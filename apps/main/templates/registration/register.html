@@ -1,0 +1,38 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Регистрация</title>
+    <link rel="stylesheet" type="text/css" href="{% static '/css/main.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+<body>
+    <form method="post">
+        {% csrf_token %}
+        <h2>РЕГИСТРАЦИЯ</h2>
+        <hr size=1 color=#ccc>
+        <div class="input-container">
+            <i class="fas fa-user"></i>
+            <input type="text" placeholder="Username" id="username" name="username" required><br><br>
+        </div> 
+        <div class="input-container">
+            <i class="fas fa-envelope"></i>
+            <input type="email" placeholder="E-mail" id="email" name="email" required><br><br>
+        </div> 
+        <div class="input-container">
+            <i class="fa fa-lock"></i>
+            <input type="password" placeholder="Password" id="password1" name="password1" required><br><br>
+        </div> 
+        <div class="input-container">
+            <i class="fa fa-lock"></i>
+            <input type="password" placeholder="Password" id="password2" name="password2" required><br><br>
+        </div> 
+        <div class="bottom-container">
+        {{form.errors}}    
+            <input type="submit" value="РЕГИСТРАЦИЯ">
+        </div>
+    </form>
+</body>
+</html>
+
+

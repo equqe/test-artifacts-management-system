@@ -1,0 +1,120 @@
+body {
+    font-family: sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+form {
+    width: 400px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+    text-align: center;
+}
+
+h2 {
+    margin-bottom: 40px;
+}
+
+hr {
+    margin-bottom: 30px;
+}
+
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    border: 1px solid #e7e7e7;
+    background-color: #f3f3f3;
+    position: fixed;
+    top: 25%;
+    width: 100%;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+li {
+    float: left;
+    margin-left: 180px;
+}
+
+li a {
+    display: block;
+    color: #666;
+    text-align: center;
+    padding: 14px 26px;
+    text-decoration: none;
+}
+
+li a:hover:not(.active) {
+    background-color: #ddd;
+}
+
+li a.active {
+    color: white;
+    background-color: #10a6e1;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="submit"],
+input[type="checkbox"] {
+    width: 100%;
+    max-width: 340px;
+    padding: 10px;
+    margin: 5px 0;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+}
+
+input[type="submit"] {
+    background-color: #19b8ea;
+    color: white;
+    border: none;
+    cursor: pointer;
+    max-width: 70px;
+}
+
+input[type="submit"]:hover {
+    background-color: #10a6e1;
+}
+
+input[type="checkbox"] {
+    width: auto;
+    margin-right: 10px;
+    margin-left: 20px;
+}
+
+
+.bottom-container {
+    display: flex;
+    align-items: center;
+}
+
+.bottom-container label {
+    margin-right: 190px;
+}
+
+.input-container {
+    position: relative;
+}
+
+.input-container input {
+    padding-left: 30px;
+}
+
+.input-container i {
+    position: absolute;
+    left: 20px;
+    top: 15px;
+    color: #999;
+}
+
+
+
