@@ -28,7 +28,7 @@ jobs:
         port: 5432
 
     - name: Install packets
-      run: pip install -r requirements.txt
+      run: pip install -r systemart/requirements.txt
 
     - name: Make migrations
       run: |
