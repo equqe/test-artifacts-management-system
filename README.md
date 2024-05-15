@@ -13,6 +13,7 @@ docker-compose build
 docker-compose up
 ```
 
+# main page `127.0.0.1:8000`, register page `127.0.0.1:8000/accounts/register`
+![image](https://github.com/equqe/test-artifacts-management-system/assets/145790372/2f005ac1-85e2-4f61-86e8-a4e46970d753)
 
-![image](https://github.com/equqe/test-artifacts-management-system/assets/145790372/d03f06a1-300f-4e47-8167-deb3ef3a5bcb)
 
