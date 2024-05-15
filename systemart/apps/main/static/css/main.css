@@ -164,7 +164,6 @@ input[type="checkbox"] {
     color: #999;
 }
 
-/* Кнопка выпадающего списка */
 .dropbtn {
     background-color: #77bbf5;
     color: white;
@@ -173,13 +172,11 @@ input[type="checkbox"] {
     border: none;
 }
 
-/* Контейнер <div> - необходим для размещения выпадающего содержимого */
 .dropdown {
 position: relative;
 display: inline-block;
 }
 
-/* Выпадающее содержимое (скрыто по умолчанию) */
 .dropdown-content {
 display: none;
 position: static;
@@ -188,7 +185,6 @@ min-width: 160px;
 box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
 }
 
-/* Ссылки внутри выпадающего списка */
 .dropdown-content a {
 color: black;
 padding: 12px 16px;
@@ -196,13 +192,10 @@ text-decoration: none;
 display: block;
 }
 
-/* Изменение цвета выпадающих ссылок при наведении курсора */
 .dropdown-content a:hover {background-color: #ddd;}
 
-/* Показать выпадающее меню при наведении курсора */
 .dropdown:hover .dropdown-content {display: block;}
 
-/* Изменение цвета фона кнопки раскрывающегося списка при отображении содержимого раскрывающегося списка */
 .dropdown:hover .dropbtn {background-color: #2c81bd;}
 
 .context-menu {
@@ -237,4 +230,18 @@ padding: 5px;
 
 .context-menu a:hover {
 background-color: #f0f0f0;
+}
+
+#searchInput {
+    padding: 6px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 300px;
+    box-sizing: border-box;
+}
+
+#searchInput:focus {
+    outline: none;
+    border-color: #66afe9;
 }

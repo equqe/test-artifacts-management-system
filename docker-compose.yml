@@ -1,0 +1,40 @@
+version: "3.9"
+services:
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_DB: "postgres"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+    expose:
+      - 5432
+    networks:
+      - web-network
+      
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    depends_on:
+      - web
+      - postgres
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+    networks:
+      - web-network
+
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    command: sh -c "wait-for-it.sh -t 15 postgres:5432 && python manage.py makemigrations main && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+    networks:
+      - web-network
+
+networks:
+  web-network:
+    driver: bridge

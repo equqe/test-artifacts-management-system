@@ -1,3 +1,17 @@
+document.addEventListener('DOMContentLoaded', function () {
+  const searchInput = document.getElementById('searchInput');
+
+  searchInput.addEventListener('input', function () {
+    const value = this.value.toLowerCase();
+    const projectRows = document.querySelectorAll('.projectlist thead:not(:first-child)');
+
+    projectRows.forEach(function (row) {
+      const projectName = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
+      row.style.display = (projectName.indexOf(value) > -1) ? 'table-row' : 'none';
+    });
+  });
+});
+
 document.querySelectorAll('.edit').forEach(function(button) {
     button.addEventListener('click', function(event) {
       event.preventDefault();

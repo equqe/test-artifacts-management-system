@@ -1,0 +1,37 @@
+# pipeline
+name: CI
+
+on: 
+  push:
+    branches:
+      - main
+
+jobs:
+  # testing every push
+  testing:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: 3.12
+
+    - name: Install Postgres
+      uses: ikalnytskyi/action-setup-postgres@v5
+      with:
+        username: postgres
+        password: postgres
+        database: postgres
+        port: 5432
+
+    - name: Install packets
+      run: pip install -r requirements.txt
+
+    - name: Make migrations
+      run: |
+        python systemart/manage.py makemigrations
+        python systemart/manage.py migrate
+  
