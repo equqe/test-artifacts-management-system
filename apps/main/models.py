@@ -2,6 +2,7 @@ from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from datetime import datetime
+import uuid
 
 # создание списка уровней приоритета
 HIGH = "HI"
@@ -16,18 +17,21 @@ PRIORITY_CHOICES = {
 class Projects(models.Model):
     """ Модель, описывающая проекты """
     
-    project_id = models.AutoField(primary_key=True)
+    project_id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     project_name = models.CharField(max_length=128)
+    description = models.TextField(max_length=120, null=True, blank=True)
 
 
 class Tester(AbstractUser):
     """ Модель, описывающая пользователя """
 
     # создание списка ролей для проектов
-    LEAD = "LD"  # главный тестировщик, может создавать/удалять проекты и добавлять в них других пользователей
+    LEAD = "LD"  # руководитель тестирования
+    SENIOR = "SN" # главный тестировщик
     DEFAULT = "DF"  # обычный тестировщик, стандартная роль
     PROJECT_ROLES_CHOICES = {
-        LEAD: "Главный тестировщик", 
+        LEAD: "Руководитель тестирования", 
+        SENIOR: "Главный тестировщик",
         DEFAULT: "Тестировщик"
     }
 
@@ -83,17 +87,19 @@ class TestSet(models.Model):
     # создание списка статусов кейсов
     SUCCESS = "SC"
     FAIL = "FL"
-    UNDEFINED = "UD"
+    SKIP = "SP"
+    NPASS = "NP"
     CASE_STATUS_CHOICES = {
         SUCCESS: "Провален",
         FAIL: "Успешно",
-        UNDEFINED: "-"
+        SKIP: "Пропущен",
+        NPASS: "Не пройден"
     }
 
     case_status = models.CharField(
         max_length=2,
         choices=CASE_STATUS_CHOICES,
-        default=UNDEFINED
+        default=NPASS
     )
 
     testset_id = models.AutoField(primary_key=True)
