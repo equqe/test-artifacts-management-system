@@ -13,7 +13,11 @@ class ProjectForm(forms.ModelForm):
     class Meta:
         model = Projects
         fields = ['project_name', 'description']
-
+        labels = {
+            'project_name': 'Название проекта',
+            'description': 'Описание',
+        }
+        
         widgets = {
             'project_name': forms.TextInput(attrs={'class':'form-control'}),
             'description': forms.Textarea(attrs={'class':'form-control', 'rows':3}),

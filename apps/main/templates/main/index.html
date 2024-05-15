@@ -18,36 +18,13 @@
                 <button class="active dropbtn">{{ user.username }}</button>
                 <div class="dropdown-content">
                     <a href="/logout">Выйти</a>
-                    <a href="/change-password">Поменять пароль</a>
+                    <a href="/accounts/password_change/">Поменять пароль</a>
                 </div>
             </div>
         </li>
     </ul>
-    
-    <table class="projectlist" border="0" cellpading="8" cellspacing="3">
-        <thead>
-            <td>ID</td>
-            <td style="width: 450px;">Название</td>
-            <td style="width: 450px;">Описание</td>
-            <td>Действия</td>
-        </thead>
-        {% for project in projects %}
-        <thead>
-            <td>{{ project.project_id }}</td>
-            <td>{{ project.project_name }}</td>
-            <td>{{ project.description }}</td>
-            <td class="createproj" data-menu-target="project-menu">...</td>
-        </thead>
-        {% endfor %}
 
-    <a class="createproj" href="/projects/new">Создать проект</a>
-    
-    <div id="project-menu" class="context-menu" style="display: none;">
-        <ul>
-          <li><a href="#">Редактировать</a></li>
-          <li><a href="#">Удалить</a></li>
-        </ul>
-    </div>
+    {% block lists %}Выберите раздел выше...{% endblock lists %}
 
     <!-- js connecting -->
     <script type="text/javascript" src="{% static "/js/main.js"%}"></script>

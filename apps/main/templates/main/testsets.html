@@ -1,0 +1,16 @@
+{% extends "main/index.html" %}
+
+{% block lists %}
+<table class="projectlist" border="0" cellpading="8" cellspacing="3">
+    <thead>
+        <td>ID</td>
+        <td style="width: 550px;">Название</td>
+    </thead>
+
+<a class="createtc" href="/testcases/new">Создать набор</a>
+
+<div id="project-menu" class="context-menu" style="display: none;">
+    <a href="#">Редактировать</a>
+    <a href="#">Удалить</a>
+</div>
+{% endblock lists %}

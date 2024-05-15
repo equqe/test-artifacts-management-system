@@ -107,6 +107,7 @@ li a.active {
     top: 23%;
 }
 
+.id_description,
 input[type="text"],
 input[type="email"],
 input[type="password"],
@@ -205,6 +206,7 @@ display: block;
 .dropdown:hover .dropbtn {background-color: #2c81bd;}
 
 .context-menu {
+    display: none;
     position: absolute;
     background-color: white;
     border: 1px solid gray;

@@ -3,7 +3,7 @@ from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.views.generic.edit import FormView
 from .forms import RegisterForm, ProjectForm
-from .models import Projects
+from .models import Projects, TestCases, TestSet, BugReports
 from django.urls import reverse_lazy
 
 @login_required
@@ -16,6 +16,22 @@ def user_logout(request):
         logout(request)
         return redirect('projects')
     return render(request, 'registration/logout.html')
+
+def projects_view(request):
+    projects = Projects.objects.all()
+    return render(request, 'main/projects.html', {'projects': projects})
+
+def testcase_view(request):
+    testcases = TestCases.objects.all()
+    return render(request, 'main/testcases.html')
+
+def testset_view(request):
+    testsets = TestSet.objects.all()
+    return render(request, 'main/testsets.html')
+
+def bugreport_view(request):
+    bugreports = BugReports.objects.all()
+    return render(request, 'main/bugreports.html')
 
 class ProjectView(FormView):
     form_class = ProjectForm
