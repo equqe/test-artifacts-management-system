@@ -14,7 +14,7 @@ def index_view(request):
 def user_logout(request):
     if request.method == 'POST':
         logout(request)
-        return redirect('projects')
+        return redirect('login')
     return render(request, 'registration/logout.html')
 
 def projects_view(request):
