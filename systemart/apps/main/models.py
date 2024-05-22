@@ -17,9 +17,12 @@ PRIORITY_CHOICES = {
 class Projects(models.Model):
     """ Модель, описывающая проекты """
     
-    project_id = models.UUIDField(primary_key=True, default=uuid.uuid4)
+    project_id = models.AutoField(primary_key=True)
     project_name = models.CharField(max_length=128)
     description = models.TextField(max_length=120, null=True, blank=True)
+
+    def __str__(self):
+        return self.project_name
 
 
 class Tester(AbstractUser):
@@ -48,6 +51,9 @@ class CaseSets(models.Model):
 
     set_id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=128)
+
+    def __str__(self):
+            return self.name
 
 
 class TestCases(models.Model):
@@ -80,6 +86,9 @@ class TestCases(models.Model):
     precondition = models.TextField(max_length=120)
     creation_date = models.DateTimeField(default=datetime.now)
 
+    def __str__(self):
+            return self.name
+
 
 class TestSet(models.Model):
     """ Модель, описывающая тестовые наборы """
@@ -90,8 +99,8 @@ class TestSet(models.Model):
     SKIP = "SP"
     NPASS = "NP"
     CASE_STATUS_CHOICES = {
-        SUCCESS: "Провален",
-        FAIL: "Успешно",
+        SUCCESS: "Успешно",
+        FAIL: "Провален",
         SKIP: "Пропущен",
         NPASS: "Не пройден"
     }
@@ -150,3 +159,6 @@ class BugReports(models.Model):
     name = models.CharField(max_length=128)
     description = models.TextField(max_length=512, null=True, blank=True)
     creationdate = models.DateTimeField(default=datetime.now)
+
+    def __str__(self):
+            return self.name

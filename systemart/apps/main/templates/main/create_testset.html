@@ -1,0 +1,19 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Создание нового тестового набора</title>
+    <link rel="stylesheet" type="text/css" href="{% static '/css/main.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+<body>
+    <form method="post">
+        {% block content %}
+        <h2>Создание нового тестового набора</h2>
+        <hr size=1 color=#ccc>
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" value="Создать">
+        {% endblock %}
+    </form>
+</body>

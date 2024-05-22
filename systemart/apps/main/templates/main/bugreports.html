@@ -3,17 +3,30 @@
 {% block lists %}
 <table class="projectlist" border="0" cellpading="8" cellspacing="3">
     <thead>
+        <td> </td>
         <td>ID</td>
-        <td style="width: 250px;">Название</td>
         <td style="width: 150px;">Приоритет</td>
         <td style="width: 100px;">Статус</td>
         <td style="width: 100px;">Дата создания</td>
         <td style="width: 450px;">Автор</td>
-        <td>Проект</td>
+        <td style="width: 100px;">Проект</td>
         <td>ID кейса</td>
     </thead>
+    {% for bugreport in bugreports %}
+        <thead>
+            <td><input type="checkbox" class="pick" name="pick"></td>
+            <td>{{ bugreport.bug_id }}</td>
+            <td>{{ bugreport.priority }}</td>
+            <td>{{ bugreport.status }}</td>
+            <td>{{ bugreport.creationdate }}</td>
+            <td>{{ bugreport.id }}</td>
+            <td>{{ bugreport.project }}</td>
+            <td>{{ bugreport.case_id }}</td>
+            <td class="createproj edit" data-menu-target="project-menu">...</td>
+        </thead>
+    {% endfor %}
 
-<a class="createtc" href="/testcases/new">Создать баг репорт</a>
+<a class="createproj" href="/bugreports/new">Создать баг репорт</a>
 
 <div id="project-menu" class="context-menu" style="display: none;">
     <a href="#">Редактировать</a>

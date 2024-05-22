@@ -3,11 +3,12 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    height: 50vh;
     margin: 0;
 }
 
 form {
+    margin-top: 50vh;
     width: 400px;
     padding: 20px;
     border: 1px solid #ccc;
@@ -32,7 +33,7 @@ ul {
     border: 1px solid #e7e7e7;
     background-color: #f3f3f3;
     position: fixed;
-    top: 20%;
+    top: 5%;
     width: 100%;
     padding-top: 5px;
     padding-bottom: 5px;
@@ -65,7 +66,7 @@ ul.actions li:first-child {
 
 li {
     float: left;
-    margin-left: 180px;
+    margin-left: 90px;
 }
 
 li a {
@@ -126,7 +127,7 @@ input[type="submit"] {
     color: white;
     border: none;
     cursor: pointer;
-    max-width: 70px;
+    max-width: 120px;
 }
 
 input[type="submit"]:hover {

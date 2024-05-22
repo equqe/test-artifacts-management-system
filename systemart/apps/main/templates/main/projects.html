@@ -3,6 +3,7 @@
 {% block lists %}
     <table class="projectlist" border="0" cellpading="8" cellspacing="3">
         <thead>
+            <td> </td>
             <td>ID</td>
             <td style="width: 450px;">Название</td>
             <td style="width: 450px;">Описание</td>
@@ -10,6 +11,7 @@
         </thead>
         {% for project in projects %}
         <thead>
+            <td><input type="checkbox" class="pick" name="pick"></td>
             <td>{{ project.project_id }}</td>
             <td>{{ project.project_name }}</td>
             <td>{{ project.description }}</td>

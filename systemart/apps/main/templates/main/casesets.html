@@ -5,18 +5,18 @@
     <thead>
         <td> </td>
         <td>ID</td>
-        <td style="width: 550px;">Статус</td>
+        <td style="width: 550px;">Название</td>
     </thead>
-    {% for testset in testsets %}
+    {% for caseset in casesets %}
         <thead>
             <td><input type="checkbox" class="pick" name="pick"></td>
-            <td>{{ testset.testset_id }}</td>
-            <td>{{ testset.case_status }}</td>
+            <td>{{ caseset.set_id }}</td>
+            <td>{{ caseset.name }}</td>
             <td class="createproj edit" data-menu-target="project-menu">...</td>
         </thead>
     {% endfor %}
 
-<a class="createproj" href="/testsets/new">Создать набор</a>
+<a class="createproj" href="/casesets/new">Создать набор кейсов</a>
 
 <div id="project-menu" class="context-menu" style="display: none;">
     <a href="#">Редактировать</a>

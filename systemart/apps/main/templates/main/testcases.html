@@ -3,6 +3,7 @@
 {% block lists %}
 <table class="projectlist" border="0" cellpading="8" cellspacing="3">
     <thead>
+        <td> </td>
         <td>ID</td>
         <td style="width: 250px;">Название</td>
         <td style="width: 150px;">Приоритет</td>
@@ -11,8 +12,21 @@
         <td style="width: 450px;">Автор</td>
         <td>Проект</td>
     </thead>
+    {% for testcase in testcases %}
+        <thead>
+            <td><input type="checkbox" class="pick" name="pick"></td>
+            <td>{{ testcase.case_id }}</td>
+            <td>{{ testcase.name }}</td>
+            <td>{{ testcase.priority }}</td>
+            <td>{{ testcase.case_type }}</td>
+            <td>{{ testcase.creation_date }}</td>
+            <td>{{ testcase.id }}</td>
+            <td>{{ testcase.project }}</td>
+            <td class="createproj edit" data-menu-target="project-menu">...</td>
+        </thead>
+    {% endfor %}
 
-<a class="createtc" href="/testcases/new">Создать кейс</a>
+<a class="createproj" href="/testcases/new">Создать кейс</a>
 <form id="searchForm">
     <input type="text" id="searchInput" placeholder="Поиск кейса по названию...">
 </form>
