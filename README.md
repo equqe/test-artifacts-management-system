@@ -17,5 +17,5 @@ docker-compose up
 ![image](https://github.com/equqe/test-artifacts-management-system/assets/145790372/2f005ac1-85e2-4f61-86e8-a4e46970d753)
 
 ## undone:
-
+отчеты, доступ по ролям, приведение верстки в порядок, сортировка по признакам, чекбоксы+шаги у кейсов
 
