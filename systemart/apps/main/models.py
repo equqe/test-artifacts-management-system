@@ -5,9 +5,9 @@ from datetime import datetime
 import uuid
 
 # создание списка уровней приоритета
-HIGH = "HI"
-MIDDLE = "MD"
-LOW = "LW"
+HIGH = "Высокий"
+MIDDLE = "Средний"
+LOW = "Низкий"
 PRIORITY_CHOICES = {
     HIGH: "Высокий", 
     MIDDLE: "Средний",
@@ -29,9 +29,9 @@ class Tester(AbstractUser):
     """ Модель, описывающая пользователя """
 
     # создание списка ролей для проектов
-    LEAD = "LD"  # руководитель тестирования
-    SENIOR = "SN" # главный тестировщик
-    DEFAULT = "DF"  # обычный тестировщик, стандартная роль
+    LEAD = "Руководитель тестирования"  # руководитель тестирования
+    SENIOR = "Главный тестировщик" # главный тестировщик
+    DEFAULT = "Тестировщик"  # обычный тестировщик, стандартная роль
     PROJECT_ROLES_CHOICES = {
         LEAD: "Руководитель тестирования", 
         SENIOR: "Главный тестировщик",
@@ -39,7 +39,7 @@ class Tester(AbstractUser):
     }
 
     role = models.CharField(
-        max_length=2, 
+        max_length=25, 
         choices=PROJECT_ROLES_CHOICES, 
         default=DEFAULT
     )
@@ -60,21 +60,21 @@ class TestCases(models.Model):
     """ Модель, описывающая тест-кейсы """
 
     # создание списка типов кейсов
-    FUNCTIONAL = "FU"
-    NONFUNCTIONAL = "NF"
+    POSITIVE = "Позитивный"
+    NEGATIVE = "Негативный"
     CASE_TYPE_CHOICES = {
-        FUNCTIONAL: "Функциональный",
-        NONFUNCTIONAL: "Нефункциональный"
+        POSITIVE: "Позитивный",
+        NEGATIVE: "Негативный"
     }
 
     case_type = models.CharField(
-        max_length=2,
+        max_length=10,
         choices=CASE_TYPE_CHOICES,
-        default=FUNCTIONAL
+        default=POSITIVE
     )
 
     priority = models.CharField(
-        max_length=2, 
+        max_length=10, 
         choices=PRIORITY_CHOICES, 
         default=LOW
     )
@@ -94,10 +94,10 @@ class TestSet(models.Model):
     """ Модель, описывающая тестовые наборы """
 
     # создание списка статусов кейсов
-    SUCCESS = "SC"
-    FAIL = "FL"
-    SKIP = "SP"
-    NPASS = "NP"
+    SUCCESS = "Успешно"
+    FAIL = "Провален"
+    SKIP = "Пропущен"
+    NPASS = "Не пройден"
     CASE_STATUS_CHOICES = {
         SUCCESS: "Успешно",
         FAIL: "Провален",
@@ -106,7 +106,7 @@ class TestSet(models.Model):
     }
 
     case_status = models.CharField(
-        max_length=2,
+        max_length=10,
         choices=CASE_STATUS_CHOICES,
         default=NPASS
     )
@@ -131,9 +131,9 @@ class BugReports(models.Model):
     """ Модель, описывающая баг репорты """
 
     # создание списка статусов баг репортов
-    OPEN = "OP"
-    CLOSED = "CL"
-    INPROCESS = "IN"
+    OPEN = "Открыт"
+    CLOSED = "Закрыт"
+    INPROCESS = "В работе"
     BUG_STATUS_CHOICES = {
         OPEN: "Открыт",
         CLOSED: "Закрыт",
@@ -141,13 +141,13 @@ class BugReports(models.Model):
     }
 
     status = models.CharField(
-        max_length=2,
+        max_length=10,
         choices=BUG_STATUS_CHOICES,
         default=OPEN
     )
 
     priority = models.CharField(
-        max_length=2, 
+        max_length=10, 
         choices=PRIORITY_CHOICES, 
         default=LOW
     )
