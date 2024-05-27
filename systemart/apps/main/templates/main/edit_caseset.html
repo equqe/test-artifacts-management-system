@@ -1,0 +1,18 @@
+{%load static%}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Редактирование набора кейсов</title>
+    <link rel="stylesheet" type="text/css" href="{% static '/css/main.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+<body>
+    <form method="post" action="{% url 'edit_caseset' pk=object.pk %}">
+        <h2>Редактирование набора кейсов</h2>
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Сохранить">
+    </form>
+</body>
+</html>
+

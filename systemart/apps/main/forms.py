@@ -38,15 +38,6 @@ class TestCaseForm(forms.ModelForm):
             'precondition': 'Предусловие',
             'creation_date': 'Дата создания',
         }
-        #
-        #widgets = {
-        #    'case_type': forms.TextInput(attrs={'class':'form-control'}),
-        #    'priority': forms.Textarea(attrs={'class':'form-control', 'rows':3}),
-        #    'project': forms.TextInput(attrs={'class':'form-control'}),
-        #    'name': forms.Textarea(attrs={'class':'form-control'}),
-        #    'precondition': forms.TextInput(attrs={'class':'form-control'}),
-        #    'creation_date': forms.Textarea(attrs={'class':'form-control', 'rows':3}),
-        #}
 
         widgets = {
             'creation_date': forms.DateInput(attrs={'class':'form-control', 'type':'date'}),
@@ -58,19 +49,14 @@ class TestsetForm(forms.ModelForm):
         model = TestSet
         fields = '__all__' 
 
-        #labels = {
-        #    'case_status': 'Статус кейса',
-        #    'set': 'id набора',
-        #    'case': 'Кейс',
-        #    'id': 'id кейса',
-        #    'runtime': 'Время прохождения',
-        #    'set': 'Набор'
-        #}
+        labels = {
+            'case_status': 'Статус кейса',
+            'set': 'id набора',
+            'testcase': 'Кейс',
+            'id': 'Автор',
+            'runtime': 'Время прохождения',
+        }
         
-        #widgets = {
-        #    'case_status': forms.ChoiceField(choices=[('SC', 'Успешно'), ('FL', 'Провален'), ('SP', 'Пропущен'), ('NP', 'Не пройден'),]),
-        #    'description': forms.Textarea(attrs={'class':'form-control', 'rows':3}),
-        #}
         widgets = {
             'runtime': forms.DateInput(attrs={'class':'form-control', 'type':'date'}),
         }
@@ -92,8 +78,9 @@ class ReportForm(forms.ModelForm):
         }
         
         widgets = {
-            'creationdate': forms.DateInput(attrs={'class':'form-control', 'type':'date', 'value': timezone.now().date(), 'readonly': 'readonly'}),
+            'creationdate': forms.DateInput(attrs={'class':'form-control', 'type':'date', 'placeholder':'YYYY-MM-DD'}),
         }
+
 
 class CaseSetsForm(forms.ModelForm):
     class Meta:
@@ -103,3 +90,9 @@ class CaseSetsForm(forms.ModelForm):
         labels = {
             'name': 'Название',
         } 
+
+
+class FilterForm(forms.Form):
+    start_date = forms.DateField(label='Промежуток времени с:')
+    end_date = forms.DateField(label='по:')
+    report_type = forms.ChoiceField(label='Тип отчета:', choices=[('bugreports', 'Багрепорты'), ('testcases', 'Тесткейсы')])

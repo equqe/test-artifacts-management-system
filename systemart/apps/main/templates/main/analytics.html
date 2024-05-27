@@ -1,0 +1,30 @@
+{% extends "main/index.html" %}
+
+{% block lists %}
+<div>
+    <label for="start-date">Промежуток времени с:</label>
+    <input type="date" id="start-date" name="start-date">
+
+    <label for="end-date">по:</label>
+    <input type="date" id="end-date" name="end-date">
+
+    <label for="report-type">Тип отчета:</label>
+    <select id="report-type" name="report-type">
+    <option value="bugreports">Багрепорты</option>
+    <option value="testcases">Тесткейсы</option>
+    </select>
+</div>
+
+<a class="createproj" href="#">Сгенерировать отчет</a>
+
+<div id="password-form" style="display:none;">
+    <form id="delete-form" method="post">
+      {% csrf_token %}
+      <label for="password">Введите пароль для подтверждения удаления:</label><br>
+      <input type="password" id="password" name="password"><br>
+      <input type="submit" value="Удалить">
+      <input type="submit" value="Закрыть" onclick="this.parentElement.style.display='none'">
+    </form>
+</div>
+{% endblock lists %}
+

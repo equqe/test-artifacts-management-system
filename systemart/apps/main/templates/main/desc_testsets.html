@@ -28,12 +28,12 @@
 
             <div id="project-menu-{{ testcase.testcase_id }}" class="context-menu" style="display: none;">
                 <input type="submit" class="edit-link" onclick="location.href = '/testcases/{{ testcase.testcase_id }}/edit/'" value="Редактировать" data-testcase-id="{{ testcase.testcase_id }}">
-                <input type="submit" class="delete-link" value="Удалить" data-testcase-id="{{ testcase.testcase_id }}">
+                <input type="submit" class="delete-link" value="Исключить" data-testcase-id="{{ testcase.testcase_id }}">
             </div>
         {% endfor %}
 </div>
 
-<a class="createproj" href="/testcases/new">Создать кейс</a>
+<a class="createproj" href="/testcases/new">Добавить кейс</a>
 <form id="searchForm">
     <input type="text" id="searchInput" placeholder="Поиск кейса по названию...">
 </form>
@@ -41,11 +41,10 @@
 <div id="password-form" style="display:none;">
     <form id="delete-form" method="post">
       {% csrf_token %}
-      <label for="password">Введите пароль для подтверждения удаления:</label><br>
+      <label for="password">Введите пароль для подтверждения исключения:</label><br>
       <input type="password" id="password" name="password"><br>
       <input type="submit" value="Удалить">
       <input type="submit" value="Закрыть" onclick="this.parentElement.style.display='none'">
     </form>
 </div>
 {% endblock lists %}
-

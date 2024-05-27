@@ -1,9 +1,10 @@
-from django.http import HttpResponseNotFound
+from django.http import Http404, HttpResponseNotFound, JsonResponse
+from django.contrib.auth import authenticate
 from django.shortcuts import render, redirect
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.views.generic.edit import FormView
-from .forms import RegisterForm, ProjectForm, TestCaseForm, TestsetForm, ReportForm, CaseSetsForm
+from .forms import RegisterForm, ProjectForm, TestCaseForm, TestsetForm, ReportForm, CaseSetsForm, FilterForm
 from .models import Projects, TestCases, TestSet, BugReports, CaseSets
 from django.urls import reverse_lazy
 
@@ -22,6 +23,10 @@ def user_logout(request):
 
 
 # objects views
+def analytics_view(request):
+    testcases = TestCases.objects.all()
+    return render(request, 'main/analytics.html', {'testcases': testcases})
+
 def projects_view(request):
     projects = Projects.objects.all()
     return render(request, 'main/projects.html', {'projects': projects})
@@ -99,14 +104,228 @@ class RegisterView(FormView):
         form.save()
         return super().form_valid(form)
 
+# desc testset
+def desc_testset(request):
+    testsets = TestSet.objects.all()
+    testcases = TestCases
+    return render(request, 'main/testsets.html', {'testsets': testsets})
 
-# delete and register views
 
+
+# delete and edit views
+
+#testcase
 def delete_testcase(request, testcase_id):
-    if request.method == 'POST':
-        try:
-            testcase = TestCases.objects.get(id=testcase_id)
-            testcase.delete()
-            return redirect('testcases')
-        except TestCases.DoesNotExist:
-            return HttpResponseNotFound('Тест-кейс не найден')
+    password = request.POST.get('password')
+    user = authenticate(request, username=request.user.username, password=password)
+    print(user, password)
+    if user is None:
+        return JsonResponse({'success': False, 'error': 'Неверный пароль'})
+
+    testcase = TestCases.objects.get(pk=testcase_id)
+    testcase.delete()
+
+    return JsonResponse({'success': True})
+
+class edit_testcase(FormView):
+    model = TestCases
+    form_class = TestCaseForm
+    template_name = 'main/edit_testcase.html'
+    success_url = reverse_lazy('testcases')
+
+    def get_object(self):
+        obj_id = self.kwargs.get('pk')
+        if obj_id:
+            try:
+                return TestCases.objects.get(pk=obj_id)
+            except TestCases.DoesNotExist:
+                raise Http404
+        else:
+            raise Http404
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['instance'] = self.get_object()
+        return kwargs
+
+    def form_valid(self, form):
+        form.save()
+        return super().form_valid(form)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['object'] = self.get_object()
+        return context
+    
+#testset
+def delete_testset(request, testset_id):
+    password = request.POST.get('password')
+    user = authenticate(request, username=request.user.username, password=password)
+    print(user, password)
+    if user is None:
+        return JsonResponse({'success': False, 'error': 'Неверный пароль'})
+
+    testset = TestSet.objects.get(pk=testset_id)
+    testset.delete()
+
+    return JsonResponse({'success': True})
+
+class edit_testset(FormView):
+    model = TestSet
+    form_class = TestsetForm
+    template_name = 'main/edit_testset.html'
+    success_url = reverse_lazy('testsets')
+
+    def get_object(self):
+        obj_id = self.kwargs.get('pk')
+        if obj_id:
+            try:
+                return TestSet.objects.get(pk=obj_id)
+            except TestSet.DoesNotExist:
+                raise Http404
+        else:
+            raise Http404
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['instance'] = self.get_object()
+        return kwargs
+
+    def form_valid(self, form):
+        form.save()
+        return super().form_valid(form)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['object'] = self.get_object()
+        return context
+    
+#caseset
+def delete_caseset(request, set_id):
+    password = request.POST.get('password')
+    user = authenticate(request, username=request.user.username, password=password)
+    print(user, password)
+    if user is None:
+        return JsonResponse({'success': False, 'error': 'Неверный пароль'})
+
+    testset = CaseSets.objects.get(pk=set_id)
+    testset.delete()
+
+    return JsonResponse({'success': True})
+
+class edit_caseset(FormView):
+    model = CaseSets
+    form_class = CaseSetsForm
+    template_name = 'main/edit_caseset.html'
+    success_url = reverse_lazy('casesets')
+
+    def get_object(self):
+        obj_id = self.kwargs.get('pk')
+        if obj_id:
+            try:
+                return CaseSets.objects.get(pk=obj_id)
+            except CaseSets.DoesNotExist:
+                raise Http404
+        else:
+            raise Http404
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['instance'] = self.get_object()
+        return kwargs
+
+    def form_valid(self, form):
+        form.save()
+        return super().form_valid(form)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['object'] = self.get_object()
+        return context
+    
+#bugreport
+def delete_bugreport(request, bug_id):
+    password = request.POST.get('password')
+    user = authenticate(request, username=request.user.username, password=password)
+    print(user, password)
+    if user is None:
+        return JsonResponse({'success': False, 'error': 'Неверный пароль'})
+
+    testset = BugReports.objects.get(pk=bug_id)
+    testset.delete()
+
+    return JsonResponse({'success': True})
+
+class edit_bugreport(FormView):
+    model = BugReports
+    form_class = ReportForm
+    template_name = 'main/edit_bugreport.html'
+    success_url = reverse_lazy('bugreports')
+
+    def get_object(self):
+        obj_id = self.kwargs.get('pk')
+        if obj_id:
+            try:
+                return BugReports.objects.get(pk=obj_id)
+            except BugReports.DoesNotExist:
+                raise Http404
+        else:
+            raise Http404
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['instance'] = self.get_object()
+        return kwargs
+
+    def form_valid(self, form):
+        form.save()
+        return super().form_valid(form)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['object'] = self.get_object()
+        return context
+    
+
+#projects
+def delete_project(request, project_id):
+    password = request.POST.get('password')
+    user = authenticate(request, username=request.user.username, password=password)
+    print(user, password)
+    if user is None:
+        return JsonResponse({'success': False, 'error': 'Неверный пароль'})
+
+    testset = Projects.objects.get(pk=project_id)
+    testset.delete()
+
+    return JsonResponse({'success': True})
+
+class edit_project(FormView):
+    model = Projects
+    form_class = ReportForm
+    template_name = 'main/edit_project.html'
+    success_url = reverse_lazy('projects')
+
+    def get_object(self):
+        obj_id = self.kwargs.get('pk')
+        if obj_id:
+            try:
+                return Projects.objects.get(pk=obj_id)
+            except Projects.DoesNotExist:
+                raise Http404
+        else:
+            raise Http404
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['instance'] = self.get_object()
+        return kwargs
+
+    def form_valid(self, form):
+        form.save()
+        return super().form_valid(form)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['object'] = self.get_object()
+        return context

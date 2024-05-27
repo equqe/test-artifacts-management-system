@@ -1,13 +1,14 @@
 {% extends "main/index.html" %}
 
 {% block lists %}
-<table class="projectlist" border="0" cellpading="8" cellspacing="3">
+<div>
+<table class="projectlist" border="0" cellpadding="8" cellspacing="3">
     <thead>
         <td> </td>
         <td>ID</td>
         <td style="width: 150px;">Приоритет</td>
         <td style="width: 100px;">Статус</td>
-        <td style="width: 100px;">Дата создания</td>
+        <td style="width: 150px;">Дата создания</td>
         <td style="width: 450px;">Автор</td>
         <td style="width: 100px;">Проект</td>
         <td>ID кейса</td>
@@ -18,18 +19,30 @@
             <td>{{ bugreport.bug_id }}</td>
             <td>{{ bugreport.priority }}</td>
             <td>{{ bugreport.status }}</td>
-            <td>{{ bugreport.creationdate }}</td>
+            <td>{{ bugreport.creationdate|date:"j M Y" }}</td>
             <td>{{ bugreport.id }}</td>
             <td>{{ bugreport.project }}</td>
             <td>{{ bugreport.testcase_id }}</td>
-            <td class="createproj edit" data-menu-target="project-menu">...</td>
+            <td class="createproj edit" data-menu-target="project-menu-{{ bugreport.bug_id }}">...</td>
         </thead>
+        <div id="project-menu-{{ bugreport.bug_id }}" class="context-menu" style="display: none;">
+            <input type="submit" class="edit-link" onclick="location.href = '/bugreports/{{ bugreport.bug_id }}/edit/'" value="Редактировать" data-testcase-id="{{ testcase.testcase_id }}">
+            <input type="submit" class="delete-link" value="Удалить" data-testcase-id="{{ bugreport.bug_id }}">
+        </div>
     {% endfor %}
-
+</div>
 <a class="createproj" href="/bugreports/new">Создать баг репорт</a>
+<form id="searchForm">
+    <input type="text" id="searchInput" placeholder="Поиск багрепорта по названию...">
+</form>
 
-<div id="project-menu" class="context-menu" style="display: none;">
-    <a href="#">Редактировать</a>
-    <a href="#">Удалить</a>
+<div id="password-form" style="display:none;">
+    <form id="delete-form" method="post">
+      {% csrf_token %}
+      <label for="password">Введите пароль для подтверждения удаления:</label><br>
+      <input type="password" id="password" name="password"><br>
+      <input type="submit" value="Удалить">
+      <input type="submit" value="Закрыть" onclick="this.parentElement.style.display='none'">
+    </form>
 </div>
 {% endblock lists %}

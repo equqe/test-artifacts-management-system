@@ -10,9 +10,8 @@ document.addEventListener('DOMContentLoaded', function () {
       row.style.display = (projectName.indexOf(value) > -1) ? 'table-row' : 'none';
     });
   });
-});
 
-document.querySelectorAll('.edit').forEach(function(button) {
+  document.querySelectorAll('.edit').forEach(function(button) {
     button.addEventListener('click', function(event) {
       event.preventDefault();
   
@@ -40,28 +39,49 @@ document.querySelectorAll('.edit').forEach(function(button) {
       document.addEventListener('click', handleDocumentClick);
     });
   });
-  
 
-
-// delete obj
-document.addEventListener('DOMContentLoaded', function() {
-  var deleteLinks = document.querySelectorAll('.delete-link');
-  deleteLinks.forEach(function(link) {
+  // delete obj
+  document.querySelectorAll('.delete-link').forEach(function(link) {
       link.addEventListener('click', function(e) {
-          e.preventDefault();
-          var testcaseId = e.target.closest('tr').querySelector('.pick').value;
-          if (confirm('Вы уверены, что хотите удалить этот тест-кейс?')) {
-              fetch('/testcases/delete/' + testcaseId, {
-                  method: 'POST',
-              }).then(function(response) {
-                  if (response.ok) {
-                      alert('Тест-кейс успешно удален.');
-                      location.reload();
-                  } else {
-                      alert('Произошла ошибка при удалении тест-кейса.');
-                  }
-              });
-          }
+        e.preventDefault();
+
+        document.querySelector('#password-form').style.display = 'block';
+
+        document.querySelector('#delete-form').dataset.testcaseId = this.dataset.testcaseId;
       });
+    });
+
+  document.querySelector('#delete-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    var testcase_id = this.dataset.testcaseId;
+
+    var csrfToken = document.querySelector('input[name=csrfmiddlewaretoken]').value;
+
+    var formData = new FormData();
+    formData.append('password', document.querySelector('#password').value);
+    formData.append('csrfmiddlewaretoken', csrfToken);
+
+    fetch('/testcases/delete/' + testcase_id + '/', {
+      method: 'POST',
+      body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        document.querySelector('#password-form').style.display = 'none';
+
+        var rowToRemove = document.querySelector('tr[data-testcase-id="' + this.dataset.testcaseId + '"]');
+        rowToRemove.parentNode.removeChild(rowToRemove);
+      } else {
+        alert(data.error);
+      }
+    })
+    .catch(error => {
+      location.reload();
+    });
   });
+
 });
+
+

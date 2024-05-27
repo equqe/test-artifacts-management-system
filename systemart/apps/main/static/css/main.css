@@ -94,7 +94,6 @@ li a.active {
 
 .createproj {
     position: relative;
-    bottom: 0%;
     border-radius: 5px;
     margin: 0;
     padding: 10px 20px;
@@ -105,7 +104,8 @@ li a.active {
 
 .projectlist {
     position: relative;
-    top: 23%;
+    top: 30%;
+    right: 9%;
 }
 
 .id_description,
@@ -240,9 +240,16 @@ background-color: #f0f0f0;
     border-radius: 5px;
     width: 300px;
     box-sizing: border-box;
+    margin-left: 20px;
 }
 
 #searchInput:focus {
     outline: none;
     border-color: #66afe9;
+}
+
+#password-form {
+    top: 0%;
+    position: absolute;
+    padding: 0;
 }

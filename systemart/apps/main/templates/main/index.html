@@ -13,7 +13,7 @@
         <li><a href="/testcases">Тест кейсы</a></li>
         <li><a href="/testsets">Тестовые наборы</a></li>
         <li><a href="/bugreports">Баг репорты</a></li>
-        <li><a href="/casesets">Наборы кейсов</a></li>
+        <li><a href="/analytics">Аналитика</a></li>
         <li>
                 <div class="dropdown">
                 <button class="active dropbtn">{{ user.username }}</button>
@@ -28,6 +28,7 @@
     {% block lists %}Выберите раздел выше...{% endblock lists %}
 
     <!-- js connecting -->
+    <script type="text/javascript" src="{% static "/js/jquery-3.6.0.min.js"%}"></script>
     <script type="text/javascript" src="{% static "/js/main.js"%}"></script>
 </body>
 </html>

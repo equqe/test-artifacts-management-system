@@ -1,7 +1,8 @@
 {% extends "main/index.html" %}
 
 {% block lists %}
-    <table class="projectlist" border="0" cellpading="8" cellspacing="3">
+<div>
+    <table class="projectlist" border="0" cellpadding="8" cellspacing="3">
         <thead>
             <td> </td>
             <td>ID</td>
@@ -15,14 +16,26 @@
             <td>{{ project.project_id }}</td>
             <td>{{ project.project_name }}</td>
             <td>{{ project.description }}</td>
-            <td class="createproj edit" data-menu-target="project-menu">...</td>
+            <td class="createproj edit" data-menu-target="project-menu-{{ project.project_id }}">...</td>
         </thead>
+        <div id="project-menu-{{ project.project_id }}" class="context-menu" style="display: none;">
+            <input type="submit" class="edit-link" onclick="location.href = '/projects/{{ project.project_id }}/edit/'" value="Редактировать" data-testcase-id="{{ project.project_id }}">
+            <input type="submit" class="delete-link" value="Удалить" data-testcase-id="{{ project.project_id }}">
+        </div>
         {% endfor %}
-
+</div>
     <a class="createproj" href="/projects/new">Создать проект</a>
+    <form id="searchForm">
+        <input type="text" id="searchInput" placeholder="Поиск проекта по названию...">
+    </form>
 
-    <div id="project-menu" class="context-menu" style="display: none;">
-        <a href="#">Редактировать</a>
-        <a href="#">Удалить</a>
+    <div id="password-form" style="display:none;">
+        <form id="delete-form" method="post">
+          {% csrf_token %}
+          <label for="password">Введите пароль для подтверждения удаления:</label><br>
+          <input type="password" id="password" name="password"><br>
+          <input type="submit" value="Удалить">
+          <input type="submit" value="Закрыть" onclick="this.parentElement.style.display='none'">
+        </form>
     </div>
 {% endblock lists %}

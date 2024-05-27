@@ -1,26 +1,36 @@
 {% extends "main/index.html" %}
 
 {% block lists %}
-<table class="projectlist" border="0" cellpading="8" cellspacing="3">
+<div>
+<table class="projectlist" border="0" cellpadding="8" cellspacing="3">
     <thead>
         <td> </td>
-        <td>ID</td>
-        <td style="width: 550px;">Статус</td>
-        <td>Время прохождения</td>
+        <td style="width: 150px;">ID</td>
+        <td style="width: 250px;">Статус</td>
+        <td style="width: 250px;">ID набора</td>
+        <td style="width: 100px;">Кейс</td>
+        <td style="width: 100px;">Автор</td>
+        <td style="width: 250px;">Время прохождения</td>
     </thead>
     {% for testset in testsets %}
-        <thead>
+        <thead onclick="location.href = '{{ testset.testset_id }}';" style="cursor:pointer;">
             <td><input type="checkbox" class="pick" name="pick" value="{{ testcase.id }}"></td>
             <td>{{ testset.testset_id }}</td>
             <td>{{ testset.case_status }}</td>
-            <td>{{ testset.runtime }}</td>
-            <td class="createproj edit" data-menu-target="project-menu">...</td>
+            <td>{{ testset.set }}</td>
+            <td>{{ testset.testcase }}</td>
+            <td>{{ testset.id }}</td>
+            <td>{{ testset.runtime|date:"j M Y" }}</td>
+            <td class="createproj edit" data-menu-target="project-menu-{{ testset.testset_id }}">...</td>
         </thead>
     {% endfor %}
-
+</div>
 <a class="createproj" href="/testsets/new">Создать набор</a>
+<form id="searchForm">
+    <input type="text" id="searchInput" placeholder="Поиск набора по названию...">
+</form>
 
-<div id="project-menu" class="context-menu" style="display: none;">
+<div id="project-menu-{{ testset.testset_id }}" class="context-menu" style="display: none;">
     <a href="#">Редактировать</a>
     <a href="#">Удалить</a>
 </div>
