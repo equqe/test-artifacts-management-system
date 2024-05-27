@@ -6,12 +6,14 @@
         <td> </td>
         <td>ID</td>
         <td style="width: 550px;">Статус</td>
+        <td>Время прохождения</td>
     </thead>
     {% for testset in testsets %}
         <thead>
-            <td><input type="checkbox" class="pick" name="pick"></td>
+            <td><input type="checkbox" class="pick" name="pick" value="{{ testcase.id }}"></td>
             <td>{{ testset.testset_id }}</td>
             <td>{{ testset.case_status }}</td>
+            <td>{{ testset.runtime }}</td>
             <td class="createproj edit" data-menu-target="project-menu">...</td>
         </thead>
     {% endfor %}

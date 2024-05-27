@@ -41,3 +41,27 @@ document.querySelectorAll('.edit').forEach(function(button) {
     });
   });
   
+
+
+// delete obj
+document.addEventListener('DOMContentLoaded', function() {
+  var deleteLinks = document.querySelectorAll('.delete-link');
+  deleteLinks.forEach(function(link) {
+      link.addEventListener('click', function(e) {
+          e.preventDefault();
+          var testcaseId = e.target.closest('tr').querySelector('.pick').value;
+          if (confirm('Вы уверены, что хотите удалить этот тест-кейс?')) {
+              fetch('/testcases/delete/' + testcaseId, {
+                  method: 'POST',
+              }).then(function(response) {
+                  if (response.ok) {
+                      alert('Тест-кейс успешно удален.');
+                      location.reload();
+                  } else {
+                      alert('Произошла ошибка при удалении тест-кейса.');
+                  }
+              });
+          }
+      });
+  });
+});

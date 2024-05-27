@@ -1,6 +1,7 @@
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
 from .models import Tester, Projects, TestCases, TestSet, BugReports, CaseSets
+from django.utils import timezone
 
 class RegisterForm(UserCreationForm):
     email = forms.EmailField()
@@ -28,16 +29,15 @@ class TestCaseForm(forms.ModelForm):
     class Meta:
         model = TestCases
         fields = '__all__' 
-        #labels = {
-        #    'case_type': 'Тип кейса',
-        #    'priority': 'Приоритет',
-        #    'case_id': '...',
-        #    'id': '...',
-        #    'project': 'Проект',
-        #    'name': 'Название',
-        #    'precondition': 'Предусловие',
-        #    'creation_date': 'Дата создания',
-        #}
+        labels = {
+            'case_type': 'Тип кейса',
+            'priority': 'Приоритет',
+            'id': 'Автор',
+            'project': 'Проект',
+            'name': 'Название',
+            'precondition': 'Предусловие',
+            'creation_date': 'Дата создания',
+        }
         #
         #widgets = {
         #    'case_type': forms.TextInput(attrs={'class':'form-control'}),
@@ -80,26 +80,26 @@ class ReportForm(forms.ModelForm):
     class Meta:
         model = BugReports
         fields = '__all__' 
-        #labels = {
-        #    'priority': 'Приоритет',
-        #    'status': 'Статус',
-        #    'case': 'Кейс',
-        #    'project': 'Проект',
-        #    'name': 'Название',
-        #    'description': 'Описание',
-        #    'creationdate': 'Время создания',
-        #}
+        labels = {
+            'priority': 'Приоритет',
+            'status': 'Статус',
+            'testcase': 'Кейс',
+            'project': 'Проект',
+            'name': 'Название',
+            'id': 'Автор',
+            'description': 'Описание',
+            'creationdate': 'Время создания',
+        }
         
-        #widgets = {
-        #    'priority': forms.ChoiceField(choices=[('SC', 'Успешно'), ('FL', 'Провален'), ('SP', 'Пропущен'), ('NP', 'Не пройден'),]),
-        #    'project_name': forms.TextInput(attrs={'class':'form-control'}),
-        #    'creationdate': forms.DateTimeBaseInput(attrs={'class':'form-control', 'rows':3}),
-        #}
         widgets = {
-            'creationdate': forms.DateInput(attrs={'class':'form-control', 'type':'date'}),
+            'creationdate': forms.DateInput(attrs={'class':'form-control', 'type':'date', 'value': timezone.now().date(), 'readonly': 'readonly'}),
         }
 
 class CaseSetsForm(forms.ModelForm):
     class Meta:
         model = CaseSets
-        fields = '__all__' 
+        fields = '__all__'
+
+        labels = {
+            'name': 'Название',
+        } 

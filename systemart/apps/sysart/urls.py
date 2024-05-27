@@ -11,6 +11,7 @@ urlpatterns = [
     path('projects/new/', views.ProjectView.as_view()),
     path('testcases/', views.testcase_view, name='testcases'),
     path('testcases/new/', views.TestCaseView.as_view()),
+    path('testcases/delete/<int:testcase_id>/', views.delete_testcase, name='delete_testcase'),
     path('testsets/', views.testset_view, name='testsets'),
     path('testsets/new/', views.TestSetView.as_view()),
     path('bugreports/', views.bugreport_view, name='bugreports'),

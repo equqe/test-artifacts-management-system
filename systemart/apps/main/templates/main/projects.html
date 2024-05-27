@@ -11,7 +11,7 @@
         </thead>
         {% for project in projects %}
         <thead>
-            <td><input type="checkbox" class="pick" name="pick"></td>
+            <td><input type="checkbox" class="pick" name="pick" value="{{ testcase.id }}"></td>
             <td>{{ project.project_id }}</td>
             <td>{{ project.project_name }}</td>
             <td>{{ project.description }}</td>

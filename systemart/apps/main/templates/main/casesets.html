@@ -9,7 +9,7 @@
     </thead>
     {% for caseset in casesets %}
         <thead>
-            <td><input type="checkbox" class="pick" name="pick"></td>
+            <td><input type="checkbox" class="pick" name="pick" value="{{ testcase.id }}"></td>
             <td>{{ caseset.set_id }}</td>
             <td>{{ caseset.name }}</td>
             <td class="createproj edit" data-menu-target="project-menu">...</td>

@@ -1,3 +1,4 @@
+from django.http import HttpResponseNotFound
 from django.shortcuts import render, redirect
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
@@ -97,3 +98,15 @@ class RegisterView(FormView):
     def form_valid(self, form):
         form.save()
         return super().form_valid(form)
+
+
+# delete and register views
+
+def delete_testcase(request, testcase_id):
+    if request.method == 'POST':
+        try:
+            testcase = TestCases.objects.get(id=testcase_id)
+            testcase.delete()
+            return redirect('testcases')
+        except TestCases.DoesNotExist:
+            return HttpResponseNotFound('Тест-кейс не найден')

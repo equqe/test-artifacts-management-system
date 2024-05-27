@@ -79,7 +79,7 @@ class TestCases(models.Model):
         default=LOW
     )
 
-    case_id = models.AutoField(primary_key=True)
+    testcase_id = models.AutoField(primary_key=True)
     id = models.ForeignKey(Tester, on_delete=models.CASCADE)
     project = models.ForeignKey(Projects, on_delete=models.CASCADE)
     name = models.CharField(max_length=128)
@@ -113,7 +113,7 @@ class TestSet(models.Model):
 
     testset_id = models.AutoField(primary_key=True)
     set = models.ForeignKey(CaseSets, on_delete=models.CASCADE)
-    case = models.ForeignKey(TestCases, on_delete=models.CASCADE)
+    testcase = models.ForeignKey(TestCases, on_delete=models.CASCADE)
     id = models.ForeignKey(Tester, on_delete=models.CASCADE)
     runtime = models.DateTimeField(default=None, null=True, blank=True)
 
@@ -122,7 +122,7 @@ class CaseSteps(models.Model):
     """ Модель, описывающая шаги кейса """
 
     step_id = models.AutoField(primary_key=True)
-    case = models.ForeignKey(TestCases, on_delete=models.CASCADE)
+    testcase = models.ForeignKey(TestCases, on_delete=models.CASCADE)
     step = models.TextField(null=True, blank=True)
     predictedresult = models.TextField(max_length=512)
 
@@ -153,7 +153,7 @@ class BugReports(models.Model):
     )
 
     bug_id = models.AutoField(primary_key=True)
-    case = models.ForeignKey(TestCases, on_delete=models.CASCADE)
+    testcase = models.ForeignKey(TestCases, on_delete=models.CASCADE)
     project = models.ForeignKey(Projects, on_delete=models.CASCADE)
     id = models.ForeignKey(Tester, on_delete=models.CASCADE)
     name = models.CharField(max_length=128)

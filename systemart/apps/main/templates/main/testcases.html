@@ -14,8 +14,8 @@
     </thead>
     {% for testcase in testcases %}
         <thead>
-            <td><input type="checkbox" class="pick" name="pick"></td>
-            <td>{{ testcase.case_id }}</td>
+            <td><input type="checkbox" class="pick" name="pick" value="{{ testcase.testcase_id }}"></td>
+            <td>{{ testcase.testcase_id }}</td>
             <td>{{ testcase.name }}</td>
             <td>{{ testcase.priority }}</td>
             <td>{{ testcase.case_type }}</td>
@@ -32,7 +32,7 @@
 </form>
 
 <div id="project-menu" class="context-menu" style="display: none;">
-    <a href="#">Редактировать</a>
-    <a href="#">Удалить</a>
+    <a href="testcases/delete/{{ testcase.testcase_id }}/">Редактировать</a>
+    <a class="delete-link" href="testcases/delete/{{ testcase.testcase_id }}/">Удалить</a>
 </div>
 {% endblock lists %}

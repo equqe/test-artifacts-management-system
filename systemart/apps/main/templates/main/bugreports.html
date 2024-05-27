@@ -14,14 +14,14 @@
     </thead>
     {% for bugreport in bugreports %}
         <thead>
-            <td><input type="checkbox" class="pick" name="pick"></td>
+            <td><input type="checkbox" class="pick" name="pick" value="{{ testcase.id }}"></td>
             <td>{{ bugreport.bug_id }}</td>
             <td>{{ bugreport.priority }}</td>
             <td>{{ bugreport.status }}</td>
             <td>{{ bugreport.creationdate }}</td>
             <td>{{ bugreport.id }}</td>
             <td>{{ bugreport.project }}</td>
-            <td>{{ bugreport.case_id }}</td>
+            <td>{{ bugreport.testcase_id }}</td>
             <td class="createproj edit" data-menu-target="project-menu">...</td>
         </thead>
     {% endfor %}
