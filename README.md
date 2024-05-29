@@ -13,15 +13,32 @@ docker-compose build
 docker-compose up
 ```
 
+### in case of errors
+
+
+make sure DATABASE data in settings.py is similar to this:
+
+```
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "postgres",
+        "USER": "postgres",
+        "PASSWORD": "postgres",
+        "HOST": "postgres",
+        "PORT": "5432",
+    }
+}
+```
+
 # main page `127.0.0.1:8000`, register page `127.0.0.1:8000/accounts/register`
 ![image](https://github.com/equqe/test-artifacts-management-system/assets/145790372/2f005ac1-85e2-4f61-86e8-a4e46970d753)
 
 ## :::
-верстка все еще импровизированная, думаю уже завтра будет полноценно выполнена верстка с тз
 
 
-неготово: фильтры и поиск, переход к внутренним тесткейсам проектов и тестовых наборов, отчеты, удаление нескольких элементов сразу по чекбоксам
+неготово: фильтры и поиск, переход к внутренним тесткейсам проектов и тестовых наборов, отчеты, удаление нескольких элементов сразу по чекбоксам. по сути, осталось не так много:) возможно даже пораньше закончу, чем к 1 июня
 
 
-по сути, осталось не так много:) возможно даже пораньше закончу, чем к 1 июня
+# описание архитектуры
 
