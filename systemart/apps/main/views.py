@@ -39,7 +39,7 @@ def generate_pdf(data, report_type):
 
     if report_type == 'testcases':
         headers = ['ID', 'Название', 'Приоритет', 'Статус', 'Тип кейса', 'Дата создания', 'Автор']
-        table_data = [headers] + [[str(item.testcase_id), str(item.name), str(item.priority), str(item.case_status), str(item.creation_date.strftime('%d-%m-%Y')), str(item.project), str(item.id)] for item in data]
+        table_data = [headers] + [[str(item.testcase_id), str(item.name), str(item.priority), str(item.case_status), str(item.case_type), str(item.creation_date.strftime('%d-%m-%Y')), str(item.id)] for item in data]
     else:
         headers = ['ID', 'Приоритет', 'Статус', 'Дата создания', 'Автор', 'Проект', 'ID кейса']
         table_data = [headers] + [[str(item.bug_id), str(item.priority), str(item.status), str(item.creation_date.strftime('%d-%m-%Y')), str(item.id), str(item.project), str(item.testcase_id)] for item in data]
