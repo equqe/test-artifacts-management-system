@@ -6,14 +6,17 @@
     <link rel="stylesheet" type="text/css" href="{% static '/css/main.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
-<body>
-    <form method="post">
-        {% block content %}
-        <h2>Создание нового набора кейсов</h2>
-        <hr size=1 color=#ccc>
-            {% csrf_token %}
-            {{ form.as_p }}
-            <input type="submit" value="Создать">
-        {% endblock %}
-    </form>
+<body style="display: block;">
+    <div class="project-form">
+        <form method="post">
+            {% block content %}
+            <h2>Создание нового набора кейсов</h2>
+            <hr size=1 color=#ccc>
+                {% csrf_token %}
+                {{ form.as_p }}
+                <input type="submit" value="Создать">
+                <a class="close-red" href="http://127.0.0.1:8000/casesets/">Закрыть</a>
+            {% endblock %}
+        </form>
+    </div>
 </body>

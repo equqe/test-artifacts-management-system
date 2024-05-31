@@ -82,6 +82,42 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 
+  let input = document.querySelector("#searchInput");
+  let arrData = document.getElementsByClassName('name');
+  input.addEventListener('input', showChoice);
+
+  function showChoice(event){
+  let value = event.target.value.toLowerCase();
+  if (value === ""){
+      for (let i=0; i<arrData.length; i++){
+          let item = arrData[i]
+          item.parentElement.style.display = ""
+      }
+      return
+  }
+  for (let i=0; i<arrData.length; i++){
+      let item = arrData[i]
+      if (!item.textContent.toLowerCase().includes(value)) {
+          item.parentElement.style.display = "none"
+      } else {
+          item.parentElement.style.display = ""
+      }
+  }
+  }
+
+
+  const sortSelects = document.querySelectorAll('.sort-select');
+
+  sortSelects.forEach(select => {
+    select.addEventListener('change', event => {
+      const selectedOption = event.target.value;
+      if (selectedOption) {
+        const url = new URL('/testcases/order_by/' + selectedOption + '/', window.location.origin);
+        window.location.href = url.toString();
+      }
+    });
+  });
+
 });
 
 

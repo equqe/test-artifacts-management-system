@@ -1,30 +1,64 @@
 {% extends "main/index.html" %}
 
 {% block lists %}
-<div>
-    <label for="start-date">Промежуток времени с:</label>
-    <input type="date" id="start-date" name="start-date">
+<div class="analysis">
+  <form method="get">
+    {{ form.as_p }}
+  </div>
+    <div class="btn-rep">
+      <button type="submit" id="generateReport">Просмотреть отчет на странице</button>
+      <button type="submit" name="download_pdf">Скачать отчет в формате PDF</button>
+    </div>
+  </form>
 
-    <label for="end-date">по:</label>
-    <input type="date" id="end-date" name="end-date">
+{% if data %} 
+<table class="analysis-tab" class="projectlist" border="0" cellpadding="8" cellspacing="3">
+    <thead>
+        <td>ID</td>
+        <td>Приоритет</td>
+        <td>Статус</td>
+        <td>Дата создания</td>
+        <td>Автор</td>
+        <td>Проект</td>
+        <td>ID кейса</td>
+    </thead>
+    {% for item in data %}
+    <tbody>
+        <td>{{ item.bug_id }} {{ item.testcase_id }}</td>
+        <td>{{ item.priority }}</td>
+        <td>{{ item.status }} {{ item.case_status }}</td>
+        <td>{{ item.creation_date|date:"j M Y" }}</td>
+        <td>{{ item.author }} {{ item.id }}</td>
+        <td>{{ item.project }}</td>
+        <td>{{ item.testcase_id }}</td>
+    </tbody>
+    {% endfor %}
+</table>
+{% else %}
+<p class="results">Результатов не найдено или вы не применили фильтр...</p>
+{% endif %}
 
-    <label for="report-type">Тип отчета:</label>
-    <select id="report-type" name="report-type">
-    <option value="bugreports">Багрепорты</option>
-    <option value="testcases">Тесткейсы</option>
-    </select>
-</div>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var reportTypeSelect = document.getElementById('id_report_type');
+    var searchCriteriaSelect = document.getElementById('id_search_criteria');
+    var searchCriteriaLabel = document.querySelector('label[for="id_search_criteria"]');
+  
+    if (reportTypeSelect.value === 'bugreports') {
+      searchCriteriaSelect.style.display = 'none';
+      searchCriteriaLabel.style.display = 'none';
+    }
+  
+    reportTypeSelect.addEventListener('change', function() {
+      if (this.value === 'bugreports') {
+        searchCriteriaSelect.style.display = 'none';
+        searchCriteriaLabel.style.display = 'none';
+      } else {
+        searchCriteriaSelect.style.display = 'block';
+        searchCriteriaLabel.style.display = 'block';
+      }
+    });
+  });
+</script>
 
-<a class="createproj" href="#">Сгенерировать отчет</a>
-
-<div id="password-form" style="display:none;">
-    <form id="delete-form" method="post">
-      {% csrf_token %}
-      <label for="password">Введите пароль для подтверждения удаления:</label><br>
-      <input type="password" id="password" name="password"><br>
-      <input type="submit" value="Удалить">
-      <input type="submit" value="Закрыть" onclick="this.parentElement.style.display='none'">
-    </form>
-</div>
 {% endblock lists %}
-

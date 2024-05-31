@@ -1,39 +1,58 @@
 {% extends "main/index.html" %}
 
 {% block lists %}
+
+
 <div>
     <table class="projectlist" border="0" cellpadding="8" cellspacing="3">
         <thead>
             <td> </td>
-            <td>ID</td>
-            <td style="width: 250px;">Название</td>
-            <td style="width: 150px;">Приоритет</td>
+            <td style="width: 80px;">ID</td>
+            <td style="width: 200px;">Название</td>
+            <td style="width: 80px;">Приоритет</td>
+            <td style="width: 150px;">Статус</td>
             <td style="width: 100px;">Тип кейса</td>
-            <td style="width: 150px;">Дата создания</td>
-            <td style="width: 450px;">Автор</td>
+            <td style="width: 250px;">Дата создания</td>
+            <td style="width: 350px;">Автор</td>
             <td>Проект</td>
+            <td>Действия</td>
         </thead>
         {% for testcase in testcases %}
-            <thead>
-                <td><input type="checkbox" class="pick" name="pick" value="{{ testcase.testcase_id }}"></td>
-                <td>{{ testcase.testcase_id }}</td>
-                <td>{{ testcase.name }}</td>
-                <td>{{ testcase.priority }}</td>
-                <td>{{ testcase.case_type }}</td>
-                <td>{{ testcase.creation_date|date:"j M Y" }}</td>
-                <td>{{ testcase.id }}</td>
-                <td>{{ testcase.project }}</td>
-                <td class="createproj edit" data-menu-target="project-menu-{{ testcase.testcase_id }}">...</td>
-            </thead>
-
-            <div id="project-menu-{{ testcase.testcase_id }}" class="context-menu" style="display: none;">
-                <input type="submit" class="edit-link" onclick="location.href = '/testcases/{{ testcase.testcase_id }}/edit/'" value="Редактировать" data-testcase-id="{{ testcase.testcase_id }}">
-                <input type="submit" class="delete-link" value="Удалить" data-testcase-id="{{ testcase.testcase_id }}">
-            </div>
-        {% endfor %}
+        <tbody>
+            <td><input type="checkbox" class="pick" name="pick" value="{{ testcase.testcase_id }}"></td>
+            <td class="clicking" onclick="location.href = '{{ testcase.testcase_id }}/edit/';" style="cursor:pointer; transition: background-color 0.3s ease;">{{ testcase.testcase_id }}</td>
+            <td class="name">{{ testcase.name }}</td>
+            <td>{{ testcase.priority }}</td>
+            <td>{{ testcase.case_status }}</td>
+            <td>{{ testcase.case_type }}</td>
+            <td>{{ testcase.creation_date|date:"j M Y" }}</td>
+            <td>{{ testcase.id }}</td>
+            <td>{{ testcase.project }}</td>
+            <td class="createproj edit" data-menu-target="project-menu-{{ testcase.testcase_id }}">...</td>
+        </tbody>
+        <div id="project-menu-{{ testcase.testcase_id }}" class="context-menu" style="display: none;">
+            <input type="submit" class="edit-link" onclick="location.href = '/testcases/{{ testcase.testcase_id }}/edit/'" value="Редактировать" data-testcase-id="{{ testcase.testcase_id }}">
+            <input type="submit" class="delete-link" value="Удалить" data-testcase-id="{{ testcase.testcase_id }}">
+        </div>
+    {% endfor %}
 </div>
 
-<a class="createproj" href="/testcases/new">Создать кейс</a>
+
+
+<a class="createproj create" href="/testcases/new">Создать кейс</a>
+
+    <a class="sort-by"> Сортировать по:</a>
+    <select id="id-sort" class="sort-select">
+      <option value="testcase_id">ID</option>
+      <option value="name">Название</option>
+      <option value="priority">Приоритет</option>
+      <option value="case_status">Статус</option>
+      <option value="creation_date">Дата создания(возр.)</option>
+      <option value="-creation_date">Дата создания(уб.)</option>
+      <option value="id">Автор</option>
+      <option value="project_id">Проект</option>
+    </select>
+
 <form id="searchForm">
     <input type="text" id="searchInput" placeholder="Поиск кейса по названию...">
 </form>
@@ -44,7 +63,7 @@
       <label for="password">Введите пароль для подтверждения удаления:</label><br>
       <input type="password" id="password" name="password"><br>
       <input type="submit" value="Удалить">
-      <input type="submit" value="Закрыть" onclick="this.parentElement.style.display='none'">
+      <a class="close-red" href="/testcases">Закрыть</a>
     </form>
 </div>
 {% endblock lists %}

@@ -7,9 +7,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
 <body>
-    <form method="post">
+    <form class="auth" method="post">
         {% csrf_token %}
         <h2>РЕГИСТРАЦИЯ</h2>
+        <a href="http://127.0.0.1:8000/accounts/login/">Уже есть аккаунт?</a>
         <hr size=1 color=#ccc>
         <div class="input-container">
             <i class="fas fa-user"></i>
@@ -25,10 +26,10 @@
         </div> 
         <div class="input-container">
             <i class="fa fa-lock"></i>
-            <input type="password" placeholder="Password" id="password2" name="password2" required><br><br>
+            <input type="password" placeholder="Repeat password" id="password2" name="password2" required><br><br>
         </div> 
         <div class="bottom-container">    
-            <input type="submit" size="100px" value="РЕГИСТРАЦИЯ">
+            <input type="submit" class="auth-btn" size="100px" value="РЕГИСТРАЦИЯ">
             {{form.errors}}
         </div>
     </form>

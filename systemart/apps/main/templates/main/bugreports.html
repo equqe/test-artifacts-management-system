@@ -1,40 +1,46 @@
 {% extends "main/index.html" %}
 
 {% block lists %}
-<div>
-<table class="projectlist" border="0" cellpadding="8" cellspacing="3">
-    <thead>
-        <td> </td>
-        <td>ID</td>
-        <td style="width: 150px;">Приоритет</td>
-        <td style="width: 100px;">Статус</td>
-        <td style="width: 150px;">Дата создания</td>
-        <td style="width: 450px;">Автор</td>
-        <td style="width: 100px;">Проект</td>
-        <td>ID кейса</td>
-    </thead>
-    {% for bugreport in bugreports %}
+<a class="createproj create" href="/bugreports/new">Создать баг репорт</a>
+<div>   
+    <table class="projectlist" border="0" cellpadding="8" cellspacing="3">
         <thead>
+            <td> </td>
+            <td>ID</td>
+            <td style="width: 80px;">Название</td>
+            <td style="width: 150px;">Приоритет</td>
+            <td style="width: 100px;">Статус</td>
+            <td style="width: 150px;">Дата создания</td>
+            <td style="width: 250px;">Автор</td>
+            <td style="width: 250px;">Описание</td>
+            <td style="width: 100px;">Проект</td>
+            <td>ID кейсов</td>
+            <td>Действия</td>
+        </thead>
+        {% for bugreport in bugreports %}
+        <tbody>
             <td><input type="checkbox" class="pick" name="pick" value="{{ testcase.id }}"></td>
-            <td>{{ bugreport.bug_id }}</td>
+            <td class="clicking" onclick="location.href = '{{ bugreport.bug_id }}/edit/';" style="cursor:pointer; transition: background-color 0.3s ease;">{{ bugreport.bug_id }}</td>
+            <td class="name">{{ bugreport.name }}</td>
             <td>{{ bugreport.priority }}</td>
             <td>{{ bugreport.status }}</td>
-            <td>{{ bugreport.creationdate|date:"j M Y" }}</td>
+            <td>{{ bugreport.creation_date|date:"j M Y" }}</td>
             <td>{{ bugreport.id }}</td>
+            <td>{{ bugreport.description }}</td>
             <td>{{ bugreport.project }}</td>
             <td>{{ bugreport.testcase_id }}</td>
             <td class="createproj edit" data-menu-target="project-menu-{{ bugreport.bug_id }}">...</td>
-        </thead>
+        </tbody>
         <div id="project-menu-{{ bugreport.bug_id }}" class="context-menu" style="display: none;">
-            <input type="submit" class="edit-link" onclick="location.href = '/bugreports/{{ bugreport.bug_id }}/edit/'" value="Редактировать" data-testcase-id="{{ testcase.testcase_id }}">
+            <input type="submit" class="edit-link" onclick="location.href = '/bugreports/{{ bugreport.bug_id }}/edit/'" value="Редактировать" data-testcase-id="{{ bugreport.bug_id }}">
             <input type="submit" class="delete-link" value="Удалить" data-testcase-id="{{ bugreport.bug_id }}">
         </div>
-    {% endfor %}
+        {% endfor %}
 </div>
-<a class="createproj" href="/bugreports/new">Создать баг репорт</a>
 <form id="searchForm">
-    <input type="text" id="searchInput" placeholder="Поиск багрепорта по названию...">
+    <input type="text" id="searchInput" placeholder="Поиск репорта по названию..." oninput="searchProjects(event)">
 </form>
+
 
 <div id="password-form" style="display:none;">
     <form id="delete-form" method="post">
@@ -42,7 +48,7 @@
       <label for="password">Введите пароль для подтверждения удаления:</label><br>
       <input type="password" id="password" name="password"><br>
       <input type="submit" value="Удалить">
-      <input type="submit" value="Закрыть" onclick="this.parentElement.style.display='none'">
+      <a class="close-red" href="/bugreports">Закрыть</a>
     </form>
 </div>
 {% endblock lists %}

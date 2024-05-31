@@ -7,9 +7,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
 <body>
-    <form method="post">
+    <form class="auth" method="post">
         {% csrf_token %}
         <h2>АВТОРИЗАЦИЯ</h2>
+        <a href="http://127.0.0.1:8000/accounts/register/">Нет аккаунта?</a>
         <hr size=1 color=#ccc>
         <div class="input-container">
             <i class="fas fa-user"></i>
@@ -20,8 +21,9 @@
             <input type="password" placeholder="Password" id="password" name="password" required><br><br>
         </div> 
         <div class="bottom-container">
-            <input type="checkbox" class="remember" name="remember"><label for="remember">Запомнить</label><br><br>    
-            <input type="submit" value="ВХОД">
+            <input type="checkbox" class="remember" name="remember"><label for="remember">Запомнить</label><br><br>   
+            
+            <input type="submit" class="auth-btn" value="ВХОД">
             {{form.errors}}
         </div>
     </form>

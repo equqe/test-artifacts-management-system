@@ -30,13 +30,16 @@ class TestCaseForm(forms.ModelForm):
         model = TestCases
         fields = '__all__' 
         labels = {
+            'name': 'Название',
             'case_type': 'Тип кейса',
             'priority': 'Приоритет',
             'id': 'Автор',
+            'case_status': 'Статус кейса',
             'project': 'Проект',
-            'name': 'Название',
             'precondition': 'Предусловие',
             'creation_date': 'Дата создания',
+            'predictedresult': 'Ожидаемый результат',
+            'step': 'Шаги',
         }
 
         widgets = {
@@ -49,16 +52,19 @@ class TestsetForm(forms.ModelForm):
         model = TestSet
         fields = '__all__' 
 
+        
         labels = {
+            'testset_name':'Название',
             'case_status': 'Статус кейса',
             'set': 'id набора',
-            'testcase': 'Кейс',
+            'testcases': 'Кейсы',
             'id': 'Автор',
             'runtime': 'Время прохождения',
         }
         
         widgets = {
             'runtime': forms.DateInput(attrs={'class':'form-control', 'type':'date'}),
+            'testcases': forms.CheckboxSelectMultiple(),
         }
 
 
@@ -69,16 +75,17 @@ class ReportForm(forms.ModelForm):
         labels = {
             'priority': 'Приоритет',
             'status': 'Статус',
-            'testcase': 'Кейс',
+            'testcase': 'Кейсы',
             'project': 'Проект',
             'name': 'Название',
             'id': 'Автор',
             'description': 'Описание',
-            'creationdate': 'Время создания',
+            'creation_date': 'Время создания',
         }
         
         widgets = {
-            'creationdate': forms.DateInput(attrs={'class':'form-control', 'type':'date', 'placeholder':'YYYY-MM-DD'}),
+            'creation_date': forms.DateInput(attrs={'class':'form-control', 'type':'date', 'placeholder':'YYYY-MM-DD'}),
+            'testcase': forms.CheckboxSelectMultiple(),
         }
 
 
@@ -93,6 +100,7 @@ class CaseSetsForm(forms.ModelForm):
 
 
 class FilterForm(forms.Form):
-    start_date = forms.DateField(label='Промежуток времени с:')
-    end_date = forms.DateField(label='по:')
-    report_type = forms.ChoiceField(label='Тип отчета:', choices=[('bugreports', 'Багрепорты'), ('testcases', 'Тесткейсы')])
+    start_date = forms.DateField(label='Промежуток времени с:', widget=forms.DateInput(attrs={'type': 'date'}))
+    end_date = forms.DateField(label='по:', widget=forms.DateInput(attrs={'type': 'date'}))
+    report_type = forms.ChoiceField(label='Тип отчета:', choices=[('testcases', 'Тесткейсы'), ('bugreports', 'Багрепорты')])
+    search_criteria = forms.ChoiceField(label='Статус:', choices=[('Успешно', 'Успешно'), ('Провален', 'Провален'), ('Пропущен', 'Пропущен'), ('Не пройден', 'Не пройден')])

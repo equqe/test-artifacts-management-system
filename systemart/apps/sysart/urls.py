@@ -8,7 +8,7 @@ urlpatterns = [
     path('accounts/register/', views.RegisterView.as_view(), name='register'),
     path('logout/', views.user_logout, name='logout'),
 
-    path('analytics/', views.analytics_view, name='analytics'),
+    path('analytics/', views.generate_report, name='analytics'),
 
     path('projects/', views.projects_view, name='projects'),
     path('projects/new/', views.ProjectView.as_view()),
@@ -17,6 +17,7 @@ urlpatterns = [
 
     path('testcases/', views.testcase_view, name='testcases'),
     path('testcases/new/', views.TestCaseView.as_view()),
+    path('testcases/order_by/<str:order_by>/', views.testcase_order_view, name='testcase_order'),
     path('testcases/delete/<int:testcase_id>/', views.delete_testcase, name='delete_testcase'),
     path('testcases/<int:pk>/edit/', views.edit_testcase.as_view(), name='edit_testcase'),
 
@@ -24,7 +25,8 @@ urlpatterns = [
     path('testsets/new/', views.TestSetView.as_view()),
     path('testsets/delete/<int:testset_id>/', views.delete_testset, name='delete_testset'),
     path('testsets/<int:pk>/edit/', views.edit_testset.as_view(), name='edit_testset'),
-    path('testsets/<int:pk>', views.desc_testset, name='desc_testset'),
+    path('testsets/<int:testset_id>/', views.desc_testset, name='desc_testset'),
+    path('testsets/<int:testset_id>/order_by/<str:order_by>/', views.testcase_order_view, name='testcase_order'),
 
     path('bugreports/', views.bugreport_view, name='bugreports'),
     path('bugreports/new/', views.BugReportsView.as_view()),

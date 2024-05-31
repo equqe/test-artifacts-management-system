@@ -9,13 +9,13 @@
 </head>
 <body>
     <ul>
-        <li><a href="/projects">Проекты</a></li>
-        <li><a href="/testcases">Тест кейсы</a></li>
-        <li><a href="/testsets">Тестовые наборы</a></li>
-        <li><a href="/bugreports">Баг репорты</a></li>
-        <li><a href="/analytics">Аналитика</a></li>
-        <li>
-                <div class="dropdown">
+        <li><a class="panel" href="/projects">Проекты</a></li>
+        <li><a class="panel" href="/testcases">Тест кейсы</a></li>
+        <li><a class="panel" href="/testsets">Тестовые наборы</a></li>
+        <li><a class="panel" href="/bugreports">Баг репорты</a></li>
+        <li><a class="panel" href="/analytics">Аналитика</a></li>
+        <li class="dropdown-container"> <!-- added class "dropdown-container" -->
+            <div class="dropdown">
                 <button class="active dropbtn">{{ user.username }}</button>
                 <div class="dropdown-content">
                     <a href="/logout">Выйти</a>

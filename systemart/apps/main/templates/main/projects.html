@@ -2,31 +2,31 @@
 
 {% block lists %}
 <div>
-    <table class="projectlist" border="0" cellpadding="8" cellspacing="3">
+    <table id="projectTable" class="projectlist" border="0" cellpadding="8" cellspacing="3">
         <thead>
             <td> </td>
-            <td>ID</td>
-            <td style="width: 450px;">Название</td>
-            <td style="width: 450px;">Описание</td>
+            <td style="width: 150px;">ID</td>
+            <td class="project_name" style="width: 450px;">Название</td>
+            <td style="width: 750px;">Описание</td>
             <td>Действия</td>
         </thead>
         {% for project in projects %}
-        <thead>
+        <tbody>
             <td><input type="checkbox" class="pick" name="pick" value="{{ testcase.id }}"></td>
-            <td>{{ project.project_id }}</td>
-            <td>{{ project.project_name }}</td>
+            <td class="clicking" onclick="location.href = '{{ project.project_id }}/edit/';" style="cursor:pointer; transition: background-color 0.3s ease;">{{ project.project_id }}</td>
+            <td class="name">{{ project.project_name }}</td>
             <td>{{ project.description }}</td>
             <td class="createproj edit" data-menu-target="project-menu-{{ project.project_id }}">...</td>
-        </thead>
+        </tbody>
         <div id="project-menu-{{ project.project_id }}" class="context-menu" style="display: none;">
             <input type="submit" class="edit-link" onclick="location.href = '/projects/{{ project.project_id }}/edit/'" value="Редактировать" data-testcase-id="{{ project.project_id }}">
             <input type="submit" class="delete-link" value="Удалить" data-testcase-id="{{ project.project_id }}">
         </div>
         {% endfor %}
 </div>
-    <a class="createproj" href="/projects/new">Создать проект</a>
+    <a class="createproj create" href="/projects/new">Создать проект</a>
     <form id="searchForm">
-        <input type="text" id="searchInput" placeholder="Поиск проекта по названию...">
+        <input type="text" id="searchInput" placeholder="Поиск проекта по названию..." oninput="searchProjects(event)">
     </form>
 
     <div id="password-form" style="display:none;">
@@ -35,7 +35,7 @@
           <label for="password">Введите пароль для подтверждения удаления:</label><br>
           <input type="password" id="password" name="password"><br>
           <input type="submit" value="Удалить">
-          <input type="submit" value="Закрыть" onclick="this.parentElement.style.display='none'">
+          <a class="close-red" href="/projects">Закрыть</a>
         </form>
     </div>
 {% endblock lists %}

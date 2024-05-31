@@ -1,37 +1,42 @@
 {% extends "main/index.html" %}
 
 {% block lists %}
+<a class="createproj create" href="/testsets/new">Создать набор</a>
+
 <div>
-<table class="projectlist" border="0" cellpadding="8" cellspacing="3">
-    <thead>
-        <td> </td>
-        <td style="width: 150px;">ID</td>
-        <td style="width: 250px;">Статус</td>
-        <td style="width: 250px;">ID набора</td>
-        <td style="width: 100px;">Кейс</td>
-        <td style="width: 100px;">Автор</td>
-        <td style="width: 250px;">Время прохождения</td>
-    </thead>
-    {% for testset in testsets %}
-        <thead onclick="location.href = '{{ testset.testset_id }}';" style="cursor:pointer;">
-            <td><input type="checkbox" class="pick" name="pick" value="{{ testcase.id }}"></td>
-            <td>{{ testset.testset_id }}</td>
-            <td>{{ testset.case_status }}</td>
-            <td>{{ testset.set }}</td>
-            <td>{{ testset.testcase }}</td>
-            <td>{{ testset.id }}</td>
-            <td>{{ testset.runtime|date:"j M Y" }}</td>
-            <td class="createproj edit" data-menu-target="project-menu-{{ testset.testset_id }}">...</td>
+    <table class="projectlist" border="0" cellpadding="8" cellspacing="3">
+        <thead>
+            <td> </td>
+            <td style="width: 180px;">ID</td>
+            <td style="width: 950px;">Название</td>
+            <td style="width: 200px;">Кейсы</td>
+            <td>Действия</td>
         </thead>
-    {% endfor %}
+        {% for testset in testsets %}
+            <tbody>
+                <td><input type="checkbox" class="pick" name="pick" value="{{ testcase.id }}"></td>
+                <td class="clicking" onclick="location.href = '{{ testset.testset_id }}';" style="cursor:pointer; transition: background-color 0.3s ease;">{{ testset.testset_id }}</td>
+                <td class="name">{{ testset.testset_name }}</td>
+                <td>{% for testcase in testset.testcases.all %} {{ testcase }} {% endfor %}</td>
+                <td class="createproj edit" data-menu-target="project-menu-{{ testset.testset_id }}">...</td>
+            </tbody>
+            <div id="project-menu-{{ testset.testset_id }}" class="context-menu" style="display: none;">
+                <input type="submit" class="edit-link" onclick="location.href = '/testsets/{{ testset.testset_id }}/edit/'" value="Редактировать" data-testcase-id="{{ testcase.testcase_id }}">
+                <input type="submit" class="delete-link" value="Удалить" data-testcase-id="{{ testset.testset_id }}">
+            </div>
+        {% endfor %}
 </div>
-<a class="createproj" href="/testsets/new">Создать набор</a>
 <form id="searchForm">
-    <input type="text" id="searchInput" placeholder="Поиск набора по названию...">
+    <input type="text" id="searchInput" placeholder="Поиск тестового набора по названию..." oninput="searchProjects(event)">
 </form>
 
-<div id="project-menu-{{ testset.testset_id }}" class="context-menu" style="display: none;">
-    <a href="#">Редактировать</a>
-    <a href="#">Удалить</a>
+<div id="password-form" style="display:none;">
+    <form id="delete-form" method="post">
+      {% csrf_token %}
+      <label for="password">Введите пароль для подтверждения удаления:</label><br>
+      <input type="password" id="password" name="password"><br>
+      <input type="submit" value="Удалить">
+      <a class="close-red" href="/testsets">Закрыть</a>
+    </form>
 </div>
 {% endblock lists %}

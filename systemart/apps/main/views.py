@@ -1,4 +1,9 @@
-from django.http import Http404, HttpResponseNotFound, JsonResponse
+from django.http import Http404, JsonResponse, HttpResponse
+from reportlab.lib.pagesizes import letter
+from reportlab.platypus import Table, TableStyle
+from reportlab.lib import colors
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.ttfonts import TTFont
 from django.contrib.auth import authenticate
 from django.shortcuts import render, redirect
 from django.contrib.auth import logout
@@ -8,6 +13,7 @@ from .forms import RegisterForm, ProjectForm, TestCaseForm, TestsetForm, ReportF
 from .models import Projects, TestCases, TestSet, BugReports, CaseSets
 from django.urls import reverse_lazy
 
+pdfmetrics.registerFont(TTFont('Arial', 'arial.ttf'))
 
 # auth views
 @login_required
@@ -21,11 +27,78 @@ def user_logout(request):
         return redirect('login')
     return render(request, 'registration/logout.html')
 
+from reportlab.pdfgen import canvas
+
+def generate_pdf(data, report_type):
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="report.pdf"'
+
+    c = canvas.Canvas(response)
+
+    pdfmetrics.registerFont(TTFont('Arial', 'Arial.ttf'))
+
+    if report_type == 'testcases':
+        headers = ['ID', 'Название', 'Приоритет', 'Статус', 'Тип кейса', 'Дата создания', 'Автор']
+        table_data = [headers] + [[str(item.testcase_id), str(item.name), str(item.priority), str(item.case_status), str(item.creation_date.strftime('%d-%m-%Y')), str(item.project), str(item.id)] for item in data]
+    else:
+        headers = ['ID', 'Приоритет', 'Статус', 'Дата создания', 'Автор', 'Проект', 'ID кейса']
+        table_data = [headers] + [[str(item.bug_id), str(item.priority), str(item.status), str(item.creation_date.strftime('%d-%m-%Y')), str(item.id), str(item.project), str(item.testcase_id)] for item in data]
+
+    table = Table(table_data)
+
+    body_style = TableStyle([
+        ('FONT', (0, 1), (-1, -1), 'Arial'),
+        ('FONTSIZE', (0, 1), (-1, -1), 12),
+    ])
+
+    table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+        ('FONT', (0, 0), (-1, 0), 'Arial'),
+        ('FONTSIZE', (0, 0), (-1, 0), 14),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+        ('GRID', (0, 0), (-1, -1), 1, colors.black)
+    ]))
+
+    table.setStyle(body_style)
+
+    table_width = table.wrap(0, 0)[0]
+
+    page_width = letter[0]
+    x_coord = (page_width - table_width) / 2
+    table_height = table.wrap(0, 0)[1]
+    page_height = letter[1]
+    y_coord = page_height - table_height
+    table.drawOn(c, x_coord, y_coord)
+
+    c.save()
+    return response
+
+
 
 # objects views
-def analytics_view(request):
-    testcases = TestCases.objects.all()
-    return render(request, 'main/analytics.html', {'testcases': testcases})
+def generate_report(request):
+    form = FilterForm(request.GET or None)
+    if form.is_valid():
+        start_date = form.cleaned_data['start_date']
+        end_date = form.cleaned_data['end_date']
+        report_type = form.cleaned_data['report_type']
+        search_criteria = form.cleaned_data['search_criteria']
+
+        if report_type == 'testcases':
+            data = TestCases.objects.filter(creation_date__range=(start_date, end_date), case_status=search_criteria)
+        elif report_type == 'bugreports':
+            data = BugReports.objects.filter(creation_date__range=(start_date, end_date))
+
+        if 'download_pdf' in request.GET:
+            return generate_pdf(data, report_type)
+        else:
+            context = {'form': form, 'data': data}
+            return render(request, 'main/analytics.html', context)
+
+    return render(request, 'main/analytics.html', {'form': form})
 
 def projects_view(request):
     projects = Projects.objects.all()
@@ -33,6 +106,11 @@ def projects_view(request):
 
 def testcase_view(request):
     testcases = TestCases.objects.all()
+    return render(request, 'main/testcases.html', {'testcases': testcases})
+
+def testcase_order_view(request, order_by):
+    testcases = TestCases.objects.all()
+    testcases = testcases.order_by(order_by)
     return render(request, 'main/testcases.html', {'testcases': testcases})
 
 def testset_view(request):
@@ -72,7 +150,9 @@ class TestSetView(FormView):
     success_url = reverse_lazy('testsets')
 
     def form_valid(self, form):
-        form.save()
+        testset = form.save(commit=False)
+        testset.save()
+        form.save_m2m()
         return super().form_valid(form)
 
 class BugReportsView(FormView):
@@ -105,10 +185,10 @@ class RegisterView(FormView):
         return super().form_valid(form)
 
 # desc testset
-def desc_testset(request):
-    testsets = TestSet.objects.all()
-    testcases = TestCases
-    return render(request, 'main/testsets.html', {'testsets': testsets})
+def desc_testset(request, testset_id):
+    testset = TestSet.objects.get(pk=testset_id)
+    testcases = testset.testcases.all()
+    return render(request, 'main/desc_testsets.html', {'testset': testset, 'testcases': testcases})
 
 
 

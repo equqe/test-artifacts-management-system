@@ -67,32 +67,6 @@ class TestCases(models.Model):
         NEGATIVE: "Негативный"
     }
 
-    case_type = models.CharField(
-        max_length=10,
-        choices=CASE_TYPE_CHOICES,
-        default=POSITIVE
-    )
-
-    priority = models.CharField(
-        max_length=10, 
-        choices=PRIORITY_CHOICES, 
-        default=LOW
-    )
-
-    testcase_id = models.AutoField(primary_key=True)
-    id = models.ForeignKey(Tester, on_delete=models.CASCADE)
-    project = models.ForeignKey(Projects, on_delete=models.CASCADE)
-    name = models.CharField(max_length=128)
-    precondition = models.TextField(max_length=120)
-    creation_date = models.DateTimeField(default=datetime.now)
-
-    def __str__(self):
-            return self.name
-
-
-class TestSet(models.Model):
-    """ Модель, описывающая тестовые наборы """
-
     # создание списка статусов кейсов
     SUCCESS = "Успешно"
     FAIL = "Провален"
@@ -105,26 +79,46 @@ class TestSet(models.Model):
         NPASS: "Не пройден"
     }
 
+    name = models.CharField(max_length=128)
+
+    case_type = models.CharField(
+        max_length=10,
+        choices=CASE_TYPE_CHOICES,
+        default=POSITIVE
+    )
+
+    priority = models.CharField(
+        max_length=10, 
+        choices=PRIORITY_CHOICES, 
+        default=LOW
+    )
+
     case_status = models.CharField(
         max_length=10,
         choices=CASE_STATUS_CHOICES,
         default=NPASS
     )
-
-    testset_id = models.AutoField(primary_key=True)
-    set = models.ForeignKey(CaseSets, on_delete=models.CASCADE)
-    testcase = models.ForeignKey(TestCases, on_delete=models.CASCADE)
+    
+    testcase_id = models.AutoField(primary_key=True)
     id = models.ForeignKey(Tester, on_delete=models.CASCADE)
-    runtime = models.DateTimeField(default=None, null=True, blank=True)
-
-
-class CaseSteps(models.Model):
-    """ Модель, описывающая шаги кейса """
-
-    step_id = models.AutoField(primary_key=True)
-    testcase = models.ForeignKey(TestCases, on_delete=models.CASCADE)
+    project = models.ForeignKey(Projects, on_delete=models.CASCADE)
+    creation_date = models.DateTimeField(default=datetime.now, editable=False)
+    precondition = models.TextField(max_length=120)
     step = models.TextField(null=True, blank=True)
     predictedresult = models.TextField(max_length=512)
+
+    def __str__(self):
+        return self.name
+
+
+class TestSet(models.Model):
+    """ Модель, описывающая тестовые наборы """
+    testset_id = models.AutoField(primary_key=True)
+    testset_name = models.CharField(max_length=128)
+    set = models.ForeignKey(CaseSets, on_delete=models.CASCADE)
+    testcases = models.ManyToManyField(TestCases)
+    id = models.ForeignKey(Tester, on_delete=models.CASCADE)
+    runtime = models.DateTimeField(default=None, null=True, blank=True)
 
 
 class BugReports(models.Model):
@@ -140,6 +134,8 @@ class BugReports(models.Model):
         INPROCESS: "В работе"
     }
 
+    name = models.CharField(max_length=128)
+
     status = models.CharField(
         max_length=10,
         choices=BUG_STATUS_CHOICES,
@@ -153,12 +149,11 @@ class BugReports(models.Model):
     )
 
     bug_id = models.AutoField(primary_key=True)
-    testcase = models.ForeignKey(TestCases, on_delete=models.CASCADE)
+    testcase = models.ManyToManyField(TestCases)
     project = models.ForeignKey(Projects, on_delete=models.CASCADE)
+    creation_date = models.DateTimeField(default=datetime.now, editable=False)
     id = models.ForeignKey(Tester, on_delete=models.CASCADE)
-    name = models.CharField(max_length=128)
     description = models.TextField(max_length=512, null=True, blank=True)
-    creationdate = models.DateTimeField(default=datetime.now)
 
     def __str__(self):
             return self.name

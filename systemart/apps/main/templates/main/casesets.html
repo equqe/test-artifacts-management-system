@@ -9,19 +9,19 @@
         <td style="width: 550px;">Название</td>
     </thead>
     {% for caseset in casesets %}
-        <thead>
-            <td><input type="checkbox" class="pick" name="pick" value="{{ testcase.id }}"></td>
-            <td>{{ caseset.set_id }}</td>
-            <td>{{ caseset.name }}</td>
-            <td class="createproj edit" data-menu-target="project-menu">...</td>
-        </thead>
+    <tbody>
+        <td><input type="checkbox" class="pick" name="pick" value="{{ testcase.id }}"></td>
+        <td>{{ caseset.set_id }}</td>
+        <td class="name">{{ caseset.name }}</td>
+        <td class="createproj edit" data-menu-target="project-menu">...</td>
+    </tbody>
         <div id="project-menu-{{ caseset.set_id }}" class="context-menu" style="display: none;">
             <input type="submit" class="edit-link" onclick="location.href = '/casesets/{{ caseset.set_id }}/edit/'" value="Редактировать" data-testcase-id="{{ testcase.testcase_id }}">
             <input type="submit" class="delete-link" value="Удалить" data-testcase-id="{{ caseset.set_id }}">
         </div>
     {% endfor %}
 </div>
-<a class="createproj" href="/casesets/new">Создать набор кейсов</a>
+<a class="createproj create" href="/casesets/new">Создать набор кейсов</a>
 
 <div id="password-form" style="display:none;">
     <form id="delete-form" method="post">
