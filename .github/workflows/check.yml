@@ -1,37 +1,28 @@
-# pipeline
-name: CI
+name: Docker Compose CI
 
-on: 
+on:
   push:
-    branches:
-      - main
+    branches: [ main ]
 
 jobs:
-  # testing every push
   testing:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repo
       uses: actions/checkout@v4
 
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: 3.12
+    - name: Set up Docker
+      uses: actions/setup-docker@v3
 
-    - name: Install Postgres
-      uses: ikalnytskyi/action-setup-postgres@v5
-      with:
-        username: postgres
-        password: postgres
-        database: postgres
-        port: 5432
+    - name: Build and run Docker Compose
+      run: |
+        docker-compose build
+        docker-compose up -d
 
     - name: Install packets
-      run: pip install -r systemart/requirements.txt
+      run: docker-compose run web pip install -r systemart/requirements.txt
 
     - name: Make migrations
       run: |
-        python systemart/manage.py makemigrations
-        python systemart/manage.py migrate
-  
+        docker-compose run web python systemart/manage.py makemigrations
+        docker-compose run web python systemart/manage.py migrate
