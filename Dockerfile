@@ -1,5 +1,9 @@
 FROM python:3.11.8-bookworm as base
 
+RUN apt-get update && apt-get install -y \
+    fonts-microsoft-web-core \
+    ttf-mscorefonts-installer
+
 ENV PKGS_DIR=/install
 ENV PIP_NO_CACHE_DIR=off
 ENV PIP_DISABLE_PIP_VERSION_CHECK=on
