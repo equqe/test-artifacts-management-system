@@ -43,7 +43,14 @@ DATABASES = {
 
 # описание архитектуры
 
-
+<details>
+  <summary><b>`fonts/`</b></summary>
+  <p>Содержит кириллический шрифт Arial для правильного отображения символов при генерации PDF отчета</p>
+  <ul>
+    <li><b>`arial.ttf`</b></li>
+    <p>Шрифт</p>
+  </ul>
+</details>
 <details>
   <summary><b>`nginx/`</b></summary>
   <p>Этот каталог содержит конфигурацию веб-сервера Nginx(nginx.conf), с помощью которого работает Django-приложение, запущенное на Docker.</p>
