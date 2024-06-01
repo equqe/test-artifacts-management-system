@@ -28,7 +28,7 @@
             <td>{{ bugreport.id }}</td>
             <td>{{ bugreport.description }}</td>
             <td>{{ bugreport.project }}</td>
-            <td>{{ bugreport.testcase_id }}</td>
+            <td>{% for case in bugreport.testcase.all %} {{ case }} {% endfor %}</td>
             <td class="createproj edit" data-menu-target="project-menu-{{ bugreport.bug_id }}">...</td>
         </tbody>
         <div id="project-menu-{{ bugreport.bug_id }}" class="context-menu" style="display: none;">

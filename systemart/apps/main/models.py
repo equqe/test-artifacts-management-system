@@ -116,7 +116,6 @@ class TestSet(models.Model):
     """ Модель, описывающая тестовые наборы """
     testset_id = models.AutoField(primary_key=True)
     testset_name = models.CharField(max_length=128)
-    set = models.ForeignKey(CaseSets, on_delete=models.CASCADE)
     testcases = models.ManyToManyField(TestCases)
     id = models.ForeignKey(Tester, on_delete=models.CASCADE)
     runtime = models.DateTimeField(default=None, null=True, blank=True)

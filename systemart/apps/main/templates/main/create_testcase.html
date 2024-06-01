@@ -118,6 +118,12 @@
                             {{ form.id }}
                         </div>
                     </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label for="{{ form.case_status.id_for_label }}">{{ form.case_status.label }}</label>
+                            {{ form.case_status }}
+                        </div>
+                    </div>
                 </div>
                 <div class="form-group" style="height: 100px; margin-left: -12px;">
                     <label for="{{ form.precondition.id_for_label }}">{{ form.precondition.label }}</label>
