@@ -21,6 +21,7 @@ jobs:
 
     - name: Install packets
       run: |
+        pwd
         chmod +r systemart/requirements.txt
         docker-compose run web pip install -r systemart/requirements.txt
 
