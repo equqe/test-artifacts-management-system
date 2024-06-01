@@ -106,6 +106,7 @@ class TestCases(models.Model):
     precondition = models.TextField(max_length=120)
     step = models.TextField(null=True, blank=True)
     predictedresult = models.TextField(max_length=512)
+    case_file = models.FileField(upload_to='testcases/', null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -154,6 +155,7 @@ class BugReports(models.Model):
     creation_date = models.DateTimeField(default=datetime.now, editable=False)
     id = models.ForeignKey(Tester, on_delete=models.CASCADE)
     description = models.TextField(max_length=512, null=True, blank=True)
+    bug_file = models.FileField(upload_to='bug_reports/', null=True, blank=True)
 
     def __str__(self):
             return self.name

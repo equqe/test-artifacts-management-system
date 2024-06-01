@@ -1,0 +1,190 @@
+D:\test\test-artifacts-management-system>docker-compose build
+time="2024-06-01T02:42:48+03:00" level=warning msg="D:\\test\\test-artifacts-management-system\\docker-compose.yml: `version` is obsolete"
+[+] Building 0.0s (0/0)  docker:default
+2024/06/01 02:42:49 http2: server: error reading preface from client //./pipe/docker_engine: file has already been close[+] Building 3.5s (21/21) FINISHED                                                                       docker:default
+ => [web internal] load build definition from Dockerfile                                                           0.2s
+ => => transferring dockerfile: 1.21kB                                                                             0.0s
+ => [web internal] load metadata for docker.io/library/python:3.11.8-bookworm                                      1.5s
+ => [web internal] load .dockerignore                                                                              0.2s
+ => => transferring context: 2B                                                                                    0.0s
+ => [web internal] load build context                                                                              0.2s
+ => => transferring context: 185.59kB                                                                              0.1s
+ => [web base 1/1] FROM docker.io/library/python:3.11.8-bookworm@sha256:e2ed446c899827ed992f8a5a8875fa0853fcab325  0.0s
+ => CACHED [web builder 1/9] RUN apt update                                                                        0.0s
+ => CACHED [web builder 2/9] RUN apt install -y gcc g++                                                            0.0s
+ => CACHED [web builder 3/9] RUN pip install --upgrade pip                                                         0.0s
+ => CACHED [web builder 4/9] RUN mkdir /install                                                                    0.0s
+ => CACHED [web builder 5/9] RUN mkdir /app                                                                        0.0s
+ => CACHED [web builder 6/9] WORKDIR /app                                                                          0.0s
+ => CACHED [web builder 7/9] COPY systemart/requirements.txt /app/                                                 0.0s
+ => CACHED [web builder 8/9] RUN pip install --no-cache-dir --target=/install -r ./requirements.txt                0.0s
+ => CACHED [web builder 9/9] RUN pip install --no-cache-dir --target=/install gunicorn                             0.0s
+ => CACHED [web stage-2 1/6] COPY --from=builder /install /usr/local                                               0.0s
+ => CACHED [web stage-2 2/6] COPY /systemart /app/systemart                                                        0.0s
+ => CACHED [web stage-2 3/6] WORKDIR /app/systemart                                                                0.0s
+ => CACHED [web stage-2 4/6] COPY wait-for-it.sh /usr/local/bin/wait-for-it.sh                                     0.0s
+ => CACHED [web stage-2 5/6] RUN apt update && apt install -y dos2unix                                             0.0s
+ => CACHED [web stage-2 6/6] RUN dos2unix /usr/local/bin/wait-for-it.sh                                            0.0s
+ => [web] exporting to image                                                                                       0.2s
+ => => exporting layers                                                                                            0.0s
+ => => writing image sha256:c646d00f9c7566feef7c198f6b179e22026d38d9294793322939329e0a9b731a                       0.0s
+ => => naming to docker.io/library/test-artifacts-management-system-web                                            0.0s
+
+D:\test\test-artifacts-management-system>docker-compose up
+time="2024-06-01T02:42:59+03:00" level=warning msg="D:\\test\\test-artifacts-management-system\\docker-compose.yml: `version` is obsolete"
+[+] Running 3/0
+ ✔ Container test-artifacts-management-system-postgres-1  Created                                                  0.0s
+ ✔ Container test-artifacts-management-system-web-1       Cr...                                                    0.0s
+ ✔ Container test-artifacts-management-system-nginx-1     Created                                                  0.0s
+Attaching to nginx-1, postgres-1, web-1
+postgres-1  |
+postgres-1  | PostgreSQL Database directory appears to contain a database; Skipping initialization
+postgres-1  |
+postgres-1  | 2024-05-31 23:43:01.362 UTC [1] LOG:  starting PostgreSQL 16.3 (Debian 16.3-1.pgdg120+1) on x86_64-pc-linux-gnu, compiled by gcc (Debian 12.2.0-14) 12.2.0, 64-bit
+postgres-1  | 2024-05-31 23:43:01.362 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+postgres-1  | 2024-05-31 23:43:01.362 UTC [1] LOG:  listening on IPv6 address "::", port 5432
+postgres-1  | 2024-05-31 23:43:01.568 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+postgres-1  | 2024-05-31 23:43:01.754 UTC [29] LOG:  database system was shut down at 2024-05-31 23:42:06 UTC
+postgres-1  | 2024-05-31 23:43:01.921 UTC [1] LOG:  database system is ready to accept connections
+web-1       | wait-for-it.sh: waiting 15 seconds for postgres:5432
+web-1       | wait-for-it.sh: postgres:5432 is available after 0 seconds
+nginx-1     | /docker-entrypoint.sh: /docker-entrypoint.d/ is not empty, will attempt to perform configuration
+nginx-1     | /docker-entrypoint.sh: Looking for shell scripts in /docker-entrypoint.d/
+nginx-1     | /docker-entrypoint.sh: Launching /docker-entrypoint.d/10-listen-on-ipv6-by-default.sh
+nginx-1     | 10-listen-on-ipv6-by-default.sh: info: /etc/nginx/conf.d/default.conf is not a file or does not exist
+nginx-1     | /docker-entrypoint.sh: Sourcing /docker-entrypoint.d/15-local-resolvers.envsh
+nginx-1     | /docker-entrypoint.sh: Launching /docker-entrypoint.d/20-envsubst-on-templates.sh
+nginx-1     | /docker-entrypoint.sh: Launching /docker-entrypoint.d/30-tune-worker-processes.sh
+nginx-1     | /docker-entrypoint.sh: Configuration complete; ready for start up
+nginx-1     | 2024/05/31 23:43:03 [notice] 1#1: using the "epoll" event method
+nginx-1     | 2024/05/31 23:43:03 [notice] 1#1: nginx/1.27.0
+nginx-1     | 2024/05/31 23:43:03 [notice] 1#1: built by gcc 12.2.0 (Debian 12.2.0-14)
+nginx-1     | 2024/05/31 23:43:03 [notice] 1#1: OS: Linux 5.15.146.1-microsoft-standard-WSL2
+nginx-1     | 2024/05/31 23:43:03 [notice] 1#1: getrlimit(RLIMIT_NOFILE): 1048576:1048576
+nginx-1     | 2024/05/31 23:43:03 [notice] 1#1: start worker processes
+nginx-1     | 2024/05/31 23:43:03 [notice] 1#1: start worker process 20
+nginx-1     | 2024/05/31 23:43:03 [notice] 1#1: start worker process 21
+nginx-1     | 2024/05/31 23:43:03 [notice] 1#1: start worker process 22
+nginx-1     | 2024/05/31 23:43:03 [notice] 1#1: start worker process 23
+nginx-1     | 2024/05/31 23:43:03 [notice] 1#1: start worker process 24
+nginx-1     | 2024/05/31 23:43:03 [notice] 1#1: start worker process 25
+nginx-1     | 2024/05/31 23:43:03 [notice] 1#1: start worker process 26
+nginx-1     | 2024/05/31 23:43:03 [notice] 1#1: start worker process 27
+web-1       | Traceback (most recent call last):
+web-1       |   File "/usr/local/reportlab/lib/utils.py", line 523, in open_for_read
+web-1       |     return open_for_read_by_name(name,mode)
+web-1       |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+web-1       |   File "/usr/local/reportlab/lib/utils.py", line 463, in open_for_read_by_name
+web-1       |     return open(name,mode)
+web-1       |            ^^^^^^^^^^^^^^^
+web-1       | FileNotFoundError: [Errno 2] No such file or directory: 'arial.ttf'
+web-1       |
+web-1       | During handling of the above exception, another exception occurred:
+web-1       |
+web-1       | Traceback (most recent call last):
+web-1       |   File "/usr/local/reportlab/lib/utils.py", line 530, in open_for_read
+web-1       |     return BytesIO((datareader if name[:5].lower()=='data:' else rlUrlRead)(name))
+web-1       |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+web-1       |   File "/usr/local/reportlab/lib/utils.py", line 476, in rlUrlRead
+web-1       |     return urlopen(name).read()
+web-1       |            ^^^^^^^^^^^^^
+web-1       |   File "/usr/local/lib/python3.11/urllib/request.py", line 216, in urlopen
+web-1       |     return opener.open(url, data, timeout)
+web-1       |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+web-1       |   File "/usr/local/lib/python3.11/urllib/request.py", line 503, in open
+web-1       |     req = Request(fullurl, data)
+web-1       |           ^^^^^^^^^^^^^^^^^^^^^^
+web-1       |   File "/usr/local/lib/python3.11/urllib/request.py", line 322, in __init__
+web-1       |     self.full_url = url
+web-1       |     ^^^^^^^^^^^^^
+web-1       |   File "/usr/local/lib/python3.11/urllib/request.py", line 348, in full_url
+web-1       |     self._parse()
+web-1       |   File "/usr/local/lib/python3.11/urllib/request.py", line 377, in _parse
+web-1       |     raise ValueError("unknown url type: %r" % self.full_url)
+web-1       | ValueError: unknown url type: 'arial.ttf'
+web-1       |
+web-1       | During handling of the above exception, another exception occurred:
+web-1       |
+web-1       | Traceback (most recent call last):
+web-1       |   File "/usr/local/reportlab/pdfbase/ttfonts.py", line 151, in TTFOpenFile
+web-1       |     f = open_for_read(fn,'rb')
+web-1       |         ^^^^^^^^^^^^^^^^^^^^^^
+web-1       |   File "/usr/local/reportlab/lib/utils.py", line 534, in open_for_read
+web-1       |     return open_for_read(name,mode)
+web-1       |            ^^^^^^^^^^^^^^^^^^^^^^^^
+web-1       |   File "/usr/local/reportlab/lib/utils.py", line 532, in open_for_read
+web-1       |     raise IOError('Cannot open resource "%s"' % name)
+web-1       | OSError: Cannot open resource "arial.ttf"
+web-1       |
+web-1       | During handling of the above exception, another exception occurred:
+web-1       |
+web-1       | Traceback (most recent call last):
+web-1       |   File "/app/systemart/manage.py", line 22, in <module>
+web-1       |     main()
+web-1       |   File "/app/systemart/manage.py", line 18, in main
+web-1       |     execute_from_command_line(sys.argv)
+web-1       |   File "/usr/local/django/core/management/__init__.py", line 442, in execute_from_command_line
+web-1       |     utility.execute()
+web-1       |   File "/usr/local/django/core/management/__init__.py", line 436, in execute
+web-1       |     self.fetch_command(subcommand).run_from_argv(self.argv)
+web-1       |   File "/usr/local/django/core/management/base.py", line 413, in run_from_argv
+web-1       |     self.execute(*args, **cmd_options)
+web-1       |   File "/usr/local/django/core/management/base.py", line 454, in execute
+web-1       |     self.check()
+web-1       |   File "/usr/local/django/core/management/base.py", line 486, in check
+web-1       |     all_issues = checks.run_checks(
+web-1       |                  ^^^^^^^^^^^^^^^^^^
+web-1       |   File "/usr/local/django/core/checks/registry.py", line 88, in run_checks
+web-1       |     new_errors = check(app_configs=app_configs, databases=databases)
+web-1       |                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+web-1       |   File "/usr/local/django/core/checks/urls.py", line 14, in check_url_config
+web-1       |     return check_resolver(resolver)
+web-1       |            ^^^^^^^^^^^^^^^^^^^^^^^^
+web-1       |   File "/usr/local/django/core/checks/urls.py", line 24, in check_resolver
+web-1       |     return check_method()
+web-1       |            ^^^^^^^^^^^^^^
+web-1       |   File "/usr/local/django/urls/resolvers.py", line 519, in check
+web-1       |     for pattern in self.url_patterns:
+web-1       |                    ^^^^^^^^^^^^^^^^^
+web-1       |   File "/usr/local/django/utils/functional.py", line 47, in __get__
+web-1       |     res = instance.__dict__[self.name] = self.func(instance)
+web-1       |                                          ^^^^^^^^^^^^^^^^^^^
+web-1       |   File "/usr/local/django/urls/resolvers.py", line 738, in url_patterns
+web-1       |     patterns = getattr(self.urlconf_module, "urlpatterns", self.urlconf_module)
+web-1       |                        ^^^^^^^^^^^^^^^^^^^
+web-1       |   File "/usr/local/django/utils/functional.py", line 47, in __get__
+web-1       |     res = instance.__dict__[self.name] = self.func(instance)
+web-1       |                                          ^^^^^^^^^^^^^^^^^^^
+web-1       |   File "/usr/local/django/urls/resolvers.py", line 731, in urlconf_module
+web-1       |     return import_module(self.urlconf_name)
+web-1       |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+web-1       |   File "/usr/local/lib/python3.11/importlib/__init__.py", line 126, in import_module
+web-1       |     return _bootstrap._gcd_import(name[level:], package, level)
+web-1       |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+web-1       |   File "<frozen importlib._bootstrap>", line 1204, in _gcd_import
+web-1       |   File "<frozen importlib._bootstrap>", line 1176, in _find_and_load
+web-1       |   File "<frozen importlib._bootstrap>", line 1147, in _find_and_load_unlocked
+web-1       |   File "<frozen importlib._bootstrap>", line 690, in _load_unlocked
+web-1       |   File "<frozen importlib._bootstrap_external>", line 940, in exec_module
+web-1       |   File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+web-1       |   File "/app/systemart/apps/sysart/urls.py", line 3, in <module>
+web-1       |     from apps.main import views
+web-1       |   File "/app/systemart/apps/main/views.py", line 16, in <module>
+web-1       |     pdfmetrics.registerFont(TTFont('Arial', 'arial.ttf'))
+web-1       |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+web-1       |   File "/usr/local/reportlab/pdfbase/ttfonts.py", line 1192, in __init__
+web-1       |     self.face = TTFontFace(filename, validate=validate, subfontIndex=subfontIndex)
+web-1       |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+web-1       |   File "/usr/local/reportlab/pdfbase/ttfonts.py", line 1073, in __init__
+web-1       |     TTFontFile.__init__(self, filename, validate=validate, subfontIndex=subfontIndex)
+web-1       |   File "/usr/local/reportlab/pdfbase/ttfonts.py", line 439, in __init__
+web-1       |     TTFontParser.__init__(self, file, validate=validate,subfontIndex=subfontIndex)
+web-1       |   File "/usr/local/reportlab/pdfbase/ttfonts.py", line 175, in __init__
+web-1       |     self.readFile(file)
+web-1       |   File "/usr/local/reportlab/pdfbase/ttfonts.py", line 251, in readFile
+web-1       |     self.filename, f = TTFOpenFile(f)
+web-1       |                        ^^^^^^^^^^^^^^
+web-1       |   File "/usr/local/reportlab/pdfbase/ttfonts.py", line 161, in TTFOpenFile
+web-1       |     raise TTFError('Can\'t open file "%s"' % fn)
+web-1       | reportlab.pdfbase.ttfonts.TTFError: Can't open file "arial.ttf"
+web-1 exited with code 1

@@ -234,6 +234,8 @@ class edit_testcase(FormView):
         return kwargs
 
     def form_valid(self, form):
+        form = form.save(commit=False)
+        form.testcase_file = self.request.FILES['testcase_file']
         form.save()
         return super().form_valid(form)
     
@@ -363,6 +365,8 @@ class edit_bugreport(FormView):
         return kwargs
 
     def form_valid(self, form):
+        form = form.save(commit=False)
+        form.bug_file = self.request.FILES['bug_file']
         form.save()
         return super().form_valid(form)
     

@@ -40,6 +40,7 @@ class TestCaseForm(forms.ModelForm):
             'creation_date': 'Дата создания',
             'predictedresult': 'Ожидаемый результат',
             'step': 'Шаги',
+            'testcase_file': 'Прикрепленный файл',
         }
 
         widgets = {
@@ -60,6 +61,7 @@ class TestsetForm(forms.ModelForm):
             'testcases': 'Кейсы',
             'id': 'Автор',
             'runtime': 'Время прохождения',
+            'testcase_file': 'Прикрепленный файл',
         }
         
         widgets = {
@@ -81,6 +83,7 @@ class ReportForm(forms.ModelForm):
             'id': 'Автор',
             'description': 'Описание',
             'creation_date': 'Время создания',
+            'bug_file': 'Прикрепленный файл',
         }
         
         widgets = {
