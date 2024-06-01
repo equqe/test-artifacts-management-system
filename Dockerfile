@@ -1,9 +1,5 @@
 FROM python:3.11.8-bookworm as base
 
-RUN apt-get update && apt-get install -y \
-    fonts-microsoft-web-core \
-    ttf-mscorefonts-installer
-
 ENV PKGS_DIR=/install
 ENV PIP_NO_CACHE_DIR=off
 ENV PIP_DISABLE_PIP_VERSION_CHECK=on
@@ -34,6 +30,12 @@ COPY --from=builder $PKGS_DIR /usr/local
 
 COPY $SRC_PATH/systemart /app/systemart
 WORKDIR /app/systemart
+
+# Copy the Arial font file to the container
+COPY fonts/arial.ttf /usr/share/fonts/truetype/
+
+# Update the font cache
+RUN fc-cache -f -v
 
 ENV SERVICE_DEBUG=False
 ENV SERVICE_DB_PATH=/data

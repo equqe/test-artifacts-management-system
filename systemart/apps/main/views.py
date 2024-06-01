@@ -35,7 +35,7 @@ def generate_pdf(data, report_type):
 
     c = canvas.Canvas(response)
 
-    pdfmetrics.registerFont(TTFont('Arial', 'Arial.ttf'))
+    pdfmetrics.registerFont(TTFont('arial', '/usr/share/fonts/truetype/arial.ttf'))
 
     if report_type == 'testcases':
         headers = ['ID', 'Название', 'Приоритет', 'Статус', 'Тип кейса', 'Дата создания', 'Автор']
@@ -55,7 +55,7 @@ def generate_pdf(data, report_type):
         ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
         ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-        ('FONT', (0, 0), (-1, 0), 'Arial'),
+        ('FONT', (0, 0), (-1, 0), 'arial'),
         ('FONTSIZE', (0, 0), (-1, 0), 14),
         ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
         ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
