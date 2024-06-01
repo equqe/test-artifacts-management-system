@@ -160,3 +160,8 @@ DATABASES = {
     Bash-скрипт, который предотвращает появление ошибок, связанных с невозможностью Django подключиться к Postgres из-за того, что Django запускается раньше, чем Postgres
   </p>
 </details>
+
+# пример генерируемого отчета pdf
+
+![image](https://github.com/equqe/test-artifacts-management-system/assets/145790372/569dfa21-e335-4ef9-b660-e589a8a2ce44)
+
