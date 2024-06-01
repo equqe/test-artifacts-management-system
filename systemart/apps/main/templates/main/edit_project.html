@@ -10,10 +10,26 @@
     <div class="project-form">
         <form method="post" action="{% url 'edit_project' pk=object.pk %}">
             <h2>Редактирование проекта</h2>
+            <hr size=2 color=#ccc style="width:100%;">
             {% csrf_token %}
-            {{ form.as_p }}
-            <input type="submit" value="Сохранить">
-            <a class="close-red" href="http://127.0.0.1:8000/projects/">Закрыть</a>
+            <div class="form-group">
+                <label for="{{ form.project_name.id_for_label }}">{{ form.project_name.label }}</label>
+                {{ form.project_name }}
+                {% for error in form.project_name.errors %}
+                    <p class="text-danger">{{ error }}</p>
+                {% endfor %}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.description.id_for_label }}">{{ form.description.label }}</label>
+                {{ form.description }}
+                {% for error in form.description.errors %}
+                    <p class="text-danger">{{ error }}</p>
+                {% endfor %}
+            </div>
+            <div>
+                <a class="close-red-form" href="http://127.0.0.1:8000/projects/">Закрыть</a>
+                <input type="submit" value="Создать">
+            </div>
         </form>
     </div>
 </body>

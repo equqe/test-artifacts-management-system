@@ -40,7 +40,7 @@ class TestCaseForm(forms.ModelForm):
             'creation_date': 'Дата создания',
             'predictedresult': 'Ожидаемый результат',
             'step': 'Шаги',
-            'testcase_file': 'Прикрепленный файл',
+            'case_file': 'Приложение',
         }
 
         widgets = {

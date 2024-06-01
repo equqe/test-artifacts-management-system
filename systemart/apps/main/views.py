@@ -391,7 +391,7 @@ def delete_project(request, project_id):
 
 class edit_project(FormView):
     model = Projects
-    form_class = ReportForm
+    form_class = ProjectForm
     template_name = 'main/edit_project.html'
     success_url = reverse_lazy('projects')
 

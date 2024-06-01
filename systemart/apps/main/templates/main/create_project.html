@@ -10,8 +10,8 @@
     <div class="project-form">
         <form method="post">
             {% csrf_token %}
-            <h2>Создание нового проекта</h2>
-            <hr size=1 color=#ccc>
+            <h1>Создание нового проекта</h1>
+            <hr size=2 color=#ccc style="width:100%;">
             <div class="form-group">
                 <label for="{{ form.project_name.id_for_label }}">{{ form.project_name.label }}</label>
                 {{ form.project_name }}
@@ -26,8 +26,10 @@
                     <p class="text-danger">{{ error }}</p>
                 {% endfor %}
             </div>
-            <input type="submit" value="Создать">
-            <a class="close-red" href="http://127.0.0.1:8000/projects/">Закрыть</a>
+            <div>
+                <a class="close-red-form" href="http://127.0.0.1:8000/projects/">Закрыть</a>
+                <input type="submit" value="Создать">
+            </div>
         </form>
     </div>
 </body>

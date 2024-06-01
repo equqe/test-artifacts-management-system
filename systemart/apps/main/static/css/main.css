@@ -238,7 +238,7 @@ input[type="checkbox"] {
     display: none;
     position: absolute;
     background-color: white;
-    border: 1px solid gray;
+    border: 2px solid gray;
     padding: 5px;
     z-index: 1000;
 }
@@ -308,11 +308,11 @@ td:hover.clicking {
     background-color: rgba(0, 0, 0, 0.3); 
 }
 
-textarea {
-  max-height: 40px;
-  width: 50%;
-  font-size: 16px;
-  font-family: Arial, sans-serif;
+#id_description {
+  width: 1200px;
+  height: 270px;
+  border-radius: 4px;
+  border: 1px solid #ccc;;
 }
 
 /* Широкое поле ввода названия */
@@ -389,6 +389,19 @@ textarea {
     color: black;
     text-decoration: none;
     cursor: pointer;
+}
+
+.close-red-form {
+    margin-left: 10px;
+    padding: 3px;
+    font-size: 13px;
+    border: 1px solid #8f8f8f;
+    background-color: rgb(232, 232, 232);
+    border-radius: 2px;
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+    display: inline-block;
 }
 
 .edit-link, 
