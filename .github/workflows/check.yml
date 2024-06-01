@@ -19,12 +19,6 @@ jobs:
         docker-compose build
         docker-compose up -d
 
-    - name: Install packets
-      run: |
-        pwd
-        chmod +r /systemart/requirements.txt
-        docker-compose run web pip install -r /systemart/requirements.txt
-
     - name: Make migrations
       run: |
         docker-compose run web python systemart/manage.py makemigrations
