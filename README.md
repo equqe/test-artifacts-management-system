@@ -32,13 +32,20 @@ DATABASES = {
 ```
 
 # main page `127.0.0.1:8000`, register page `127.0.0.1:8000/accounts/register`
-![image](https://github.com/equqe/test-artifacts-management-system/assets/145790372/2f005ac1-85e2-4f61-86e8-a4e46970d753)
+
+
+![image](https://github.com/equqe/test-artifacts-management-system/assets/145790372/e0d9810c-eb1e-4c83-85e5-accc4547c5e0)
+
+
+
+![image](https://github.com/equqe/test-artifacts-management-system/assets/145790372/a258b7a5-4ed9-45f2-aee3-4736a18401ff)
+
 
 ## :::
 
 
 в целом все=)
-остались только причесать шаблоны создания и редактирования
+если будут какие-то недочеты, напишите!
 
 
 # описание архитектуры
