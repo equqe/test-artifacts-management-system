@@ -2,7 +2,7 @@
 
 {% block lists %}
 
-<h1 class="testsetheader"> {{testset.testset_name}} </h1>
+<h1 class="testsetheader" data-testset-id="{{ testset.testset_id }}"> {{testset.testset_name}} </h1>
 <a class="createproj create" href="edit">Добавить кейс</a>
   
   <div>
@@ -56,5 +56,21 @@
         </form>
     </table>
 </div>
+
+<script>
+    const sortSelects = document.querySelectorAll('.sort-select');
+
+    sortSelects.forEach(select => {
+      select.addEventListener('change', event => {
+        const selectedOption = event.target.value;
+        if (selectedOption) {
+            const testsetId = document.querySelector('.testsetheader').dataset.testsetId;
+            const url = new URL(`/testsets/${testsetId}/order_by/${selectedOption}/`, window.location.origin);
+          window.location.href = url.toString();
+        }
+      });
+    });
+  
+</script>
 
 {% endblock %}

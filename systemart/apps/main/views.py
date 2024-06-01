@@ -117,6 +117,11 @@ def testset_view(request):
     testsets = TestSet.objects.all()
     return render(request, 'main/testsets.html', {'testsets': testsets})
 
+def testset_order_view(request, order_by, testset_id):
+    testset = TestSet.objects.get(pk=testset_id)
+    testcases = testset.testcases.order_by(order_by)
+    return render(request, 'main/desc_testsets.html', {'testset': testset, 'testcases': testcases})
+
 def bugreport_view(request):
     bugreports = BugReports.objects.all()
     return render(request, 'main/bugreports.html', {'bugreports': bugreports})
