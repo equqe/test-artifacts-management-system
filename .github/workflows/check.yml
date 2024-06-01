@@ -20,7 +20,9 @@ jobs:
         docker-compose up -d
 
     - name: Install packets
-      run: docker-compose run web pip install -r systemart/requirements.txt
+      run: |
+        ls -l systemart/requirements.txt
+        docker-compose run web pip install -r systemart/requirements.txt
 
     - name: Make migrations
       run: |
