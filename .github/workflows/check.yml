@@ -21,5 +21,5 @@ jobs:
 
     - name: Make migrations
       run: |
-        docker-compose run web python systemart/manage.py makemigrations
-        docker-compose run web python systemart/manage.py migrate
+        docker-compose run web python app/systemart/manage.py makemigrations
+        docker-compose run web python app/systemart/manage.py migrate
