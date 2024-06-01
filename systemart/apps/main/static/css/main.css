@@ -315,12 +315,11 @@ td:hover.clicking {
   border: 1px solid #ccc;;
 }
 
-/* Широкое поле ввода названия */
+
 #id_name {
     width: 100%;
   }
   
-  /* Столбцы по две штуки */
   #id_status,
   #id_priority,
   #id_project,
@@ -339,7 +338,7 @@ td:hover.clicking {
     margin-bottom: 5px;
   }
   
-  /* Описание снизу слева */
+
   #id_description {
     clear: both;
     width: 100%;
@@ -427,4 +426,8 @@ td:hover.clicking {
 
 .sort-by {
     margin-left: 250px;
+}
+
+.acc-au {
+    text-decoration: none;
 }
