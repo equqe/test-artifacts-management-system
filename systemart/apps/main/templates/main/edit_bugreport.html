@@ -5,14 +5,131 @@
     <title>Редактирование багрепортов</title>
     <link rel="stylesheet" type="text/css" href="{% static '/css/main.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            margin-right: -15px;
+            margin-left: -15px;
+        }
+
+        .form-row .col {
+            flex: 0 0 auto;
+            width: auto;
+        }
+
+        .form-row .col-sm-4 {
+            flex: 0 0 33.33333%;
+            max-width: 33.33333%;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .form-group-top-label {
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        label {
+            display: inline-block;
+            margin-right: 10px;
+            margin-bottom: 0;
+            width: 90px;
+        }
+
+        label.top-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            width: auto;
+        }
+
+        textarea {
+            resize: vertical;
+        }
+
+        #id_name {
+            width: 1300px;
+            max-width: 1300px;
+        }
+
+        #id_description {
+            width: 600px;
+            height: 300px;
+        }
+
+        .verticalLine {
+            border-left: 2px solid #ccc;
+            margin-left: 70px;
+            margin-right: 70px;
+            margin-top: -30px;
+        }
+
+        input[type="checkbox"] {
+            margin-left: 0px;
+        }
+
+        label[for="id_bug_file"] {
+            margin-right: 50px;
+        }
+    </style>
 </head>
 <body style="display: block;">
     <div class="project-form">
         <form method="post" action="{% url 'edit_bugreport' pk=object.pk %}" enctype="multipart/form-data">
             <h2>Редактирование багрепорта</h2>
+            <hr size=1 color=#ccc>
             {% csrf_token %}
-            {{ form.as_p }}
-
+            <div class="form-group" style="margin-top: -60px; margin-left: -12px; max-width: 1300px;">
+                {{ form.name }}
+            </div>
+            <div class="form-row">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="{{ form.priority.id_for_label }}">{{ form.priority.label }}</label>
+                        {{ form.priority }}
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="{{ form.project.id_for_label }}">{{ form.project.label }}</label>
+                        {{ form.project }}
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="{{ form.status.id_for_label }}">{{ form.status.label }}</label>
+                        {{ form.status }}
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="{{ form.id.id_for_label }}">{{ form.id.label }}</label>
+                        {{ form.id }}
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-group form-group-top-label">
+                    <label for="{{ form.testcase.id_for_label }}" class="top-label">{{ form.testcase.label }}</label>
+                    {{ form.testcase }}
+                </div>
+            </div>
+            <hr size=2 color=#ccc style="width: 1400px;">
+            <div class="form-row">
+                <div class="col">
+                    <div class="form-group form-group-top-label">
+                        <label for="{{ form.description.id_for_label }}" class="top-label">{{ form.description.label }}</label>
+                        {{ form.description }}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.bug_file.id_for_label }}">{{ form.bug_file.label }}</label>
+                        {{ form.bug_file }}
+                    </div>
+                </div>
             <input type="submit" value="Сохранить">
             <a class="close-red" href="http://127.0.0.1:8000/bugreports/">Закрыть</a>
         </form>
