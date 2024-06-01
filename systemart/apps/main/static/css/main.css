@@ -345,53 +345,38 @@ textarea {
     width: 100%;
   }
 
-.project-form {
+  .project-form {
     padding: 30px;
     padding-right: 10%;
     padding-left: 10%;
 }
+  
+.project-form form {
+  display: flex;
+  flex-direction: column;
+}
 
 .project-form form {
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
   }
   
-  .project-form form p {
-    width: 30%;
+  .project-form form .form-group {
     margin-bottom: 10px;
   }
   
-  /* Этот селектор выбирает первые 6 элементов <p> с <select> */
-  .project-form form p:nth-child(-n + 7) {
-    margin-right: 120px;
-  }
-
-  .project-form form p:nth-child(11) {
-    margin-left: 5px !important;
-    padding-right: 10px;
-  }
-
-  .project-form form p:nth-child(3) {
-    margin-left: 50px;
-  }
-
-  #id_description {
-    max-height: 100px;
-    width: 100%;
-  }
-
-  .project-form form p:nth-child(9) {
-    margin-right: 50px;
-  }
-
-  .project-form form p:nth-child(10) {
-    margin-right: 50px;
+  .project-form form .form-group label {
+    font-weight: bold;
   }
   
-  /* Этот селектор выбирает последние 3 элементов <p> с текстовыми полями */
-  .project-form form p:nth-last-child(-n + 4) {
-    width: 100%;
-    margin-bottom: 10px;
+  .project-form form input[type="submit"],
+  .project-form form a.close-red {
+    align-self: flex-end;
+    margin-top: 10px;
+  }
+  
+  .project-form form a.close-red {
+    margin-left: 10px;
   }
   
 

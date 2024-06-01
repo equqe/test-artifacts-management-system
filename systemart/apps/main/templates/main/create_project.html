@@ -9,14 +9,26 @@
 <body style="display: block;">
     <div class="project-form">
         <form method="post">
-            {% block content %}
+            {% csrf_token %}
             <h2>Создание нового проекта</h2>
             <hr size=1 color=#ccc>
-                {% csrf_token %}
-                {{ form.as_p }}
-                <input type="submit" value="Создать">
-                <a class="close-red" href="http://127.0.0.1:8000/projects/">Закрыть</a>
-            {% endblock %}
+            <div class="form-group">
+                <label for="{{ form.project_name.id_for_label }}">{{ form.project_name.label }}</label>
+                {{ form.project_name }}
+                {% for error in form.project_name.errors %}
+                    <p class="text-danger">{{ error }}</p>
+                {% endfor %}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.description.id_for_label }}">{{ form.description.label }}</label>
+                {{ form.description }}
+                {% for error in form.description.errors %}
+                    <p class="text-danger">{{ error }}</p>
+                {% endfor %}
+            </div>
+            <input type="submit" value="Создать">
+            <a class="close-red" href="http://127.0.0.1:8000/projects/">Закрыть</a>
         </form>
     </div>
 </body>
+
