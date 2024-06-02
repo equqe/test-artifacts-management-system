@@ -153,8 +153,23 @@
                         {{ form.case_file }}
                     </div>
                 </div>
+                <div id="steps-container">
+                    <div class="step-result-pair">
+                        <label for="{{ form.steps.id_for_label }}">{{ form.steps.label }}</label>
+                        {{ form.steps }}
+                    </div>
+                </div>
+                <div id="results-container">
+                    <div class="step-result-pair">
+                        <label for="{{ form.expected_results.id_for_label }}">{{ form.expected_results.label }}</label>
+                        {{ form.expected_results }}
+                    </div>
+                </div>
+                <button id="add-step-btn" type="button">Добавить шаг</button>
                 <input type="submit" value="Создать">
                 <a class="close-red" href="http://127.0.0.1:8000/testcases/">Закрыть</a>
+                {{form.errors}}
+
             {% endblock %}
         </form>
     </div>

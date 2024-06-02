@@ -233,12 +233,29 @@ class edit_testcase(FormView):
         kwargs['instance'] = self.get_object()
         return kwargs
 
+    """
+    def form_valid(self, form):
+        test_case = form.save()
+        
+        #steps = self.request.POST.getlist('step')
+        #expected_results = self.request.POST.getlist('predictedresult')
+
+        #test_case.step = '\n'.join(form.steps)
+        #test_case.predictedresult = '\n'.join(form.expected_results)
+        test_case.testcase_file = self.request.FILES['testcase_file']
+
+        test_case.save()
+
+        return super().form_valid(form)
+    """
+    
     def form_valid(self, form):
         form = form.save(commit=False)
-        form.testcase_file = self.request.FILES['testcase_file']
+        if self.request.FILES:
+            form.testcase_file = self.request.FILES['case_file']
         form.save()
         return super().form_valid(form)
-    
+        
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['object'] = self.get_object()

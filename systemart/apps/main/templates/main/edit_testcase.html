@@ -1,4 +1,5 @@
-{%load static%}
+{% load static %}
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -65,13 +66,17 @@
 
 
         #id_step {
-            width: 600px;
-            height: 300px;
+            width: 357px;
+            height: 36px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
         }
 
         #id_predictedresult {
-            width: 600px;
-            height: 300px;
+            width: 357px;
+            height: 36px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
         }
 
         .verticalLine {
@@ -85,7 +90,7 @@
 </head>
 <body style="display: block;">
     <div class="project-form">
-        <form method="post" action="{% url 'edit_testcase' pk=object.pk %}">
+        <form method="post" enctype="multipart/form-data" action="{% url 'edit_testcase' pk=object.pk %}" >
             <h2>Редактирование тесткейса</h2>
             <hr size=1 color=#ccc>
             {% csrf_token %}
@@ -130,23 +135,27 @@
                 {{ form.precondition }}
             </div>
             <hr size=2 color=#ccc style="width: 1400px;">
-            <div class="form-row">
-                <div class="col">
-                    <div class="form-group form-group-top-label">
-                        <label for="{{ form.step.id_for_label }}" class="top-label">{{ form.step.label }}</label>
-                        {{ form.step }}
-                    </div>
-                </div>
-                <div class="verticalLine"></div>
-                <div class="col">
-                    <div class="pre">
-                        <div class="form-group form-group-top-label">
-                            <label for="{{ form.predictedresult.id_for_label }}" class="top-label">{{ form.predictedresult.label }}</label>
-                            {{ form.predictedresult }}
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <div id="testTable">
+                <table>
+                  <tr>
+                    <th> </th>
+                    <th>Шаги</th>
+                    <th> </th>
+                    <th>Ожидаемые результаты</th>
+                  </tr>
+                  {% for step in form.step %}
+                  <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ step }}</td>
+                    {% for predictedresult in form.predictedresult %}
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ predictedresult }}</td>
+                    {% endfor %}
+                  </tr>
+                  {% endfor %}
+                </table>
+              </div>
+              <button id="addRowBtn" type="button">Add Row</button>
             <div class="form-group">
                 <div class="form-group form-group-top-label">
                     <label for="{{ form.case_file.id_for_label }}" class="top-label">{{ form.case_file.label }}</label>
@@ -155,8 +164,25 @@
             </div>
             <input type="submit" value="Сохранить">
             <a class="close-red" href="http://127.0.0.1:8000/testcases/">Закрыть</a>
+            {{form.errors}}
         </form>
     </div>
+    <script>
+        document.getElementById("addRowBtn").addEventListener("click", function() {
+            let table = document.getElementById("testTable").getElementsByTagName("table")[0];
+            let index = table.rows.length;
+          
+            let row = table.insertRow();
+            let indexCell = row.insertCell();
+            let stepsCell = row.insertCell();
+            let expectedResultsIndexCell = row.insertCell();
+            let expectedResultsCell = row.insertCell();
+
+            indexCell.textContent = index;
+            stepsCell.innerHTML = `<textarea name="step" id="id_step">`;
+            expectedResultsIndexCell.textContent = index;
+            expectedResultsCell.innerHTML = `<textarea name="predictedresult" id="id_predictedresult">`;
+        });
+    </script>
 </body>
 </html>
-

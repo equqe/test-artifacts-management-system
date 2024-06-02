@@ -47,7 +47,7 @@ ROOT_URLCONF = 'apps.sysart.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'main/templatetags')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -71,8 +71,8 @@ DATABASES = {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": "postgres",
         "USER": "postgres",
-        "PASSWORD": "postgres",
-        "HOST": "postgres",
+        "PASSWORD": "1234",
+        "HOST": "localhost",
         "PORT": "5432",
     }
 }
@@ -119,3 +119,5 @@ AUTH_USER_MODEL = "main.Tester"
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 MEDIA_URL = '/media/'
+
+
