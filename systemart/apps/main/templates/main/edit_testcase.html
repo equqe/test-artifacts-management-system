@@ -90,7 +90,7 @@
 </head>
 <body style="display: block;">
     <div class="project-form">
-        <form method="post" enctype="multipart/form-data" action="{% url 'edit_testcase' pk=object.pk %}" >
+        <form method="post" enctype="multipart/form-data" >
             <h2>Редактирование тесткейса</h2>
             <hr size=1 color=#ccc>
             {% csrf_token %}
@@ -164,7 +164,7 @@
                 </div>
             </div>
             <input type="submit" value="Сохранить">
-            <a class="close-red" href="http://127.0.0.1:8000/testcases/">Закрыть</a>
+            <a class="close-red" href="{{ referer }}">Закрыть</a>
             {{form.errors}}
         </form>
     </div>

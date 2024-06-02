@@ -10,7 +10,6 @@
             <td style="width: 80px;">ID</td>
             <td style="width: 200px;">Название</td>
             <td style="width: 80px;">Приоритет</td>
-            <td style="width: 150px;">Статус</td>
             <td style="width: 100px;">Тип кейса</td>
             <td style="width: 250px;">Дата создания</td>
             <td style="width: 350px;">Автор</td>
@@ -23,7 +22,6 @@
             <td class="clicking" onclick="location.href = '{{ testcase.testcase_id }}/edit/';" style="cursor:pointer; transition: background-color 0.3s ease;">{{ testcase.testcase_id }}</td>
             <td class="name">{{ testcase.name }}</td>
             <td>{{ testcase.priority }}</td>
-            <td>{{ testcase.case_status }}</td>
             <td>{{ testcase.case_type }}</td>
             <td>{{ testcase.creation_date|date:"j M Y" }}</td>
             <td>{{ testcase.id }}</td>
@@ -46,7 +44,6 @@
       <option value="testcase_id">ID</option>
       <option value="name">Название</option>
       <option value="priority">Приоритет</option>
-      <option value="case_status">Статус</option>
       <option value="creation_date">Дата создания(возр.)</option>
       <option value="-creation_date">Дата создания(уб.)</option>
       <option value="id">Автор</option>

@@ -258,7 +258,8 @@ class edit_testcase(FormView):
         
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['object'] = self.get_object()
+        referer = self.request.META.get('HTTP_REFERER', '/')
+        context['referer'] = referer
         return context
     
 #testset
