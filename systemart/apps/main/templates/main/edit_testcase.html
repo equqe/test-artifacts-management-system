@@ -155,7 +155,8 @@
                   {% endfor %}
                 </table>
               </div>
-              <button id="addRowBtn" type="button">Add Row</button>
+              <button id="addRowBtn" type="button">Добавить шаг</button>
+              <button id="delRowBtn" type="button">Удалить шаг</button>
             <div class="form-group">
                 <div class="form-group form-group-top-label">
                     <label for="{{ form.case_file.id_for_label }}" class="top-label">{{ form.case_file.label }}</label>
@@ -182,6 +183,14 @@
             stepsCell.innerHTML = `<textarea name="step" id="id_step">`;
             expectedResultsIndexCell.textContent = index;
             expectedResultsCell.innerHTML = `<textarea name="predictedresult" id="id_predictedresult">`;
+        });
+        document.getElementById("delRowBtn").addEventListener("click", function() {
+            let table = document.getElementById("testTable").getElementsByTagName("table")[0];
+            let rows = table.rows;
+        
+            if(rows.length > 2) {
+                table.deleteRow(rows.length - 1);
+            }
         });
     </script>
 </body>

@@ -45,6 +45,8 @@ class TestCaseForm(forms.ModelForm):
 
         widgets = {
             'creation_date': forms.DateInput(attrs={'class':'form-control', 'type':'date'}),
+            'steps': forms.Textarea(attrs={'rows': 10}),  
+            'predictedresults': forms.Textarea(attrs={'rows': 10}),  
         }
 
 

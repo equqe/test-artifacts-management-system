@@ -65,13 +65,17 @@
 
 
         #id_step {
-            width: 600px;
-            height: 300px;
+            width: 357px;
+            height: 36px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
         }
 
         #id_predictedresult {
-            width: 600px;
-            height: 300px;
+            width: 357px;
+            height: 36px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
         }
 
         .verticalLine {
@@ -130,47 +134,64 @@
                     {{ form.precondition }}
                 </div>
                 <hr size=2 color=#ccc style="width: 1400px;">
-                <div class="form-row">
-                    <div class="col">
-                        <div class="form-group form-group-top-label">
-                            <label for="{{ form.step.id_for_label }}" class="top-label">{{ form.step.label }}</label>
-                            {{ form.step }}
-                        </div>
-                    </div>
-                    <div class="verticalLine"></div>
-                    <div class="col">
-                        <div class="pre">
-                            <div class="form-group form-group-top-label">
-                                <label for="{{ form.predictedresult.id_for_label }}" class="top-label">{{ form.predictedresult.label }}</label>
-                                {{ form.predictedresult }}
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <div id="testTable">
+                    <table>
+                      <tr>
+                        <th> </th>
+                        <th>Шаги</th>
+                        <th> </th>
+                        <th>Ожидаемые результаты</th>
+                      </tr>
+                      {% for step in form.step %}
+                      <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ step }}</td>
+                        {% for predictedresult in form.predictedresult %}
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ predictedresult }}</td>
+                        {% endfor %}
+                      </tr>
+                      {% endfor %}
+                    </table>
+                  </div>
+                  <button id="addRowBtn" type="button">Добавить шаг</button>
+                  <button id="delRowBtn" type="button">Удалить шаг</button>
                 <div class="form-group">
                     <div class="form-group form-group-top-label">
                         <label for="{{ form.case_file.id_for_label }}" class="top-label">{{ form.case_file.label }}</label>
                         {{ form.case_file }}
                     </div>
                 </div>
-                <div id="steps-container">
-                    <div class="step-result-pair">
-                        <label for="{{ form.steps.id_for_label }}">{{ form.steps.label }}</label>
-                        {{ form.steps }}
-                    </div>
-                </div>
-                <div id="results-container">
-                    <div class="step-result-pair">
-                        <label for="{{ form.expected_results.id_for_label }}">{{ form.expected_results.label }}</label>
-                        {{ form.expected_results }}
-                    </div>
-                </div>
-                <button id="add-step-btn" type="button">Добавить шаг</button>
                 <input type="submit" value="Создать">
                 <a class="close-red" href="http://127.0.0.1:8000/testcases/">Закрыть</a>
                 {{form.errors}}
 
             {% endblock %}
         </form>
+        <script>
+            document.getElementById("addRowBtn").addEventListener("click", function() {
+                let table = document.getElementById("testTable").getElementsByTagName("table")[0];
+                let index = table.rows.length;
+              
+                let row = table.insertRow();
+                let indexCell = row.insertCell();
+                let stepsCell = row.insertCell();
+                let expectedResultsIndexCell = row.insertCell();
+                let expectedResultsCell = row.insertCell();
+    
+                indexCell.textContent = index;
+                stepsCell.innerHTML = `<textarea name="step" id="id_step">`;
+                expectedResultsIndexCell.textContent = index;
+                expectedResultsCell.innerHTML = `<textarea name="predictedresult" id="id_predictedresult">`;
+            });
+            document.getElementById("delRowBtn").addEventListener("click", function() {
+                let table = document.getElementById("testTable").getElementsByTagName("table")[0];
+                let rows = table.rows;
+            
+                if(rows.length > 2) {
+                    table.deleteRow(rows.length - 1);
+                }
+            });
+        </script>
     </div>
 </body>
