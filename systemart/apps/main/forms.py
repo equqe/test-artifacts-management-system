@@ -1,5 +1,6 @@
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
+from django.db import models
 from .models import Tester, Projects, TestCases, TestSet, BugReports, CaseSets
 from django.utils import timezone
 
@@ -28,6 +29,18 @@ class ProjectForm(forms.ModelForm):
 class TestCaseForm(forms.ModelForm):
     class Meta:
         model = TestCases
+
+        step_0 = models.TextField()
+        step_1 = models.TextField()
+        step_2 = models.TextField()
+        step_3 = models.TextField()
+        step_4 = models.TextField()
+        predictedresult_0 = models.TextField()
+        predictedresult_1 = models.TextField()
+        predictedresult_2 = models.TextField()
+        predictedresult_3 = models.TextField()
+        predictedresult_4 = models.TextField()
+
         fields = '__all__' 
         labels = {
             'name': 'Название',

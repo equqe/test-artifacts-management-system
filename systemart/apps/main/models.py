@@ -114,8 +114,8 @@ class TestCases(models.Model):
     project = models.ForeignKey(Projects, on_delete=models.CASCADE)
     creation_date = models.DateTimeField(default=datetime.now, editable=False)
     precondition = models.TextField(max_length=120)
-    step = models.TextField(null=True, blank=True)
-    predictedresult = models.TextField(max_length=512)
+    step = models.TextField(max_length=200, null=True, blank=True)
+    predictedresult = models.TextField(max_length=200, null=True, blank=True)
     case_file = models.FileField(upload_to='testcases/', null=True, blank=True)
 
     def __str__(self):

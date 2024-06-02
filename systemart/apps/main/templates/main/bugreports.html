@@ -12,7 +12,6 @@
             <td style="width: 100px;">Статус</td>
             <td style="width: 150px;">Дата создания</td>
             <td style="width: 250px;">Автор</td>
-            <td style="width: 250px;">Описание</td>
             <td style="width: 100px;">Проект</td>
             <td>ID кейсов</td>
             <td>Действия</td>
@@ -26,7 +25,6 @@
             <td>{{ bugreport.status }}</td>
             <td>{{ bugreport.creation_date|date:"j M Y" }}</td>
             <td>{{ bugreport.id }}</td>
-            <td>{{ bugreport.description }}</td>
             <td>{{ bugreport.project }}</td>
             <td>{% for case in bugreport.testcase.all %} {{ case }} {% endfor %}</td>
             <td class="createproj edit" data-menu-target="project-menu-{{ bugreport.bug_id }}">...</td>
