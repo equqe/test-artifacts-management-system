@@ -232,22 +232,6 @@ class edit_testcase(FormView):
         kwargs = super().get_form_kwargs()
         kwargs['instance'] = self.get_object()
         return kwargs
-
-    """
-    def form_valid(self, form):
-        test_case = form.save()
-        
-        #steps = self.request.POST.getlist('step')
-        #expected_results = self.request.POST.getlist('predictedresult')
-
-        #test_case.step = '\n'.join(form.steps)
-        #test_case.predictedresult = '\n'.join(form.expected_results)
-        test_case.testcase_file = self.request.FILES['testcase_file']
-
-        test_case.save()
-
-        return super().form_valid(form)
-    """
     
     def form_valid(self, form):
         form = form.save(commit=False)
@@ -262,6 +246,40 @@ class edit_testcase(FormView):
         context['referer'] = referer
         return context
     
+class edit_testcase_desc(FormView):
+    model = TestCases
+    form_class = TestCaseForm
+    template_name = 'main/desc_edit_testsets.html'
+    success_url = reverse_lazy('testsets')
+
+    def get_object(self):
+        obj_id = self.kwargs.get('pk')
+        if obj_id:
+            try:
+                return TestCases.objects.get(pk=obj_id)
+            except TestCases.DoesNotExist:
+                raise Http404
+        else:
+            raise Http404
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['instance'] = self.get_object()
+        return kwargs
+    
+    def form_valid(self, form):
+        form = form.save(commit=False)
+        if self.request.FILES:
+            form.testcase_file = self.request.FILES['case_file']
+        form.save()
+        return super().form_valid(form)
+        
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        referer = self.request.META.get('HTTP_REFERER', '/')
+        context['referer'] = referer
+        return context
+
 #testset
 def delete_testset(request, testset_id):
     password = request.POST.get('password')

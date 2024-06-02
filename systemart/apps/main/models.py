@@ -96,7 +96,17 @@ class TestCases(models.Model):
     case_status = models.CharField(
         max_length=10,
         choices=CASE_STATUS_CHOICES,
-        default=NPASS
+        default=NPASS,
+        null=True, 
+        blank=True
+    )
+
+    case_status_local = models.CharField(
+        max_length=10,
+        choices=CASE_STATUS_CHOICES,
+        default=NPASS,
+        null=True, 
+        blank=True
     )
     
     testcase_id = models.AutoField(primary_key=True)

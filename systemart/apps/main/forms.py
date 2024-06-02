@@ -68,7 +68,7 @@ class TestsetForm(forms.ModelForm):
         
         widgets = {
             'runtime': forms.DateInput(attrs={'class':'form-control', 'type':'date'}),
-            'testcases': forms.Select(attrs={'class':'form-control', 'label':'Кейсы'}),
+            'testcases': forms.SelectMultiple(attrs={'class':'form-control', 'label':'Кейсы'}),
         }
 
 
@@ -90,7 +90,7 @@ class ReportForm(forms.ModelForm):
         
         widgets = {
             'creation_date': forms.DateInput(attrs={'class':'form-control', 'type':'date', 'placeholder':'YYYY-MM-DD'}),
-            'testcase': forms.Select(attrs={'class':'form-control', 'label':'Кейсы'}),
+            'testcase': forms.SelectMultiple(attrs={'class':'form-control', 'label':'Кейсы'}),
         }
 
 

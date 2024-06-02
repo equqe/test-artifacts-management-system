@@ -1,0 +1,197 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Редактирование тесткейса</title>
+    <link rel="stylesheet" type="text/css" href="{% static '/css/main.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            margin-right: -15px;
+            margin-left: -15px;
+        }
+
+        .form-row .col {
+            flex: 0 0 auto;
+            width: auto;
+        }
+
+        .form-row .col-sm-4 {
+            flex: 0 0 33.33333%;
+            max-width: 33.33333%;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .form-group-top-label {
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        label {
+            display: inline-block;
+            margin-right: 10px;
+            margin-bottom: 0;
+            width: 90px; 
+        }
+
+        label.top-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            width: auto;
+        }
+
+        textarea {
+            resize: vertical;
+        }
+
+        #id_name {
+            width: 1300px; 
+            max-width: 1300px;
+        }
+
+        #id_precondition {
+            width: 500px; 
+            max-width: 500px;
+            max-height: 30px;
+            margin-left: 20px;
+        }
+
+
+        #id_step {
+            width: 357px;
+            height: 36px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        #id_predictedresult {
+            width: 357px;
+            height: 36px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .verticalLine {
+            border-left: 2px solid #ccc;
+            margin-left: 70px;
+            margin-right: 70px;
+            margin-top: -30px;
+        }
+
+    </style>
+</head>
+<body style="display: block;">
+    <div class="project-form">
+        <form method="post" enctype="multipart/form-data" >
+            <h2>Редактирование тесткейса</h2>
+            <hr size=1 color=#ccc>
+            {% csrf_token %}
+            <div class="form-group" style="margin-top: -60px; margin-left: -12px; max-width: 1300px;">
+                {{ form.name }}
+            </div>
+            <div class="form-row">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="{{ form.priority.id_for_label }}">{{ form.priority.label }}</label>
+                        {{ form.priority }}
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="{{ form.project.id_for_label }}">{{ form.project.label }}</label>
+                        {{ form.project }}
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="{{ form.case_type.id_for_label }}">{{ form.case_type.label }}</label>
+                        {{ form.case_type }}
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="{{ form.id.id_for_label }}">{{ form.id.label }}</label>
+                        {{ form.id }}
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label for="{{ form.case_status.id_for_label }}">{{ form.case_status.label }}</label>
+                        {{ form.case_status_local }}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group" style="height: 100px; margin-left: -12px;">
+                <label for="{{ form.precondition.id_for_label }}">{{ form.precondition.label }}</label>
+                {{ form.precondition }}
+            </div>
+            <hr size=2 color=#ccc style="width: 1400px;">
+            <div id="testTable">
+                <table>
+                  <tr>
+                    <th> </th>
+                    <th>Шаги</th>
+                    <th> </th>
+                    <th>Ожидаемые результаты</th>
+                  </tr>
+                  {% for step in form.step %}
+                  <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ step }}</td>
+                    {% for predictedresult in form.predictedresult %}
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ predictedresult }}</td>
+                    {% endfor %}
+                  </tr>
+                  {% endfor %}
+                </table>
+              </div>
+              <button id="addRowBtn" type="button">Добавить шаг</button>
+              <button id="delRowBtn" type="button">Удалить шаг</button>
+            <div class="form-group">
+                <div class="form-group form-group-top-label">
+                    <label for="{{ form.case_file.id_for_label }}" class="top-label">{{ form.case_file.label }}</label>
+                    {{ form.case_file }}
+                </div>
+            </div>
+            <input type="submit" value="Сохранить">
+            <a class="close-red" href="{{ referer }}">Закрыть</a>
+            {{form.errors}}
+        </form>
+    </div>
+    <script>
+        document.getElementById("addRowBtn").addEventListener("click", function() {
+            let table = document.getElementById("testTable").getElementsByTagName("table")[0];
+            let index = table.rows.length;
+          
+            let row = table.insertRow();
+            let indexCell = row.insertCell();
+            let stepsCell = row.insertCell();
+            let expectedResultsIndexCell = row.insertCell();
+            let expectedResultsCell = row.insertCell();
+
+            indexCell.textContent = index;
+            stepsCell.innerHTML = `<textarea name="step" id="id_step">`;
+            expectedResultsIndexCell.textContent = index;
+            expectedResultsCell.innerHTML = `<textarea name="predictedresult" id="id_predictedresult">`;
+        });
+        document.getElementById("delRowBtn").addEventListener("click", function() {
+            let table = document.getElementById("testTable").getElementsByTagName("table")[0];
+            let rows = table.rows;
+        
+            if(rows.length > 2) {
+                table.deleteRow(rows.length - 1);
+            }
+        });
+    </script>
+</body>
+</html>

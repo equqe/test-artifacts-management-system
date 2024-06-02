@@ -30,6 +30,8 @@ urlpatterns = [
     path('testsets/<int:testset_id>/', views.desc_testset, name='desc_testset'),
     path('testsets/<int:testset_id>/order_by/<str:order_by>/', views.testset_order_view, name='testset_order'),
 
+    path('testsets/testcase/<int:pk>/edit/', views.edit_testcase_desc.as_view(), name='edit_testcase'),
+
     path('bugreports/', views.bugreport_view, name='bugreports'),
     path('bugreports/new/', views.BugReportsView.as_view()),
     path('bugreports/delete/<int:bug_id>/', views.delete_bugreport, name='delete_bugreport'),

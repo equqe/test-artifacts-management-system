@@ -11,6 +11,7 @@
             <td style="width: 200px;">Название</td>
             <td style="width: 80px;">Приоритет</td>
             <td style="width: 100px;">Тип кейса</td>
+            <td style="width: 100px;">Статус</td>
             <td style="width: 250px;">Дата создания</td>
             <td style="width: 350px;">Автор</td>
             <td>Проект</td>
@@ -23,6 +24,7 @@
             <td class="name">{{ testcase.name }}</td>
             <td>{{ testcase.priority }}</td>
             <td>{{ testcase.case_type }}</td>
+            <td>{{ testcase.case_status }}</td>
             <td>{{ testcase.creation_date|date:"j M Y" }}</td>
             <td>{{ testcase.id }}</td>
             <td>{{ testcase.project }}</td>
