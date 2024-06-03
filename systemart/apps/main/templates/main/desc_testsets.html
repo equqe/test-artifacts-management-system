@@ -17,14 +17,15 @@
             <td style="width: 150px;">Дата создания</td>
             <td style="width: 450px;">Автор</td>
             <td>Проект</td>
+            <td>Действия</td>
         </thead>
         {% for testcase in testcases %}
         <tbody>
             <td><input type="checkbox" class="pick" name="pick" value="{{ testcase.testcase_id }}"></td>
-            <td class="clicking" onclick="location.href = '/testsets/testcase/{{ testcase.testcase_id }}/edit/';" style="cursor:pointer; transition: background-color 0.3s ease;">{{ testcase.testcase_id }}</td>
+            <td class="clicking" onclick="location.href = '/testcases/{{ testcase.testcase_id }}/edit/';" style="cursor:pointer; transition: background-color 0.3s ease;">{{ testcase.testcase_id }}</td>
             <td class="name">{{ testcase.name }}</td>
             <td>{{ testcase.priority }}</td>
-            <td>{{ testcase.case_status_local }}</td>
+            <td>{{ testcase.case_status }}</td>
             <td>{{ testcase.case_type }}</td>
             <td>{{ testcase.creation_date|date:"j M Y" }}</td>
             <td>{{ testcase.id }}</td>
@@ -40,6 +41,7 @@
 
     <a class="sort-by"> Сортировать по:</a>
     <select id="id-sort" class="sort-select">
+      <option>---</option>
       <option value="testcase_id">ID</option>
       <option value="name">Название</option>
       <option value="priority">Приоритет</option>

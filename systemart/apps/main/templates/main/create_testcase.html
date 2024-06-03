@@ -6,6 +6,11 @@
     <link rel="stylesheet" type="text/css" href="{% static '/css/main.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
+        #addRowBtn,
+        #delRowBtn {
+            margin-bottom: 50px;
+        }
+
         .form-row {
             display: flex;
             flex-wrap: wrap;
@@ -85,6 +90,33 @@
             margin-top: -30px;
         }
 
+        #id_step_0,
+        #id_step_1,
+        #id_step_2,
+        #id_step_3,
+        #id_step_4 {
+            width: 357px;
+            height: 36px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        #id_predictedresult_0,
+        #id_predictedresult_1,
+        #id_predictedresult_2,
+        #id_predictedresult_3,
+        #id_predictedresult_4 {
+            width: 357px;
+            height: 36px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        #invis {
+            border-bottom: 0px solid #fff;
+        }
+
+
     </style>
 </head>
 <body style="display: block;">
@@ -122,12 +154,6 @@
                             {{ form.id }}
                         </div>
                     </div>
-                    <div class="col-sm-4">
-                        <div class="form-group">
-                            <label for="{{ form.case_status.id_for_label }}">{{ form.case_status.label }}</label>
-                            {{ form.case_status }}
-                        </div>
-                    </div>
                 </div>
                 <div class="form-group" style="height: 100px; margin-left: -12px;">
                     <label for="{{ form.precondition.id_for_label }}">{{ form.precondition.label }}</label>
@@ -136,26 +162,91 @@
                 <hr size=2 color=#ccc style="width: 1400px;">
                 <div id="testTable">
                     <table>
-                      <tr>
-                        <th> </th>
-                        <th>Шаги</th>
-                        <th> </th>
-                        <th>Ожидаемые результаты</th>
-                      </tr>
-                      {% for step in form.step %}
-                      <tr>
-                        <td>{{ forloop.counter }}</td>
-                        <td>{{ step }}</td>
-                        {% for predictedresult in form.predictedresult %}
-                        <td>{{ forloop.counter }}</td>
-                        <td>{{ predictedresult }}</td>
+                        <tr>
+                          <th> </th>
+                          <th>Шаги</th>
+                          <th> </th>
+                          <th> </th>
+                          <th>Ожидаемые результаты</th>
+                        </tr>
+                        {% for step in form.step_0 %}
+                          <tr>
+                            <td>1</td>
+                            <td>{{ step }}</td>
+                            {% for predictedresult in form.predictedresult_0 %}
+                              {% if predictedresult %}
+                              <td style="width:600px;" id="invis"> </td>
+                              <td>1</td>
+                              <td>{{ predictedresult }}</td>
+                              {% endif %}
+                            {% endfor %}
+                          </tr>
                         {% endfor %}
-                      </tr>
-                      {% endfor %}
+                        {% for step in form.step_1 %}
+                            {% if form.step_1.value %}
+                                <tr>
+                                    <td>2</td>
+                                    <td>{{ step }}</td>
+                                    {% for predictedresult in form.predictedresult_1 %}
+                                        {% if predictedresult %}
+                                            <td>2</td>
+                                            <td>{{ predictedresult }}</td>
+                                        {% endif %}
+                                    {% endfor %}
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+    
+                        {% for step in form.step_2 %}
+                            {% if form.step_2.value %}
+                                <tr>
+                                    <td>3</td>
+                                    <td>{{ step }}</td>
+                                    {% for predictedresult in form.predictedresult_2 %}
+                                        {% if predictedresult %}
+                                            <td>3</td>
+                                            <td>{{ predictedresult }}</td>
+                                        {% endif %}
+                                    {% endfor %}
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+    
+                        {% for step in form.step_3 %}
+                            {% if form.step_3.value %}
+                                <tr>
+                                    <td>4</td>
+                                    <td>{{ step }}</td>
+                                    {% for predictedresult in form.predictedresult_3 %}
+                                        {% if predictedresult %}
+                                            <td>4</td>
+                                            <td>{{ predictedresult }}</td>
+                                        {% endif %}
+                                    {% endfor %}
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+    
+                        {% for step in form.step_4 %}
+                            {% if form.step_4.value %}
+                                <tr>
+                                    <td>5</td>
+                                    <td>{{ step }}</td>
+                                    {% for predictedresult in form.predictedresult_4 %}
+                                        {% if predictedresult %}
+                                            <td>5</td>
+                                            <td>{{ predictedresult }}</td>
+                                        {% endif %}
+                                    {% endfor %}
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
                     </table>
                   </div>
+                  <div>
                   <button id="addRowBtn" type="button">Добавить шаг</button>
                   <button id="delRowBtn" type="button">Удалить шаг</button>
+                  </div>
                 <div class="form-group">
                     <div class="form-group form-group-top-label">
                         <label for="{{ form.case_file.id_for_label }}" class="top-label">{{ form.case_file.label }}</label>
@@ -169,28 +260,38 @@
             {% endblock %}
         </form>
         <script>
+            let rowIndex = document.getElementById("testTable").getElementsByTagName("table")[0].rows.length-1;
+
             document.getElementById("addRowBtn").addEventListener("click", function() {
+            if (rowIndex < 5) {
                 let table = document.getElementById("testTable").getElementsByTagName("table")[0];
                 let index = table.rows.length;
-              
+    
                 let row = table.insertRow();
                 let indexCell = row.insertCell();
                 let stepsCell = row.insertCell();
+                let emptyCell = row.insertCell();
                 let expectedResultsIndexCell = row.insertCell();
                 let expectedResultsCell = row.insertCell();
     
                 indexCell.textContent = index;
-                stepsCell.innerHTML = `<textarea name="step" id="id_step">`;
+                stepsCell.innerHTML = `<textarea name="step_${rowIndex}" id="id_step_${rowIndex}"></textarea>`;
+                emptyCell.setAttribute('id', 'invis');
                 expectedResultsIndexCell.textContent = index;
-                expectedResultsCell.innerHTML = `<textarea name="predictedresult" id="id_predictedresult">`;
+                expectedResultsCell.innerHTML = `<textarea name="predictedresult_${rowIndex}" id="id_predictedresult_${rowIndex}"></textarea>`;
+    
+                rowIndex++;
+            }
             });
+    
             document.getElementById("delRowBtn").addEventListener("click", function() {
-                let table = document.getElementById("testTable").getElementsByTagName("table")[0];
-                let rows = table.rows;
-            
-                if(rows.length > 2) {
-                    table.deleteRow(rows.length - 1);
-                }
+            let table = document.getElementById("testTable").getElementsByTagName("table")[0];
+            let rows = table.rows;
+    
+            if (rows.length > 2) {
+                table.deleteRow(rows.length - 1);
+                rowIndex--;
+            }
             });
         </script>
     </div>

@@ -30,17 +30,6 @@ class TestCaseForm(forms.ModelForm):
     class Meta:
         model = TestCases
 
-        step_0 = models.TextField()
-        step_1 = models.TextField()
-        step_2 = models.TextField()
-        step_3 = models.TextField()
-        step_4 = models.TextField()
-        predictedresult_0 = models.TextField()
-        predictedresult_1 = models.TextField()
-        predictedresult_2 = models.TextField()
-        predictedresult_3 = models.TextField()
-        predictedresult_4 = models.TextField()
-
         fields = '__all__' 
         labels = {
             'name': 'Название',
@@ -51,15 +40,11 @@ class TestCaseForm(forms.ModelForm):
             'project': 'Проект',
             'precondition': 'Предусловие',
             'creation_date': 'Дата создания',
-            'predictedresult': 'Ожидаемый результат',
-            'step': 'Шаги',
             'case_file': 'Приложение',
         }
 
         widgets = {
             'creation_date': forms.DateInput(attrs={'class':'form-control', 'type':'date'}),
-            'steps': forms.Textarea(attrs={'rows': 10}),  
-            'predictedresults': forms.Textarea(attrs={'rows': 10}),  
         }
 
 

@@ -2,6 +2,7 @@ from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from datetime import datetime
+from django.contrib.auth import get_user_model
 import uuid
 
 # создание списка уровней приоритета
@@ -100,22 +101,22 @@ class TestCases(models.Model):
         null=True, 
         blank=True
     )
-
-    case_status_local = models.CharField(
-        max_length=10,
-        choices=CASE_STATUS_CHOICES,
-        default=NPASS,
-        null=True, 
-        blank=True
-    )
     
     testcase_id = models.AutoField(primary_key=True)
     id = models.ForeignKey(Tester, on_delete=models.CASCADE)
     project = models.ForeignKey(Projects, on_delete=models.CASCADE)
     creation_date = models.DateTimeField(default=datetime.now, editable=False)
     precondition = models.TextField(max_length=120)
-    step = models.TextField(max_length=200, null=True, blank=True)
-    predictedresult = models.TextField(max_length=200, null=True, blank=True)
+    step_0 = models.TextField(max_length=200, null=True, blank=True)
+    step_1 = models.TextField(max_length=200, null=True, blank=True)
+    step_2 = models.TextField(max_length=200, null=True, blank=True)
+    step_3 = models.TextField(max_length=200, null=True, blank=True)
+    step_4 = models.TextField(max_length=200, null=True, blank=True)
+    predictedresult_0 = models.TextField(max_length=200, null=True, blank=True)
+    predictedresult_1 = models.TextField(max_length=200, null=True, blank=True)
+    predictedresult_2 = models.TextField(max_length=200, null=True, blank=True)
+    predictedresult_3 = models.TextField(max_length=200, null=True, blank=True)
+    predictedresult_4 = models.TextField(max_length=200, null=True, blank=True)
     case_file = models.FileField(upload_to='testcases/', null=True, blank=True)
 
     def __str__(self):

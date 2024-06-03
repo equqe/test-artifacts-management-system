@@ -1,6 +1,13 @@
 {% extends "main/index.html" %}
 
 {% block lists %}
+
+<style>
+    .testsets {
+      font-weight: bold;
+    }
+  </style>
+
 <a class="createproj create" href="/testsets/new">Создать набор</a>
 
 <div>
@@ -9,7 +16,6 @@
             <td> </td>
             <td style="width: 180px;">ID</td>
             <td style="width: 950px;">Название</td>
-            <td style="width: 200px;">Кейсы</td>
             <td>Действия</td>
         </thead>
         {% for testset in testsets %}
@@ -17,7 +23,6 @@
                 <td><input type="checkbox" class="pick" name="pick" value="{{ testcase.id }}"></td>
                 <td class="clicking" onclick="location.href = '{{ testset.testset_id }}';" style="cursor:pointer; transition: background-color 0.3s ease;">{{ testset.testset_id }}</td>
                 <td class="name">{{ testset.testset_name }}</td>
-                <td>{% for testcase in testset.testcases.all %} {{ testcase }} {% endfor %}</td>
                 <td class="createproj edit" data-menu-target="project-menu-{{ testset.testset_id }}">...</td>
             </tbody>
             <div id="project-menu-{{ testset.testset_id }}" class="context-menu" style="display: none;">
