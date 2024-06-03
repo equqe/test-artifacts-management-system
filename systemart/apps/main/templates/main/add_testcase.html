@@ -1,0 +1,20 @@
+{% load static%}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Главная</title>
+    <!-- css connecting -->
+    <link rel="stylesheet" type="text/css" href="{% static "/css/main.css"%}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+<body>
+{% block lists %}
+<div>
+<h1>Отметьте выбранные кейсы чекбоксами.</h1>
+<div>
+
+
+{% endblock lists %}
+</body>
+</html>
+

@@ -15,7 +15,8 @@
         <thead>
             <td> </td>
             <td style="width: 180px;">ID</td>
-            <td style="width: 950px;">Название</td>
+            <td style="width: 550px;">Название</td>
+            <td style="width: 450px;">Время прохождения</td>
             <td>Действия</td>
         </thead>
         {% for testset in testsets %}
@@ -23,6 +24,7 @@
                 <td><input type="checkbox" class="pick" name="pick" value="{{ testcase.id }}"></td>
                 <td class="clicking" onclick="location.href = '{{ testset.testset_id }}';" style="cursor:pointer; transition: background-color 0.3s ease;">{{ testset.testset_id }}</td>
                 <td class="name">{{ testset.testset_name }}</td>
+                <td>{{ testset.runtime|date:"j M Y" }}</td>
                 <td class="createproj edit" data-menu-target="project-menu-{{ testset.testset_id }}">...</td>
             </tbody>
             <div id="project-menu-{{ testset.testset_id }}" class="context-menu" style="display: none;">
@@ -44,4 +46,36 @@
       <a class="close-red" href="/testsets">Закрыть</a>
     </form>
 </div>
+<script>
+    document.querySelector('#delete-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+    
+        var testcase_id = this.dataset.testcaseId;
+    
+        var csrfToken = document.querySelector('input[name=csrfmiddlewaretoken]').value;
+    
+        var formData = new FormData();
+        formData.append('password', document.querySelector('#password').value);
+        formData.append('csrfmiddlewaretoken', csrfToken);
+    
+        fetch('/testsets/delete/' + testcase_id + '/', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+            document.querySelector('#password-form').style.display = 'none';
+    
+            var rowToRemove = document.querySelector('tr[data-testcase-id="' + this.dataset.testcaseId + '"]');
+            rowToRemove.parentNode.removeChild(rowToRemove);
+            } else {
+            alert(data.error);
+            }
+        })
+        .catch(error => {
+            location.reload();
+        });
+        });
+</script>
 {% endblock lists %}

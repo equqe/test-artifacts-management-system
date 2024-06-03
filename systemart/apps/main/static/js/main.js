@@ -51,37 +51,6 @@ document.addEventListener('DOMContentLoaded', function () {
       });
     });
 
-  document.querySelector('#delete-form').addEventListener('submit', function(e) {
-    e.preventDefault();
-
-    var testcase_id = this.dataset.testcaseId;
-
-    var csrfToken = document.querySelector('input[name=csrfmiddlewaretoken]').value;
-
-    var formData = new FormData();
-    formData.append('password', document.querySelector('#password').value);
-    formData.append('csrfmiddlewaretoken', csrfToken);
-
-    fetch('/testcases/delete/' + testcase_id + '/', {
-      method: 'POST',
-      body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-      if (data.success) {
-        document.querySelector('#password-form').style.display = 'none';
-
-        var rowToRemove = document.querySelector('tr[data-testcase-id="' + this.dataset.testcaseId + '"]');
-        rowToRemove.parentNode.removeChild(rowToRemove);
-      } else {
-        alert(data.error);
-      }
-    })
-    .catch(error => {
-      location.reload();
-    });
-  });
-
   let input = document.querySelector("#searchInput");
   let arrData = document.getElementsByClassName('name');
   input.addEventListener('input', showChoice);

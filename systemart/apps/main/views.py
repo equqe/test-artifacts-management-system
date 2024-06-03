@@ -195,6 +195,10 @@ def desc_testset(request, testset_id):
     testcases = testset.testcases.all()
     return render(request, 'main/desc_testsets.html', {'testset': testset, 'testcases': testcases})
 
+def add_testcase(request, testset_id):
+    testcases = TestCases.objects.all()
+    return render(request, 'main/add_testcase.html', {'testcases': testcases})
+
 
 
 # delete and edit views
