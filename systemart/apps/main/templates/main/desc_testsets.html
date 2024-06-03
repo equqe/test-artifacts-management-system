@@ -22,7 +22,7 @@
         {% for testcase in testcases %}
         <tbody>
             <td><input type="checkbox" class="pick" name="pick" value="{{ testcase.testcase_id }}"></td>
-            <td class="clicking" onclick="location.href = '/testsets/testcases/{{ testcase.testcase_id }}/edit/';" style="cursor:pointer; transition: background-color 0.3s ease;">{{ testcase.testcase_id }}</td>
+            <td class="clicking" onclick="location.href = '/testsets/testcase/{{ testcase.testcase_id }}/edit/';" style="cursor:pointer; transition: background-color 0.3s ease;">{{ testcase.testcase_id }}</td>
             <td class="name">{{ testcase.name }}</td>
             <td>{{ testcase.priority }}</td>
             <td>{{ testcase.case_status }}</td>
