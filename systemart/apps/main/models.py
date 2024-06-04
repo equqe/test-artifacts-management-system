@@ -2,7 +2,6 @@ from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from datetime import datetime
-from django.contrib.auth import get_user_model
 import uuid
 
 # создание списка уровней приоритета
@@ -100,7 +99,7 @@ class TestCases(models.Model):
     )
     
     testcase_id = models.AutoField(primary_key=True)
-    id = models.ForeignKey(Tester, on_delete=models.CASCADE)
+    id = models.ForeignKey(Tester, on_delete=models.CASCADE, blank=True, editable=False)
     project = models.ForeignKey(Projects, on_delete=models.CASCADE)
     creation_date = models.DateTimeField(default=datetime.now, editable=False)
     precondition = models.TextField(max_length=120)
@@ -115,6 +114,7 @@ class TestCases(models.Model):
     predictedresult_3 = models.TextField(max_length=200, null=True, blank=True)
     predictedresult_4 = models.TextField(max_length=200, null=True, blank=True)
     case_file = models.FileField(upload_to='testcases/', null=True, blank=True)
+    runtime = models.DateTimeField(default=datetime.now, editable=False, blank=True)
 
     def __str__(self):
         return self.name
@@ -124,9 +124,8 @@ class TestSet(models.Model):
     """ Модель, описывающая тестовые наборы """
     testset_id = models.AutoField(primary_key=True)
     testset_name = models.CharField(max_length=128)
-    testcases = models.ManyToManyField(TestCases)
-    id = models.ForeignKey(Tester, on_delete=models.CASCADE)
-    runtime = models.DateTimeField(default=datetime.now)
+    testcases = models.ManyToManyField(TestCases, blank=True)
+    id = models.ForeignKey(Tester, on_delete=models.CASCADE, blank=True, editable=False)
 
     def save(self, *args, **kwargs):
         self.runtime = datetime.now()  
@@ -164,7 +163,7 @@ class BugReports(models.Model):
     testcase = models.ManyToManyField(TestCases)
     project = models.ForeignKey(Projects, on_delete=models.CASCADE)
     creation_date = models.DateTimeField(default=datetime.now, editable=False)
-    id = models.ForeignKey(Tester, on_delete=models.CASCADE)
+    id = models.ForeignKey(Tester, on_delete=models.CASCADE, blank=True, editable=False)
     description = models.TextField(max_length=512, null=True, blank=True)
     bug_file = models.FileField(upload_to='bug_reports/', null=True, blank=True)
 

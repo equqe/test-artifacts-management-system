@@ -41,10 +41,12 @@ class TestCaseForm(forms.ModelForm):
             'precondition': 'Предусловие',
             'creation_date': 'Дата создания',
             'case_file': 'Приложение',
+            'runtime': 'Время прохождения',
         }
 
         widgets = {
             'creation_date': forms.DateInput(attrs={'class':'form-control', 'type':'date'}),
+            'runtime': forms.DateInput(attrs={'class':'form-control', 'type':'date'}),
         }
 
 
@@ -60,13 +62,12 @@ class TestsetForm(forms.ModelForm):
             'set': 'id набора',
             'testcases': 'Кейсы',
             'id': 'Автор',
-            'runtime': 'Время прохождения',
             'testcase_file': 'Прикрепленный файл',
         }
         
         widgets = {
             'runtime': forms.DateInput(attrs={'class':'form-control', 'type':'date'}),
-            'testcases': forms.SelectMultiple(attrs={'class':'form-control', 'label':'Кейсы'}),
+            'testcases': forms.CheckboxInput(),
         }
 
 
@@ -88,7 +89,7 @@ class ReportForm(forms.ModelForm):
         
         widgets = {
             'creation_date': forms.DateInput(attrs={'class':'form-control', 'type':'date', 'placeholder':'YYYY-MM-DD'}),
-            'testcase': forms.SelectMultiple(attrs={'class':'form-control', 'label':'Кейсы'}),
+            'testcases': forms.CheckboxInput(),
         }
 
 

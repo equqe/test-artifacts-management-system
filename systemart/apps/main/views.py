@@ -10,7 +10,7 @@ from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.views.generic.edit import FormView
 from .forms import RegisterForm, ProjectForm, TestCaseForm, TestsetForm, ReportForm, CaseSetsForm, FilterForm
-from .models import Projects, TestCases, TestSet, BugReports, CaseSets
+from .models import Projects, TestCases, TestSet, BugReports, CaseSets, Tester
 from django.urls import reverse_lazy
 
 pdfmetrics.registerFont(TTFont('Arial', 'arial.ttf'))
@@ -146,6 +146,7 @@ class TestCaseView(FormView):
     success_url = reverse_lazy('testcases')
 
     def form_valid(self, form):
+        form.instance.id = self.request.user
         form.save()
         return super().form_valid(form)
     
@@ -154,9 +155,11 @@ class TestSetView(FormView):
     template_name = 'main/create_testset.html'
     success_url = reverse_lazy('testsets')
 
+    testcases = TestCases.objects.all()
+
     def form_valid(self, form):
+        form.instance.id = self.request.user
         testset = form.save(commit=False)
-        testset.id = self.request.user
         testset.save()
         form.save_m2m()
         return super().form_valid(form)
@@ -167,6 +170,7 @@ class BugReportsView(FormView):
     success_url = reverse_lazy('bugreports')
 
     def form_valid(self, form):
+        form.instance.id = self.request.user
         form.save()
         return super().form_valid(form)
 
@@ -176,6 +180,7 @@ class CaseSetsView(FormView):
     success_url = reverse_lazy('casesets')
 
     def form_valid(self, form):
+        form.instance.id = self.request.user
         form.save()
         return super().form_valid(form)
 

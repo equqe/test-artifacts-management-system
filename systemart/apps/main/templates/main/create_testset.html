@@ -6,6 +6,14 @@
     <link rel="stylesheet" type="text/css" href="{% static '/css/main.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
+        .container {
+            width: 900px;
+            height: 400px;
+            overflow: auto;
+            position: relative;
+            border: 1px solid black;
+        }
+
         .form-row {
             display: flex;
             flex-wrap: wrap;
@@ -69,6 +77,14 @@
             margin-right: 50px;
         }
 
+        .container {
+            width: 900px;
+            height: 400px;
+            overflow: auto;
+            position: relative;
+            border: 1px solid black;
+        }
+
     </style>
 </head>
 <body style="display: block;">
@@ -88,12 +104,6 @@
                             {{ form.id }}
                         </div>
                     </div>
-                    <div class="col-sm-4">
-                        <div class="form-group">
-                            <label for="{{ form.runtime.id_for_label }}">{{ form.runtime.label }}</label>
-                            {{ form.runtime }}
-                        </div>
-                    </div>
                 </div>
                 <div class="form-group" style="height: 100px; margin-left: -12px;">
                     <label for="{{ form.testcases.id_for_label }}">{{ form.testcases.label }}</label>
@@ -104,5 +114,19 @@
             {% endblock %}
         </form>
     </div>
+    <script>      
+        const checkboxes = document.querySelectorAll('.pick');
+        const hiddenInput = document.querySelector('#testset_testcases');
+    
+        function updateHiddenInput() {
+            const checkedCheckboxes = document.querySelectorAll('.pick:checked');
+            const values = Array.from(checkedCheckboxes).map(checkbox => checkbox.value);
+            hiddenInput.value = values.join(', ');
+        }
+    
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', updateHiddenInput);
+        });
+    </script>
 </body>
 </html>

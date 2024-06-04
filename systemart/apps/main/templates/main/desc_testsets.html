@@ -15,7 +15,8 @@
             <td style="width: 150px;">Статус</td>
             <td style="width: 100px;">Тип кейса</td>
             <td style="width: 150px;">Дата создания</td>
-            <td style="width: 450px;">Автор</td>
+            <td style="width: 150px;">Дата прохождения</td>
+            <td style="width: 350px;">Автор</td>
             <td>Проект</td>
             <td>Действия</td>
         </thead>
@@ -28,6 +29,7 @@
             <td>{{ testcase.case_status }}</td>
             <td>{{ testcase.case_type }}</td>
             <td>{{ testcase.creation_date|date:"j M Y" }}</td>
+            <td>{{ testcase.runtime|date:"j M Y" }}</td>
             <td>{{ testcase.id }}</td>
             <td>{{ testcase.project }}</td>
             <td class="createproj edit" data-menu-target="project-menu-{{ testcase.testcase_id }}">...</td>
