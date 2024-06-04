@@ -108,8 +108,11 @@ class TestCases(models.Model):
     runtime = models.DateTimeField(default=datetime.now, blank=True, null=True)
 
     def save(self, *args, **kwargs):
-        self.runtime = datetime.now()  
-        super(TestSet, self).save(*args, **kwargs) 
+        if not self.pk:
+            self.runtime = None
+        else: 
+            self.runtime = datetime.now()
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.name
@@ -121,7 +124,7 @@ class TestSet(models.Model):
     testset_name = models.CharField(max_length=128)
     testcases = models.ManyToManyField(TestCases, blank=True)
     id = models.ForeignKey(Tester, on_delete=models.CASCADE, blank=True, editable=False)
-    
+
 
 class BugReports(models.Model):
     """ Модель, описывающая баг репорты """
