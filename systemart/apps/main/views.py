@@ -201,7 +201,6 @@ def add_testcase(request, testset_id):
     testcases = TestCases.objects.all()
     
     if request.method == 'POST':
-        testset.testcases.clear()
         testcase_ids_str = request.POST.get('testset_testcases')
         testcase_ids = [int(id_str) for id_str in testcase_ids_str.split(',')]
         for testcase_id in testcase_ids:
