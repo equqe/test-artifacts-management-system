@@ -108,10 +108,13 @@ class TestCases(models.Model):
     runtime = models.DateTimeField(default=datetime.now, blank=True, null=True)
 
     def save(self, *args, **kwargs):
-        if not self.pk:
-            self.runtime = None
-        else: 
+        # проверяем, было ли изменено поле case_status
+        if self.pk and TestCases.objects.get(pk=self.pk).case_status != self.case_status:
+            # обновляем поле runtime
             self.runtime = datetime.now()
+        elif not self.pk:
+            # это первое сохранение объекта, устанавливаем runtime в None
+            self.runtime = None
         super().save(*args, **kwargs)
 
     def __str__(self):
