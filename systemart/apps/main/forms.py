@@ -67,7 +67,7 @@ class TestsetForm(forms.ModelForm):
         
         widgets = {
             'runtime': forms.DateInput(attrs={'class':'form-control', 'type':'date'}),
-            'testcases': forms.CheckboxInput(),
+            'testcases': forms.CheckboxSelectMultiple(),
         }
 
 
@@ -89,7 +89,7 @@ class ReportForm(forms.ModelForm):
         
         widgets = {
             'creation_date': forms.DateInput(attrs={'class':'form-control', 'type':'date', 'placeholder':'YYYY-MM-DD'}),
-            'testcases': forms.CheckboxInput(),
+            'testcases': forms.CheckboxSelectMultiple(),
         }
 
 
