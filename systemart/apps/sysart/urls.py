@@ -29,6 +29,7 @@ urlpatterns = [
     path('testsets/<int:pk>/edit/', views.edit_testset.as_view(), name='edit_testset'),
     path('testsets/<int:testset_id>/', views.desc_testset, name='desc_testset'),
     path('testsets/<int:testset_id>/order_by/<str:order_by>/', views.testset_order_view, name='testset_order'),
+    path('testsets/delete/<int:testset_id>/<int:testcase_id>/', views.delete_testset_testcase, name='delete_testset_testcase'),
 
     path('testsets/<int:testset_id>/testcase/add/', views.add_testcase, name='add_testcase'),
     path('testsets/testcase/<int:pk>/edit/', views.edit_testcase_desc.as_view(), name='edit_testcase'),

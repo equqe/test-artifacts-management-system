@@ -211,6 +211,7 @@ def add_testcase(request, testset_id):
         for testcase_id in testcase_ids:
             testset.testcases.add(TestCases.objects.get(pk=testcase_id))
         testset.save()
+        return redirect('testsets')
     return render(request, 'main/add_testcase.html', {'testset': testset, 'testcases': testcases})
 
 
@@ -311,6 +312,20 @@ def delete_testset(request, testset_id):
     testset.delete()
 
     return JsonResponse({'success': True})
+
+def delete_testset_testcase(request, testset_id, testcase_id):
+    password = request.POST.get('password')
+    user = authenticate(request, username=request.user.username, password=password)
+    print(user, password)
+    if user is None:
+        return JsonResponse({'success': False, 'error': 'Неверный пароль'})
+
+    testset = TestSet.objects.get(pk=testset_id)
+    testcase = TestCases.objects.get(pk=testcase_id)
+    testset.testcases.remove(testcase)
+
+    return JsonResponse({'success': True})
+
 
 class edit_testset(FormView):
     model = TestSet

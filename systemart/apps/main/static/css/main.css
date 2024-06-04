@@ -296,7 +296,8 @@ input[type="checkbox"] {
 
 .testsetheader {
     position: relative;
-    right: 20%;
+    right: -60%;
+    bottom: 6%;
 }
 
 .results {

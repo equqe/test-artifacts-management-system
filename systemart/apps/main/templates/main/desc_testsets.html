@@ -2,7 +2,8 @@
 
 {% block lists %}
 
-<h1 class="testsetheader" data-testset-id="{{ testset.testset_id }}"> {{testset.testset_name}} </h1>
+<h1 class="testsetheader" data-testset-id="{{ testset.testset_id }}"> {{testset.testset_name}}</h1>
+
 <a class="createproj create" href="testcase/add/">Добавить кейс</a>
   
   <div>
@@ -16,7 +17,7 @@
             <td style="width: 100px;">Тип кейса</td>
             <td style="width: 150px;">Дата создания</td>
             <td style="width: 150px;">Дата прохождения</td>
-            <td style="width: 350px;">Автор</td>
+            <td style="width: 250px;">Автор</td>
             <td>Проект</td>
             <td>Действия</td>
         </thead>
@@ -36,7 +37,7 @@
         </tbody>
             <div id="project-menu-{{ testcase.testcase_id }}" class="context-menu" style="display: none;">
                 <input type="submit" class="edit-link" onclick="location.href = '/testcases/{{ testcase.testcase_id }}/edit/'" value="Редактировать" data-testcase-id="{{ testcase.testcase_id }}">
-                <input type="submit" class="delete-link" value="Удалить" data-testcase-id="{{ testcase.testcase_id }}">
+                <input type="submit" class="delete-link" value="Удалить" data-testcase-id="{{ testcase.testcase_id }}" data-testset-id="{{ testset.testset_id }}">
             </div>
         {% endfor %}
 
@@ -61,6 +62,16 @@
     </table>
 </div>
 
+<div id="password-form" style="display:none;">
+  <form id="delete-form" method="post">
+    {% csrf_token %}
+    <label for="password">Введите пароль для подтверждения удаления:</label><br>
+    <input type="password" id="password" name="password"><br>
+    <input type="submit" value="Удалить">
+    <a class="close-red" href="/testcases">Закрыть</a>
+  </form>
+</div>
+
 <script>
     const sortSelects = document.querySelectorAll('.sort-select');
 
@@ -74,7 +85,38 @@
         }
       });
     });
-  
+    
+    document.querySelector('#delete-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+    
+      var testcase_id = this.dataset.testcaseId;
+      var testset_id = document.querySelector('.testsetheader').dataset.testsetId;
+    
+      var csrfToken = document.querySelector('input[name=csrfmiddlewaretoken]').value;
+    
+      var formData = new FormData();
+      formData.append('password', document.querySelector('#password').value);
+      formData.append('csrfmiddlewaretoken', csrfToken);
+    
+      fetch('/testsets/delete/' + testset_id + '/' + testcase_id + '/', {
+          method: 'POST',
+          body: formData
+      })
+      .then(response => response.json())
+      .then(data => {
+          if (data.success) {
+          document.querySelector('#password-form').style.display = 'none';
+    
+          var rowToRemove = document.querySelector('tr[data-testcase-id="' + this.dataset.testcaseId + '"]');
+          rowToRemove.parentNode.removeChild(rowToRemove);
+          } else {
+          alert(data.error);
+          }
+      })
+      .catch(error => {
+          location.reload();
+      });
+      });
 </script>
 
 {% endblock %}

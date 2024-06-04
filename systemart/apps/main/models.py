@@ -103,18 +103,13 @@ class TestCases(models.Model):
     project = models.ForeignKey(Projects, on_delete=models.CASCADE)
     creation_date = models.DateTimeField(default=datetime.now, editable=False)
     precondition = models.TextField(max_length=120)
-    step_0 = models.TextField(max_length=200, null=True, blank=True)
-    step_1 = models.TextField(max_length=200, null=True, blank=True)
-    step_2 = models.TextField(max_length=200, null=True, blank=True)
-    step_3 = models.TextField(max_length=200, null=True, blank=True)
-    step_4 = models.TextField(max_length=200, null=True, blank=True)
-    predictedresult_0 = models.TextField(max_length=200, null=True, blank=True)
-    predictedresult_1 = models.TextField(max_length=200, null=True, blank=True)
-    predictedresult_2 = models.TextField(max_length=200, null=True, blank=True)
-    predictedresult_3 = models.TextField(max_length=200, null=True, blank=True)
-    predictedresult_4 = models.TextField(max_length=200, null=True, blank=True)
-    case_file = models.FileField(upload_to='testcases/', null=True, blank=True)
-    runtime = models.DateTimeField(default=datetime.now, editable=False, blank=True)
+    step = models.TextField(max_length=200, null=True, blank=True)
+    predictedresult = models.TextField(max_length=200, null=True, blank=True)
+    runtime = models.DateTimeField(default=datetime.now, blank=True, null=True)
+
+    def save(self, *args, **kwargs):
+        self.runtime = datetime.now()  
+        super(TestSet, self).save(*args, **kwargs) 
 
     def __str__(self):
         return self.name
@@ -126,11 +121,7 @@ class TestSet(models.Model):
     testset_name = models.CharField(max_length=128)
     testcases = models.ManyToManyField(TestCases, blank=True)
     id = models.ForeignKey(Tester, on_delete=models.CASCADE, blank=True, editable=False)
-
-    def save(self, *args, **kwargs):
-        self.runtime = datetime.now()  
-        super(TestSet, self).save(*args, **kwargs) 
-
+    
 
 class BugReports(models.Model):
     """ Модель, описывающая баг репорты """
