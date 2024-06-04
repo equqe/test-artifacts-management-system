@@ -30,11 +30,9 @@ class Tester(AbstractUser):
     """ Модель, описывающая пользователя """
 
     # создание списка ролей для проектов
-    LEAD = "Руководитель тестирования"  # руководитель тестирования
     SENIOR = "Главный тестировщик" # главный тестировщик
     DEFAULT = "Тестировщик"  # обычный тестировщик, стандартная роль
     PROJECT_ROLES_CHOICES = {
-        LEAD: "Руководитель тестирования", 
         SENIOR: "Главный тестировщик",
         DEFAULT: "Тестировщик"
     }
@@ -44,7 +42,6 @@ class Tester(AbstractUser):
         choices=PROJECT_ROLES_CHOICES, 
         default=DEFAULT
     )
-    project = models.ForeignKey(Projects, on_delete=models.CASCADE, null=True, blank=True)
 
 
 class CaseSets(models.Model):
@@ -129,7 +126,11 @@ class TestSet(models.Model):
     testset_name = models.CharField(max_length=128)
     testcases = models.ManyToManyField(TestCases)
     id = models.ForeignKey(Tester, on_delete=models.CASCADE)
-    runtime = models.DateTimeField(default=None, null=True, blank=True)
+    runtime = models.DateTimeField(default=datetime.now)
+
+    def save(self, *args, **kwargs):
+        self.runtime = datetime.now()  
+        super(TestSet, self).save(*args, **kwargs) 
 
 
 class BugReports(models.Model):

@@ -11,8 +11,56 @@
 {% block lists %}
 <div>
 <h1>Отметьте выбранные кейсы чекбоксами.</h1>
-<div>
+<form method="post">
+    {% csrf_token %}
+    <div>
+        <table style="left:9%;"class="projectlist" border="0" cellpadding="8" cellspacing="3">
+            <thead>
+                <td> </td>
+                <td style="width: 80px;">ID</td>
+                <td style="width: 200px;">Название</td>
+                <td style="width: 80px;">Приоритет</td>
+                <td style="width: 100px;">Тип кейса</td>
+                <td style="width: 250px;">Дата создания</td>
+                <td style="width: 350px;">Автор</td>
+                <td>Проект</td>
+            </thead>
+            {% for testcase in testcases %}
+            <tbody>
+                <td><input type="checkbox" class="pick" name="testcase_{{ testcase.testcase_id }}" value="{{ testcase.testcase_id }}"></td>
+                <td class="clicking" onclick="location.href = '{{ testcase.testcase_id }}/edit/';" style="cursor:pointer; transition: background-color 0.3s ease;">{{ testcase.testcase_id }}</td>
+                <td class="name">{{ testcase.name }}</td>
+                <td>{{ testcase.priority }}</td>
+                <td>{{ testcase.case_type }}</td>
+                <td>{{ testcase.creation_date|date:"j M Y" }}</td>
+                <td>{{ testcase.id }}</td>
+                <td>{{ testcase.project }}</td>
+        {% endfor %}
+    </div>
+    <div>
+        <input type="submit" style="margin-left:970px;position:absolute;bottom:9%;right:10%;" value="Изменить">
+        <a class="close-red" href="/testsets" style="margin-left:970px;position:absolute;bottom:9%;right:6%;"> Закрыть</a>
+    </div>
+    <input type="hidden" id="testset_testcases" name="testset_testcases" value="{{ testset.testcases.all|join:', ' }}">
+</form>
+<form id="searchForm">
+    <input type="text" id="searchInput" style="margin-left:970px;"placeholder="Поиск кейса по названию...">
+</form>
 
+<script>      
+    const checkboxes = document.querySelectorAll('.pick');
+    const hiddenInput = document.querySelector('#testset_testcases');
+
+    function updateHiddenInput() {
+        const checkedCheckboxes = document.querySelectorAll('.pick:checked');
+        const values = Array.from(checkedCheckboxes).map(checkbox => checkbox.value);
+        hiddenInput.value = values.join(', ');
+    }
+
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', updateHiddenInput);
+    });
+</script>
 
 {% endblock lists %}
 </body>

@@ -13,12 +13,11 @@
             <td> </td>
             <td>ID</td>
             <td style="width: 80px;">Название</td>
-            <td style="width: 150px;">Приоритет</td>
-            <td style="width: 100px;">Статус</td>
-            <td style="width: 150px;">Дата создания</td>
+            <td style="width: 250px;">Приоритет</td>
+            <td style="width: 300px;">Статус</td>
+            <td style="width: 250px;">Дата создания</td>
             <td style="width: 250px;">Автор</td>
             <td style="width: 100px;">Проект</td>
-            <td>ID кейсов</td>
             <td>Действия</td>
         </thead>
         {% for bugreport in bugreports %}
@@ -31,7 +30,6 @@
             <td>{{ bugreport.creation_date|date:"j M Y" }}</td>
             <td>{{ bugreport.id }}</td>
             <td>{{ bugreport.project }}</td>
-            <td>{% for case in bugreport.testcase.all %} {{ case }} {% endfor %}</td>
             <td class="createproj edit" data-menu-target="project-menu-{{ bugreport.bug_id }}">...</td>
         </tbody>
         <div id="project-menu-{{ bugreport.bug_id }}" class="context-menu" style="display: none;">

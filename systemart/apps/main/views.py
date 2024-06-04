@@ -156,6 +156,7 @@ class TestSetView(FormView):
 
     def form_valid(self, form):
         testset = form.save(commit=False)
+        testset.id = self.request.user
         testset.save()
         form.save_m2m()
         return super().form_valid(form)
@@ -196,8 +197,18 @@ def desc_testset(request, testset_id):
     return render(request, 'main/desc_testsets.html', {'testset': testset, 'testcases': testcases})
 
 def add_testcase(request, testset_id):
+    testset = TestSet.objects.get(pk=testset_id)
     testcases = TestCases.objects.all()
-    return render(request, 'main/add_testcase.html', {'testcases': testcases})
+    
+    if request.method == 'POST':
+        testset.testcases.clear()
+        testcase_ids_str = request.POST.get('testset_testcases')
+        testcase_ids = [int(id_str) for id_str in testcase_ids_str.split(',')]
+        for testcase_id in testcase_ids:
+            testset.testcases.add(TestCases.objects.get(pk=testcase_id))
+        testset.save()
+    return render(request, 'main/add_testcase.html', {'testset': testset, 'testcases': testcases})
+
 
 
 
