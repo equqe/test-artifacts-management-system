@@ -77,9 +77,10 @@
         }
 
         .container {
-            width: 900px;
-            height: 400px;
-            overflow: auto;
+            padding: 10px;
+            width: 300px;
+            height: 100px;
+            overflow-y: auto;
             position: relative;
             border: 1px solid black;
         }
@@ -125,7 +126,9 @@
                 <div class="col">
                     <div class="form-group form-group-top-label" style="margin-left:-15px;">
                         <label for="{{ form.testcase.id_for_label }}" class="top-label">{{ form.testcase.label }}</label>
-                        {{ form.testcase }}
+                        <div class="container">
+                            {{ form.testcase }}
+                        </div>
                     </div>
                 </div>
                 <hr size=2 color=#ccc style="width: 1400px;">
