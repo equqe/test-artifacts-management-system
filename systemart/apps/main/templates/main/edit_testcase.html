@@ -151,78 +151,17 @@
                       <th> </th>
                       <th>Ожидаемые результаты</th>
                     </tr>
-                    {% for step in form.step_0 %}
-                      <tr>
-                        <td>1</td>
-                        <td>{{ step }}</td>
-                        {% for predictedresult in form.predictedresult_0 %}
-                          {% if predictedresult %}
-                          <td style="width:600px;" id="invis"> </td>
-                          <td>1</td>
-                          <td>{{ predictedresult }}</td>
-                          {% endif %}
-                        {% endfor %}
-                      </tr>
-                    {% endfor %}
-                    {% for step in form.step_1 %}
-                        {% if form.step_1.value %}
-                            <tr>
-                                <td>2</td>
-                                <td>{{ step }}</td>
-                                {% for predictedresult in form.predictedresult_1 %}
-                                    {% if predictedresult %}
-                                        <td>2</td>
-                                        <td>{{ predictedresult }}</td>
-                                    {% endif %}
-                                {% endfor %}
-                            </tr>
-                        {% endif %}
-                    {% endfor %}
-
-                    {% for step in form.step_2 %}
-                        {% if form.step_2.value %}
-                            <tr>
-                                <td>3</td>
-                                <td>{{ step }}</td>
-                                {% for predictedresult in form.predictedresult_2 %}
-                                    {% if predictedresult %}
-                                        <td>3</td>
-                                        <td>{{ predictedresult }}</td>
-                                    {% endif %}
-                                {% endfor %}
-                            </tr>
-                        {% endif %}
-                    {% endfor %}
-
-                    {% for step in form.step_3 %}
-                        {% if form.step_3.value %}
-                            <tr>
-                                <td>4</td>
-                                <td>{{ step }}</td>
-                                {% for predictedresult in form.predictedresult_3 %}
-                                    {% if predictedresult %}
-                                        <td>4</td>
-                                        <td>{{ predictedresult }}</td>
-                                    {% endif %}
-                                {% endfor %}
-                            </tr>
-                        {% endif %}
-                    {% endfor %}
-
-                    {% for step in form.step_4 %}
-                        {% if form.step_4.value %}
-                            <tr>
-                                <td>5</td>
-                                <td>{{ step }}</td>
-                                {% for predictedresult in form.predictedresult_4 %}
-                                    {% if predictedresult %}
-                                        <td>5</td>
-                                        <td>{{ predictedresult }}</td>
-                                    {% endif %}
-                                {% endfor %}
-                            </tr>
-                        {% endif %}
-                    {% endfor %}
+                    {% for form in steps_formset %}
+                    {% if form.instance %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ form.step }}</td>
+                            <td></td>
+                            <td></td>
+                            <td>{{ form.predictedresult }}</td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
                   </table>
               </div>
               <div>
@@ -256,10 +195,10 @@
             let expectedResultsCell = row.insertCell();
 
             indexCell.textContent = index;
-            stepsCell.innerHTML = `<textarea name="step_${rowIndex}" id="id_step_${rowIndex}"></textarea>`;
+            stepsCell.innerHTML = `<textarea name="casesteps_set-${rowIndex}-step" id="id_casesteps_set-${rowIndex}-step"></textarea>`;
             emptyCell.setAttribute('id', 'invis');
             expectedResultsIndexCell.textContent = index;
-            expectedResultsCell.innerHTML = `<textarea name="predictedresult_${rowIndex}" id="id_predictedresult_${rowIndex}"></textarea>`;
+            expectedResultsCell.innerHTML = `<textarea name="casesteps_set-${rowIndex}-predictedresult" id="id_casesteps_set-${rowIndex}-predictedresult"></textarea>`;
 
             rowIndex++;
         }

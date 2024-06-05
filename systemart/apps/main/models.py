@@ -103,23 +103,25 @@ class TestCases(models.Model):
     project = models.ForeignKey(Projects, on_delete=models.CASCADE)
     creation_date = models.DateTimeField(default=datetime.now, editable=False)
     precondition = models.TextField(max_length=120)
-    step = models.TextField(max_length=200, null=True, blank=True)
-    predictedresult = models.TextField(max_length=200, null=True, blank=True)
     runtime = models.DateTimeField(default=datetime.now, blank=True, null=True)
 
     def save(self, *args, **kwargs):
-        # проверяем, было ли изменено поле case_status
         if self.pk and TestCases.objects.get(pk=self.pk).case_status != self.case_status:
-            # обновляем поле runtime
             self.runtime = datetime.now()
         elif not self.pk:
-            # это первое сохранение объекта, устанавливаем runtime в None
             self.runtime = None
         super().save(*args, **kwargs)
 
     def __str__(self):
         return self.name
 
+class CaseSteps(models.Model):
+    """ Модель, описывающая шаги кейса """
+
+    step_id = models.AutoField(primary_key=True)
+    testcase_id = models.ForeignKey(TestCases, on_delete=models.CASCADE)
+    step = models.TextField(null=True, blank=True)
+    predictedresult = models.TextField(max_length=512)
 
 class TestSet(models.Model):
     """ Модель, описывающая тестовые наборы """

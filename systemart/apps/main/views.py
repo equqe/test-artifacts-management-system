@@ -9,8 +9,9 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.views.generic.edit import FormView
-from .forms import RegisterForm, ProjectForm, TestCaseForm, TestsetForm, ReportForm, CaseSetsForm, FilterForm
+from .forms import RegisterForm, ProjectForm, TestCaseForm, TestsetForm, ReportForm, CaseSetsForm, FilterForm, CaseStepForm
 from .models import Projects, TestCases, TestSet, BugReports, CaseSets, Tester
+from django.views.generic.edit import UpdateView
 from django.urls import reverse_lazy
 
 pdfmetrics.registerFont(TTFont('Arial', 'arial.ttf'))
@@ -146,9 +147,24 @@ class TestCaseView(FormView):
     success_url = reverse_lazy('testcases')
 
     def form_valid(self, form):
-        form.instance.id = self.request.user
-        form.save()
-        return super().form_valid(form)
+        test_case = form.save(commit=False)
+        test_case.id = self.request.user
+        test_case.save()
+        formset = form.steps_formset(instance=test_case, data=self.request.POST, files=self.request.FILES)
+        if formset.is_valid():
+            formset.save()
+            return super().form_valid(form)
+        else:
+            return self.render_to_response(self.get_context_data(form=form, steps_formset=formset))
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        form = self.get_form()
+        if self.request.method == 'POST':
+            context['steps_formset'] = form.steps_formset(self.request.POST, self.request.FILES)
+        else:
+            context['steps_formset'] = form.steps_formset()
+        return context
     
 class TestSetView(FormView):
     form_class = TestsetForm
@@ -232,7 +248,7 @@ def delete_testcase(request, testcase_id):
 
     return JsonResponse({'success': True})
 
-class edit_testcase(FormView):
+class edit_testcase(UpdateView):
     model = TestCases
     form_class = TestCaseForm
     template_name = 'main/edit_testcase.html'
@@ -252,18 +268,28 @@ class edit_testcase(FormView):
         kwargs = super().get_form_kwargs()
         kwargs['instance'] = self.get_object()
         return kwargs
-    
+
     def form_valid(self, form):
-        form = form.save(commit=False)
-        if self.request.FILES:
-            form.testcase_file = self.request.FILES['case_file']
-        form.save()
-        return super().form_valid(form)
-        
+        test_case = form.save(commit=False)
+        test_case.id = self.request.user
+        test_case.save()
+        formset = CaseStepForm(instance=test_case, data=self.request.POST, files=self.request.FILES)
+        if formset.is_valid():
+            formset.save()
+            return redirect('testcases')
+        else:
+            return self.render_to_response(self.get_context_data(form=form, steps_formset=formset))
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        referer = self.request.META.get('HTTP_REFERER', '/')
-        context['referer'] = referer
+        form = self.get_form()
+        test_case = self.get_object()
+        if self.request.method == 'POST':
+            context['steps_formset'] = CaseStepForm(instance=test_case, data=self.request.POST, files=self.request.FILES)
+        else:
+            initial_data = [{'step': step.step, 'predictedresult': step.predictedresult} for step in test_case.casesteps_set.all()]
+            context['steps_formset'] = CaseStepForm(instance=test_case, initial=initial_data)
+        context['test_case'] = test_case
         return context
     
 class edit_testcase_desc(FormView):

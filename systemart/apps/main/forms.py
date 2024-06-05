@@ -1,7 +1,7 @@
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
 from django.db import models
-from .models import Tester, Projects, TestCases, TestSet, BugReports, CaseSets
+from .models import Tester, Projects, TestCases, TestSet, BugReports, CaseSets, CaseSteps
 from django.utils import timezone
 
 class RegisterForm(UserCreationForm):
@@ -23,6 +23,15 @@ class ProjectForm(forms.ModelForm):
         widgets = {
             'project_name': forms.TextInput(attrs={'class':'form-control'}),
             'description': forms.Textarea(attrs={'class':'form-control', 'rows':3}),
+        }
+
+class CaseStepForm(forms.ModelForm):
+    class Meta:
+        model = CaseSteps
+        fields = '__all__' 
+        labels = {
+            'step': 'Шаг',
+            'predictedresult': 'Ожидаемый результат',
         }
 
 
@@ -49,6 +58,9 @@ class TestCaseForm(forms.ModelForm):
             'runtime': forms.DateInput(attrs={'class':'form-control', 'type':'date'}),
         }
 
+    def __init__(self, *args, **kwargs):
+        super(TestCaseForm, self).__init__(*args, **kwargs)
+        self.steps_formset = forms.inlineformset_factory(TestCases, CaseSteps, form=CaseStepForm, extra=1)
 
 class TestsetForm(forms.ModelForm):
     class Meta:
