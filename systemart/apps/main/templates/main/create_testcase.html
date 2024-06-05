@@ -169,6 +169,7 @@
                           <th> </th>
                           <th>Ожидаемые результаты</th>
                         </tr>
+                        {{ formset.management_form }}
                         {% for form in steps_formset.forms %}
                         <tr>
                             <td>{{ forloop.counter }}</td>

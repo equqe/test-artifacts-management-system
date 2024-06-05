@@ -9,8 +9,8 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.views.generic.edit import FormView
-from .forms import RegisterForm, ProjectForm, TestCaseForm, TestsetForm, ReportForm, CaseSetsForm, FilterForm, CaseStepForm
-from .models import Projects, TestCases, TestSet, BugReports, CaseSets, Tester
+from .forms import RegisterForm, ProjectForm, TestCaseForm, TestsetForm, ReportForm, FilterForm, CaseStepForm
+from .models import Projects, TestCases, TestSet, BugReports
 from django.views.generic.edit import UpdateView
 from django.urls import reverse_lazy
 
@@ -129,10 +129,6 @@ def bugreport_view(request):
     bugreports = BugReports.objects.all()
     return render(request, 'main/bugreports.html', {'bugreports': bugreports})
 
-def casesets_view(request):
-    casesets = CaseSets.objects.all()
-    return render(request, 'main/casesets.html', {'casesets':casesets})
-
 # create views
 class ProjectView(FormView):
     form_class = ProjectForm
@@ -157,7 +153,11 @@ class TestCaseView(FormView):
             formset.save()
             return super().form_valid(form)
         else:
-            return self.render_to_response(self.get_context_data(form=form, steps_formset=formset))
+            context = self.get_context_data(form=form, steps_formset=formset)
+            context['formset_errors'] = formset.errors
+
+            return self.render_to_response(context)
+
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -186,16 +186,6 @@ class BugReportsView(FormView):
     form_class = ReportForm
     template_name = 'main/create_bugreport.html'
     success_url = reverse_lazy('bugreports')
-
-    def form_valid(self, form):
-        form.instance.id = self.request.user
-        form.save()
-        return super().form_valid(form)
-
-class CaseSetsView(FormView):
-    form_class = CaseSetsForm
-    template_name = 'main/create_casesets.html'
-    success_url = reverse_lazy('casesets')
 
     def form_valid(self, form):
         form.instance.id = self.request.user
@@ -367,49 +357,6 @@ class edit_testset(FormView):
             try:
                 return TestSet.objects.get(pk=obj_id)
             except TestSet.DoesNotExist:
-                raise Http404
-        else:
-            raise Http404
-
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        kwargs['instance'] = self.get_object()
-        return kwargs
-
-    def form_valid(self, form):
-        form.save()
-        return super().form_valid(form)
-    
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['object'] = self.get_object()
-        return context
-    
-#caseset
-def delete_caseset(request, set_id):
-    password = request.POST.get('password')
-    user = authenticate(request, username=request.user.username, password=password)
-    print(user, password)
-    if user is None:
-        return JsonResponse({'success': False, 'error': 'Неверный пароль'})
-
-    testset = CaseSets.objects.get(pk=set_id)
-    testset.delete()
-
-    return JsonResponse({'success': True})
-
-class edit_caseset(FormView):
-    model = CaseSets
-    form_class = CaseSetsForm
-    template_name = 'main/edit_caseset.html'
-    success_url = reverse_lazy('casesets')
-
-    def get_object(self):
-        obj_id = self.kwargs.get('pk')
-        if obj_id:
-            try:
-                return CaseSets.objects.get(pk=obj_id)
-            except CaseSets.DoesNotExist:
                 raise Http404
         else:
             raise Http404

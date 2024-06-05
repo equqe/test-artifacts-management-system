@@ -43,16 +43,6 @@ class Tester(AbstractUser):
     )
 
 
-class CaseSets(models.Model):
-    """ Модель, описывающая наборы кейсов"""
-
-    set_id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=128)
-
-    def __str__(self):
-            return self.name
-
-
 class TestCases(models.Model):
     """ Модель, описывающая тест-кейсы """
 

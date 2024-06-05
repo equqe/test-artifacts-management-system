@@ -39,10 +39,5 @@ urlpatterns = [
     path('bugreports/delete/<int:bug_id>/', views.delete_bugreport, name='delete_bugreport'),
     path('bugreports/<int:pk>/edit/', views.edit_bugreport.as_view(), name='edit_bugreport'),
 
-    path('casesets/', views.casesets_view, name='casesets'),
-    path('casesets/new/', views.CaseSetsView.as_view()),
-    path('casesets/delete/<int:set_id>/', views.delete_caseset, name='delete_caseset'),
-    path('casesets/<int:pk>/edit/', views.edit_caseset.as_view(), name='edit_caseset'),
-
     path('', views.index_view),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,7 +1,7 @@
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
 from django.db import models
-from .models import Tester, Projects, TestCases, TestSet, BugReports, CaseSets, CaseSteps
+from .models import Tester, Projects, TestCases, TestSet, BugReports, CaseSteps
 from django.utils import timezone
 
 class RegisterForm(UserCreationForm):
@@ -103,17 +103,6 @@ class ReportForm(forms.ModelForm):
             'creation_date': forms.DateInput(attrs={'class':'form-control', 'type':'date', 'placeholder':'YYYY-MM-DD'}),
             'testcases': forms.CheckboxSelectMultiple(),
         }
-
-
-class CaseSetsForm(forms.ModelForm):
-    class Meta:
-        model = CaseSets
-        fields = '__all__'
-
-        labels = {
-            'name': 'Название',
-        } 
-
 
 class FilterForm(forms.Form):
     start_runtime = forms.DateField(label='Дата прохождения с:', widget=forms.DateInput(attrs={'type': 'date'}), required=False)
