@@ -162,29 +162,34 @@
                 <hr size=2 color=#ccc style="width: 1400px;">
                 <div id="testTable">
                     <table>
-                        <tr>
-                          <th> </th>
-                          <th>Шаги</th>
-                          <th> </th>
-                          <th> </th>
-                          <th>Ожидаемые результаты</th>
-                        </tr>
-                        {% for form in steps_formset.forms %}
-                        <tr>
+                        <thead>
+                          <tr>
+                            <th></th>
+                            <th>Шаги</th>
+                            <th></th>
+                            <th></th>
+                            <th>Ожидаемые результаты</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {% for form in formset %}
+                          <tr>
                             <td>{{ forloop.counter }}</td>
                             <td>{{ form.step }}</td>
                             <td></td>
                             <td></td>
                             <td>{{ form.predictedresult }}</td>
-                            {{form.errors}}
-                        </tr>
-                    {% endfor %}
-                    </table>
+                            {{ form.errors }}
+                          </tr>
+                          {% endfor %}
+                        </tbody>
+                      </table>
                   </div>
                   <div>
                   <button id="addRowBtn" type="button">Добавить шаг</button>
                   <button id="delRowBtn" type="button">Удалить шаг</button>
                   </div>
+                  {{ formset.management_form }}  <!-- Add this element -->
                 <div class="form-group">
                     <div class="form-group form-group-top-label">
                         <label for="{{ form.case_file.id_for_label }}" class="top-label">{{ form.case_file.label }}</label>
@@ -194,6 +199,7 @@
                 <input type="submit" value="Создать">
                 <a class="close-red" href="http://127.0.0.1:8000/testcases/">Закрыть</a>
                 {{form.errors}}
+                
 
             {% endblock %}
         </form>

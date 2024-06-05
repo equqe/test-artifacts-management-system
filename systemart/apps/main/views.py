@@ -1,3 +1,4 @@
+from django.forms import inlineformset_factory
 from django.http import Http404, JsonResponse, HttpResponse
 from reportlab.lib.pagesizes import letter
 from reportlab.platypus import Table, TableStyle
@@ -9,10 +10,12 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.views.generic.edit import FormView
+from django.forms.formsets import formset_factory
 from .forms import RegisterForm, ProjectForm, TestCaseForm, TestsetForm, ReportForm, CaseSetsForm, FilterForm, CaseStepForm
-from .models import Projects, TestCases, TestSet, BugReports, CaseSets, Tester
+from .models import Projects, TestCases, TestSet, BugReports, CaseSets, CaseSteps
 from django.views.generic.edit import UpdateView
 from django.urls import reverse_lazy
+from django import forms
 
 pdfmetrics.registerFont(TTFont('Arial', 'arial.ttf'))
 
@@ -149,25 +152,76 @@ class TestCaseView(FormView):
     success_url = reverse_lazy('testcases')
 
     def form_valid(self, form):
+        test_case = form.save()
+        formset = self.get_context_data()['formset']
+        if formset.is_valid():
+            for case_step_form in formset:
+                case_step = case_step_form.save(commit=False)
+                case_step.testcase = test_case
+                case_step.save()
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['formset'] = CaseStepFormSet(instance=self.object, prefix='steps')
+        return context
+
+    def get_form(self, form_class=None):
+        form_class = form_class or self.form_class
+        form = super().get_form(form_class)
+        # Pass the CaseStepFormSet to the TestCaseForm instance
+        form.formset = CaseStepFormSet(instance=TestCases(),
+                                          prefix='steps')
+        return form
+
+# Define the CaseStepFormSet here
+CaseStepFormSet = inlineformset_factory(TestCases, CaseSteps, form=CaseStepForm, extra=1)
+
+    
+class edit_testcase(UpdateView):
+    model = TestCases
+    form_class = TestCaseForm
+    template_name = 'main/edit_testcase.html'
+    success_url = reverse_lazy('testcases')
+
+    def get_object(self):
+        obj_id = self.kwargs.get('pk')
+        if obj_id:
+            try:
+                return TestCases.objects.get(pk=obj_id)
+            except TestCases.DoesNotExist:
+                raise Http404
+        else:
+            raise Http404
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['instance'] = self.get_object()
+        return kwargs
+
+    def form_valid(self, form):
         test_case = form.save(commit=False)
         test_case.id = self.request.user
         test_case.save()
-        formset = form.steps_formset(instance=test_case, data=self.request.POST, files=self.request.FILES)
+        formset = CaseStepForm(instance=test_case, data=self.request.POST, files=self.request.FILES)
         if formset.is_valid():
             formset.save()
-            return super().form_valid(form)
+            return redirect('testcases')
         else:
             return self.render_to_response(self.get_context_data(form=form, steps_formset=formset))
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         form = self.get_form()
+        test_case = self.get_object()
         if self.request.method == 'POST':
-            context['steps_formset'] = form.steps_formset(self.request.POST, self.request.FILES)
+            context['steps_formset'] = CaseStepForm(instance=test_case, data=self.request.POST, files=self.request.FILES)
         else:
-            context['steps_formset'] = form.steps_formset()
+            initial_data = [{'step': step.step, 'predictedresult': step.predictedresult} for step in test_case.casesteps_set.all()]
+            context['steps_formset'] = CaseStepForm(instance=test_case, initial=initial_data)
+        context['test_case'] = test_case
         return context
-    
+
 class TestSetView(FormView):
     form_class = TestsetForm
     template_name = 'main/create_testset.html'
@@ -250,49 +304,7 @@ def delete_testcase(request, testcase_id):
 
     return JsonResponse({'success': True})
 
-class edit_testcase(UpdateView):
-    model = TestCases
-    form_class = TestCaseForm
-    template_name = 'main/edit_testcase.html'
-    success_url = reverse_lazy('testcases')
 
-    def get_object(self):
-        obj_id = self.kwargs.get('pk')
-        if obj_id:
-            try:
-                return TestCases.objects.get(pk=obj_id)
-            except TestCases.DoesNotExist:
-                raise Http404
-        else:
-            raise Http404
-
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        kwargs['instance'] = self.get_object()
-        return kwargs
-
-    def form_valid(self, form):
-        test_case = form.save(commit=False)
-        test_case.id = self.request.user
-        test_case.save()
-        formset = CaseStepForm(instance=test_case, data=self.request.POST, files=self.request.FILES)
-        if formset.is_valid():
-            formset.save()
-            return redirect('testcases')
-        else:
-            return self.render_to_response(self.get_context_data(form=form, steps_formset=formset))
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        form = self.get_form()
-        test_case = self.get_object()
-        if self.request.method == 'POST':
-            context['steps_formset'] = CaseStepForm(instance=test_case, data=self.request.POST, files=self.request.FILES)
-        else:
-            initial_data = [{'step': step.step, 'predictedresult': step.predictedresult} for step in test_case.casesteps_set.all()]
-            context['steps_formset'] = CaseStepForm(instance=test_case, initial=initial_data)
-        context['test_case'] = test_case
-        return context
     
 class edit_testcase_desc(FormView):
     model = TestCases

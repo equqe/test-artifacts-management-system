@@ -1,6 +1,8 @@
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
 from django.db import models
+from django.forms.models import inlineformset_factory
+from django.forms.formsets import formset_factory
 from .models import Tester, Projects, TestCases, TestSet, BugReports, CaseSets, CaseSteps
 from django.utils import timezone
 
@@ -28,18 +30,18 @@ class ProjectForm(forms.ModelForm):
 class CaseStepForm(forms.ModelForm):
     class Meta:
         model = CaseSteps
-        fields = '__all__' 
+        fields = '__all__'
         labels = {
             'step': 'Шаг',
             'predictedresult': 'Ожидаемый результат',
         }
 
-
 class TestCaseForm(forms.ModelForm):
+    StepFormSet = formset_factory(CaseStepForm, extra=1)
+
     class Meta:
         model = TestCases
-
-        fields = '__all__' 
+        fields = '__all__'
         labels = {
             'name': 'Название',
             'case_type': 'Тип кейса',
@@ -60,7 +62,7 @@ class TestCaseForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(TestCaseForm, self).__init__(*args, **kwargs)
-        self.steps_formset = forms.inlineformset_factory(TestCases, CaseSteps, form=CaseStepForm, extra=1)
+        self.steps_formset = self.StepFormSet()
 
 class TestsetForm(forms.ModelForm):
     class Meta:

@@ -119,7 +119,7 @@ class CaseSteps(models.Model):
     """ Модель, описывающая шаги кейса """
 
     step_id = models.AutoField(primary_key=True)
-    testcase_id = models.ForeignKey(TestCases, on_delete=models.CASCADE)
+    testcase_id = models.ForeignKey(TestCases, on_delete=models.CASCADE, related_name='steps')
     step = models.TextField(null=True, blank=True, max_length=512)
     predictedresult = models.TextField(null=True, blank=True, max_length=512)
 
