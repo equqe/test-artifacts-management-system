@@ -19,23 +19,25 @@
 {% if data %} 
 <table class="analysis-tab" class="projectlist" border="0" cellpadding="8" cellspacing="3" style="margin-top:100px;margin-left:50px;">
     <thead>
+        <td></td>
         <td>ID</td>
+        <td>Название</td>
         <td>Приоритет</td>
         <td>Статус</td>
-        <td>Дата создания</td>
+        <td id="date-obj">Дата прохождения</td>
         <td>Автор</td>
         <td>Проект</td>
-        <td>ID кейса</td>
     </thead>
     {% for item in data %}
     <tbody>
+        <td></td>
         <td>{{ item.bug_id }} {{ item.testcase_id }}</td>
+        <td>{{ item.name }}</td>
         <td>{{ item.priority }}</td>
         <td>{{ item.status }} {{ item.case_status }}</td>
         <td>{{ item.creation_date|date:"j M Y" }}</td>
         <td>{{ item.author }} {{ item.id }}</td>
         <td>{{ item.project }}</td>
-        <td>{{ item.testcase_id }}</td>
     </tbody>
     {% endfor %}
 </table>
@@ -45,22 +47,63 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
+    var runtimeLabel = document.querySelector('label[for="id_start_runtime"]');
+    var runtimeSelect = document.getElementById('id_start_runtime');
+    var runtimeLabelEnd = document.querySelector('label[for="id_end_runtime"]');
+    var runtimeSelectEnd = document.getElementById('id_end_runtime');
+  
+    var timeLabel = document.querySelector('label[for="id_start_date"]');
+    var timeSelect = document.getElementById('id_start_date');
+    var timeLabelEnd = document.querySelector('label[for="id_end_date"]');
+    var timeSelectEnd = document.getElementById('id_end_date');
+  
     var reportTypeSelect = document.getElementById('id_report_type');
     var searchCriteriaSelect = document.getElementById('id_search_criteria');
     var searchCriteriaLabel = document.querySelector('label[for="id_search_criteria"]');
   
-    if (reportTypeSelect.value === 'bugreports') {
+    var dateHeader = document.getElementById('date-obj'); // добавленная строка
+  
+    if (reportTypeSelect.value === 'testcases') {
+      timeLabel.style.display = 'none';
+      timeSelect.style.display = 'none';
+      timeLabelEnd.style.display = 'none';
+      timeSelectEnd.style.display = 'none';
+    } else {
       searchCriteriaSelect.style.display = 'none';
       searchCriteriaLabel.style.display = 'none';
+      runtimeLabel.style.display = 'none';
+      runtimeSelect.style.display = 'none';
+      runtimeLabelEnd.style.display = 'none';
+      runtimeSelectEnd.style.display = 'none';
     }
   
     reportTypeSelect.addEventListener('change', function() {
       if (this.value === 'bugreports') {
         searchCriteriaSelect.style.display = 'none';
         searchCriteriaLabel.style.display = 'none';
+        runtimeLabel.style.display = 'none';
+        runtimeSelect.style.display = 'none';
+        runtimeLabelEnd.style.display = 'none';
+        runtimeSelectEnd.style.display = 'none';
+        timeLabel.style.display = 'block';
+        timeSelect.style.display = 'block';
+        timeLabelEnd.style.display = 'block';
+        timeSelectEnd.style.display = 'block';
+  
+        dateHeader.textContent = 'Дата создания'; // добавленная строка
       } else {
         searchCriteriaSelect.style.display = 'block';
         searchCriteriaLabel.style.display = 'block';
+        runtimeLabel.style.display = 'block';
+        runtimeSelect.style.display = 'block';
+        runtimeLabelEnd.style.display = 'block';
+        runtimeSelectEnd.style.display = 'block';
+        timeLabel.style.display = 'none';
+        timeSelect.style.display = 'none';
+        timeLabelEnd.style.display = 'none';
+        timeSelectEnd.style.display = 'none';
+  
+        dateHeader.textContent = 'Дата прохождения'; // добавленная строка
       }
     });
   });

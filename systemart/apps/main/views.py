@@ -39,11 +39,11 @@ def generate_pdf(data, report_type):
     pdfmetrics.registerFont(TTFont('arial', '/usr/share/fonts/truetype/arial.ttf'))
 
     if report_type == 'testcases':
-        headers = ['ID', 'Название', 'Приоритет', 'Статус', 'Тип кейса', 'Дата создания', 'Автор']
-        table_data = [headers] + [[str(item.testcase_id), str(item.name), str(item.priority), str(item.case_status), str(item.case_type), str(item.creation_date.strftime('%d-%m-%Y')), str(item.id)] for item in data]
+        headers = ['ID', 'Название', 'Приоритет', 'Статус', 'Тип кейса', 'Дата прохождения', 'Автор']
+        table_data = [headers] + [[str(item.testcase_id), str(item.name), str(item.priority), str(item.case_status), str(item.case_type), str(item.runtime.strftime('%d-%m-%Y')), str(item.id)] for item in data]
     else:
-        headers = ['ID', 'Приоритет', 'Статус', 'Дата создания', 'Автор', 'Проект', 'ID кейса']
-        table_data = [headers] + [[str(item.bug_id), str(item.priority), str(item.status), str(item.creation_date.strftime('%d-%m-%Y')), str(item.id), str(item.project), str(item.testcase_id)] for item in data]
+        headers = ['ID', 'Название', 'Приоритет', 'Статус', 'Дата создания', 'Автор', 'Проект', 'ID кейса']
+        table_data = [headers] + [[str(item.bug_id), str(item.name), str(item.priority), str(item.status), str(item.creation_date.strftime('%d-%m-%Y')), str(item.id), str(item.project), str(item.testcase_id)] for item in data]
 
     table = Table(table_data)
 
@@ -87,9 +87,11 @@ def generate_report(request):
         end_date = form.cleaned_data['end_date']
         report_type = form.cleaned_data['report_type']
         search_criteria = form.cleaned_data['search_criteria']
+        start_runtime = form.cleaned_data['start_runtime']
+        end_runtime = form.cleaned_data['end_runtime']
 
         if report_type == 'testcases':
-            data = TestCases.objects.filter(creation_date__range=(start_date, end_date), case_status=search_criteria)
+            data = TestCases.objects.filter(runtime__range=(start_runtime, end_runtime), case_status=search_criteria)
         elif report_type == 'bugreports':
             data = BugReports.objects.filter(creation_date__range=(start_date, end_date))
 

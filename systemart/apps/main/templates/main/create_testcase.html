@@ -201,7 +201,6 @@
             let rowIndex = document.getElementById("testTable").getElementsByTagName("table")[0].rows.length-1;
 
             document.getElementById("addRowBtn").addEventListener("click", function() {
-            if (rowIndex < 5) {
                 let table = document.getElementById("testTable").getElementsByTagName("table")[0];
                 let index = table.rows.length;
     
@@ -219,7 +218,6 @@
                 expectedResultsCell.innerHTML = `<textarea name="casesteps_set-${rowIndex}-predictedresult" id="id_casesteps_set-${rowIndex}-predictedresult"></textarea>`;
     
                 rowIndex++;
-            }
             });
     
             document.getElementById("delRowBtn").addEventListener("click", function() {

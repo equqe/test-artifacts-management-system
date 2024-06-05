@@ -116,7 +116,9 @@ class CaseSetsForm(forms.ModelForm):
 
 
 class FilterForm(forms.Form):
-    start_date = forms.DateField(label='Промежуток времени с:', widget=forms.DateInput(attrs={'type': 'date'}))
-    end_date = forms.DateField(label='по:', widget=forms.DateInput(attrs={'type': 'date'}))
+    start_runtime = forms.DateField(label='Дата прохождения с:', widget=forms.DateInput(attrs={'type': 'date'}), required=False)
+    end_runtime = forms.DateField(label='по:', widget=forms.DateInput(attrs={'type': 'date'}), required=False)
+    start_date = forms.DateField(label='Промежуток времени с:', widget=forms.DateInput(attrs={'type': 'date'}), required=False)
+    end_date = forms.DateField(label='по:', widget=forms.DateInput(attrs={'type': 'date'}), required=False)
     report_type = forms.ChoiceField(label='Тип отчета:', choices=[('testcases', 'Тесткейсы'), ('bugreports', 'Багрепорты')])
     search_criteria = forms.ChoiceField(label='Статус:', choices=[('Успешно', 'Успешно'), ('Провален', 'Провален'), ('Пропущен', 'Пропущен'), ('Не пройден', 'Не пройден')])

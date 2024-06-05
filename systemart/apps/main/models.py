@@ -120,8 +120,8 @@ class CaseSteps(models.Model):
 
     step_id = models.AutoField(primary_key=True)
     testcase_id = models.ForeignKey(TestCases, on_delete=models.CASCADE)
-    step = models.TextField(null=True, blank=True)
-    predictedresult = models.TextField(max_length=512)
+    step = models.TextField(null=True, blank=True, max_length=512)
+    predictedresult = models.TextField(null=True, blank=True, max_length=512)
 
 class TestSet(models.Model):
     """ Модель, описывающая тестовые наборы """
