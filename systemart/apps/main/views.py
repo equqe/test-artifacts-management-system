@@ -462,7 +462,7 @@ class edit_bugreport(FormView):
 
     def form_valid(self, form):
         form = form.save(commit=False)
-        form.bug_file = self.request.FILES['bug_file']
+        form.bug_file = self.request.FILES.get('bug_file')
         form.save()
         return super().form_valid(form)
     
