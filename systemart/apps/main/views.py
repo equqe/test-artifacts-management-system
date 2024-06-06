@@ -1,21 +1,21 @@
+from .forms import RegisterForm, ProjectForm, TestCaseForm, TestsetForm, ReportForm, FilterForm, CaseStepForm
+from .models import Projects, TestCases, TestSet, BugReports
 from django.http import Http404, JsonResponse, HttpResponse
 from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
+from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.models import Group
-from reportlab.lib.pagesizes import letter
+from django.contrib.auth import logout
+from django.contrib.auth import authenticate
+from django.shortcuts import render, redirect
+from django.views.generic.edit import FormView
+from django.views.defaults import page_not_found, server_error, permission_denied
+from django.views.generic.edit import UpdateView
+from django.urls import reverse_lazy
+from reportlab.lib.pagesizes import letter, landscape
 from reportlab.platypus import Table, TableStyle
 from reportlab.lib import colors
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
-from django.contrib.auth import authenticate
-from django.shortcuts import render, redirect
-from django.contrib.auth import logout
-from django.contrib.auth.decorators import login_required, permission_required
-from django.views.generic.edit import FormView
-from .forms import RegisterForm, ProjectForm, TestCaseForm, TestsetForm, ReportForm, FilterForm, CaseStepForm
-from .models import Projects, TestCases, TestSet, BugReports
-from django.views.defaults import page_not_found, server_error, permission_denied
-from django.views.generic.edit import UpdateView
-from django.urls import reverse_lazy
 
 pdfmetrics.registerFont(TTFont('Arial', 'arial.ttf'))
 
@@ -43,7 +43,7 @@ def generate_pdf(data, report_type):
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = 'attachment; filename="report.pdf"'
 
-    c = canvas.Canvas(response)
+    c = canvas.Canvas(response, pagesize=landscape(letter))
 
     pdfmetrics.registerFont(TTFont('arial', '/usr/share/fonts/truetype/arial.ttf'))
 
@@ -51,8 +51,8 @@ def generate_pdf(data, report_type):
         headers = ['ID', 'Название', 'Приоритет', 'Статус', 'Тип кейса', 'Дата прохождения', 'Автор']
         table_data = [headers] + [[str(item.testcase_id), str(item.name), str(item.priority), str(item.case_status), str(item.case_type), str(item.runtime.strftime('%d-%m-%Y')), str(item.id)] for item in data]
     else:
-        headers = ['ID', 'Название', 'Приоритет', 'Статус', 'Дата создания', 'Автор', 'Проект', 'ID кейса']
-        table_data = [headers] + [[str(item.bug_id), str(item.name), str(item.priority), str(item.status), str(item.creation_date.strftime('%d-%m-%Y')), str(item.id), str(item.project), str(item.testcase_id)] for item in data]
+        headers = ['ID', 'Название', 'Приоритет', 'Статус', 'Дата создания', 'Автор', 'Проект']
+        table_data = [headers] + [[str(item.bug_id), str(item.name), str(item.priority), str(item.status), str(item.creation_date.strftime('%d-%m-%Y')), str(item.id), str(item.project)] for item in data]
 
     table = Table(table_data)
 
@@ -171,6 +171,7 @@ class TestCaseView(LoginRequiredMixin, FormView):
         test_case.save()
         formset = form.steps_formset(instance=test_case, data=self.request.POST, files=self.request.FILES)
         if formset.is_valid():
+            print(self.request.POST)
             formset.save()
             return super().form_valid(form)
         else:
@@ -226,7 +227,7 @@ class RegisterView(FormView):
 
     def form_valid(self, form):
         user = form.save()
-        tester_group = Group.objects.get(name='tester')
+        tester_group = Group.objects.get(name='Тестировщик')
         tester_group.user_set.add(user)
         return super().form_valid(form)
     
@@ -290,31 +291,28 @@ class edit_testcase(LoginRequiredMixin, UpdateView):
         else:
             raise Http404
 
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        kwargs['instance'] = self.get_object()
-        return kwargs
-
     def form_valid(self, form):
         test_case = form.save(commit=False)
         test_case.id = self.request.user
         test_case.save()
-        formset = CaseStepForm(instance=test_case, data=self.request.POST, files=self.request.FILES)
+        formset = form.steps_formset(instance=test_case, data=self.request.POST, files=self.request.FILES)
         if formset.is_valid():
             formset.save()
-            return redirect('testcases')
+            return super().form_valid(form)
         else:
-            return self.render_to_response(self.get_context_data(form=form, steps_formset=formset))
+            context = self.get_context_data(form=form, steps_formset=formset)
+            context['formset_errors'] = formset.errors
+
+            return self.render_to_response(context)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         form = self.get_form()
         test_case = self.get_object()
         if self.request.method == 'POST':
-            context['steps_formset'] = CaseStepForm(instance=test_case, data=self.request.POST, files=self.request.FILES)
+            context['steps_formset'] = form.steps_formset(instance=test_case, data=self.request.POST, files=self.request.FILES)
         else:
-            initial_data = [{'step': step.step, 'predictedresult': step.predictedresult} for step in test_case.casesteps_set.all()]
-            context['steps_formset'] = CaseStepForm(instance=test_case, initial=initial_data)
+            context['steps_formset'] = form.steps_formset(instance=test_case)
         context['test_case'] = test_case
         return context
 

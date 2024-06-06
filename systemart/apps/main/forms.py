@@ -32,6 +32,7 @@ class CaseStepForm(forms.ModelForm):
         labels = {
             'step': 'Шаг',
             'predictedresult': 'Ожидаемый результат',
+            'testcase_id' : 'ID тесткейса',
         }
 
 
