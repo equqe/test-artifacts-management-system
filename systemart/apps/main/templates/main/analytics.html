@@ -2,23 +2,67 @@
 
 {% block lists %}
 <style>
-  .analysis {
-    font-weight: bold;
+  label {
+    display: inline-block; 
+    margin-right: 10px;
+  }
+
+  input,
+  select {
+    margin-right: 20px;
   }
 </style>
-<div class="analysis">
+<div class="analysis" >
   <form method="get">
-    {{ form.as_p }}
-  </div>
-    <div class="btn-rep">
-      <button type="submit" id="generateReport">Просмотреть отчет на странице</button>
+    <div class="form-row" style="display: flex; flex-wrap: nowrap;">
+      <div class="col-sm-4">
+          <div class="form-group" style="display: flex;">
+              <label for="{{ form.start_runtime.id_for_label }}">{{ form.start_runtime.label }}</label>
+              {{ form.start_runtime }}
+          </div>
+      </div>
+      <div class="col-sm-4">
+          <div class="form-group" style="display: flex;">
+              <label for="{{ form.end_runtime.id_for_label }}">{{ form.end_runtime.label }}</label>
+              {{ form.end_runtime }}
+          </div>
+      </div>
+      <div class="col-sm-4">
+          <div class="form-group" style="display: flex;">
+              <label for="{{ form.start_date.id_for_label }}">{{ form.start_date.label }}</label>
+              {{ form.start_date }}
+          </div>
+      </div>
+      <div class="col-sm-4">
+          <div class="form-group" style="display: flex;">
+              <label for="{{ form.end_date.id_for_label }}">{{ form.end_date.label }}</label>
+              {{ form.end_date }}
+          </div>
+      </div>
+      <div class="col-sm-4">
+          <div class="form-group" style="display: flex;">
+              <label for="{{ form.report_type.id_for_label }}">{{ form.report_type.label }}</label>
+              {{ form.report_type }}
+          </div>
+      </div>
+      <div class="col-sm-4">
+          <div class="form-group" style="display: flex;">
+              <label for="{{ form.search_criteria.id_for_label }}">{{ form.search_criteria.label }}</label>
+              {{ form.search_criteria }}
+          </div>
+      </div>
+    </div>
+
+    <div class="btn-rep" style="margin-top:50px; margin-left:0; margin-right:0; display: flex; justify-content: center;">
+      <button type="submit" id="generateReport" style="margin-right:50px;">Просмотреть отчет на странице</button>
       <button type="submit" name="download_pdf">Скачать отчет в формате PDF</button>
     </div>
   </form>
 
-{% if data %} 
-<table class="analysis-tab" class="projectlist" border="0" cellpadding="8" cellspacing="3" style="margin-top:100px;margin-left:50px;">
+  {% if data %}
+  <table class="analysis-tab projectlist" border="0" cellpadding="8" cellspacing="3" style="margin-top:100px;margin-left:50px;">
     <thead>
+      <tr>
         <td></td>
         <td>ID</td>
         <td>Название</td>
@@ -27,83 +71,119 @@
         <td id="date-obj">Дата прохождения</td>
         <td>Автор</td>
         <td>Проект</td>
+      </tr>
     </thead>
-    {% for item in data %}
     <tbody>
+      {% for item in data %}
+      <tr>
         <td></td>
-        <td>{{ item.bug_id }} {{ item.testcase_id }}</td>
-        <td>{{ item.name }}</td>
-        <td>{{ item.priority }}</td>
-        <td>{{ item.status }} {{ item.case_status }}</td>
-        <td>{{ item.creation_date|date:"j M Y" }}</td>
+        <td style="width: 50px;">{{ item.bug_id }} {{ item.testcase_id }}</td>
+        <td style="width: 250px;">{{ item.name }}</td>
+        <td style="width: 250px;">{{ item.priority }}</td>
+        <td style="width: 250px;">{{ item.status }} {{ item.case_status }}</td>
+        <td style="width: 350px;">{{ item.creation_date|date:"j M Y" }}</td>
         <td>{{ item.author }} {{ item.id }}</td>
         <td>{{ item.project }}</td>
+      </tr>
+      {% endfor %}
     </tbody>
-    {% endfor %}
-</table>
-{% else %}
-<p class="results">Результатов не найдено или вы не применили фильтр...</p>
-{% endif %}
+  </table>
+  {% else %}
+  <p class="results" style="text-align: center;">Результатов не найдено или вы не применили фильтр...</p>
+  {% endif %}
+</div>
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    var runtimeLabel = document.querySelector('label[for="id_start_runtime"]');
-    var runtimeSelect = document.getElementById('id_start_runtime');
-    var runtimeLabelEnd = document.querySelector('label[for="id_end_runtime"]');
-    var runtimeSelectEnd = document.getElementById('id_end_runtime');
-  
-    var timeLabel = document.querySelector('label[for="id_start_date"]');
-    var timeSelect = document.getElementById('id_start_date');
-    var timeLabelEnd = document.querySelector('label[for="id_end_date"]');
-    var timeSelectEnd = document.getElementById('id_end_date');
-  
-    var reportTypeSelect = document.getElementById('id_report_type');
-    var searchCriteriaSelect = document.getElementById('id_search_criteria');
-    var searchCriteriaLabel = document.querySelector('label[for="id_search_criteria"]');
-  
-    var dateHeader = document.getElementById('date-obj'); // добавленная строка
-  
+    const runtimeElements = ['id_start_runtime', 'id_end_runtime'];
+    const timeElements = ['id_start_date', 'id_end_date'];
+    const searchElements = ['id_search_criteria'];
+    const labelElements = document.querySelectorAll('label[for]');
+    const reportTypeSelect = document.getElementById('id_report_type');
+    const dateHeader = document.getElementById('date-obj');
+
+    labelElements.forEach(label => {
+      if (runtimeElements.includes(label.htmlFor) || timeElements.includes(label.htmlFor) || searchElements.includes(label.htmlFor)) {
+        label.style.display = 'none';
+      }
+    });
+
+    [runtimeElements, timeElements].forEach(elements => {
+      elements.forEach(elementId => {
+        const element = document.getElementById(elementId);
+        element.style.display = 'none';
+      });
+    });
+
     if (reportTypeSelect.value === 'testcases') {
-      timeLabel.style.display = 'none';
-      timeSelect.style.display = 'none';
-      timeLabelEnd.style.display = 'none';
-      timeSelectEnd.style.display = 'none';
+      [runtimeElements, searchElements].forEach(elements => {
+        elements.forEach(elementId => {
+          const element = document.getElementById(elementId);
+          const label = document.querySelector(`label[for="${elementId}"]`);
+          element.style.display = 'block';
+          label.style.display = 'block';
+        });
+      });
     } else {
-      searchCriteriaSelect.style.display = 'none';
-      searchCriteriaLabel.style.display = 'none';
-      runtimeLabel.style.display = 'none';
-      runtimeSelect.style.display = 'none';
-      runtimeLabelEnd.style.display = 'none';
-      runtimeSelectEnd.style.display = 'none';
+      timeElements.forEach(elementId => {
+        const element = document.getElementById(elementId);
+        const label = document.querySelector(`label[for="${elementId}"]`);
+        element.style.display = 'block';
+        label.style.display = 'block';
+        document.getElementById('id_search_criteria').style.display = 'none';
+      });
+
+      dateHeader.textContent = 'Дата создания';
     }
-  
+
     reportTypeSelect.addEventListener('change', function() {
       if (this.value === 'bugreports') {
-        searchCriteriaSelect.style.display = 'none';
-        searchCriteriaLabel.style.display = 'none';
-        runtimeLabel.style.display = 'none';
-        runtimeSelect.style.display = 'none';
-        runtimeLabelEnd.style.display = 'none';
-        runtimeSelectEnd.style.display = 'none';
-        timeLabel.style.display = 'block';
-        timeSelect.style.display = 'block';
-        timeLabelEnd.style.display = 'block';
-        timeSelectEnd.style.display = 'block';
-  
-        dateHeader.textContent = 'Дата создания'; // добавленная строка
+        timeElements.forEach(elementId => {
+          const element = document.getElementById(elementId);
+          const label = document.querySelector(`label[for="${elementId}"]`);
+          element.style.display = 'block';
+          label.style.display = 'block';
+        });
+
+        [runtimeElements, searchElements].forEach(elements => {
+          elements.forEach(elementId => {
+            const element = document.getElementById(elementId);
+            const label = document.querySelector(`label[for="${elementId}"]`);
+            element.style.display = 'none';
+            label.style.display = 'none';
+          });
+        });
+
+        dateHeader.textContent = 'Дата создания';
       } else {
-        searchCriteriaSelect.style.display = 'block';
-        searchCriteriaLabel.style.display = 'block';
-        runtimeLabel.style.display = 'block';
-        runtimeSelect.style.display = 'block';
-        runtimeLabelEnd.style.display = 'block';
-        runtimeSelectEnd.style.display = 'block';
-        timeLabel.style.display = 'none';
-        timeSelect.style.display = 'none';
-        timeLabelEnd.style.display = 'none';
-        timeSelectEnd.style.display = 'none';
-  
-        dateHeader.textContent = 'Дата прохождения'; // добавленная строка
+        [runtimeElements, timeElements, searchElements].forEach(elements => {
+          elements.forEach(elementId => {
+            const element = document.getElementById(elementId);
+            const label = document.querySelector(`label[for="${elementId}"]`);
+            element.style.display = 'none';
+            label.style.display = 'none';
+          });
+        });
+
+        if (this.value === 'testcases') {
+          [runtimeElements, searchElements].forEach(elements => {
+            elements.forEach(elementId => {
+              const element = document.getElementById(elementId);
+              const label = document.querySelector(`label[for="${elementId}"]`);
+              element.style.display = 'block';
+              label.style.display = 'block';
+            });
+          });
+        } else {
+          timeElements.forEach(elementId => {
+            const element = document.getElementById(elementId);
+            const label = document.querySelector(`label[for="${elementId}"]`);
+            element.style.display = 'block';
+            label.style.display = 'block';
+          });
+        }
+
+        dateHeader.textContent = 'Дата прохождения';
       }
     });
   });

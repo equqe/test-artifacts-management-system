@@ -37,15 +37,15 @@
                 <td>{{ testcase.project }}</td>
         {% endfor %}
     </div>
-    <div>
-        <input type="submit" style="margin-left:970px;position:absolute;bottom:9%;right:10%;" value="Изменить">
-        <a class="close-red" href="/testsets" style="margin-left:970px;position:absolute;bottom:9%;right:6%;"> Закрыть</a>
-    </div>
     <input type="hidden" id="testset_testcases" name="testset_testcases" value="{{ testset.testcases.all|join:', ' }}">
 </form>
 <form id="searchForm">
     <input type="text" id="searchInput" style="margin-left:970px;"placeholder="Поиск кейса по названию...">
 </form>
+<div style="padding: 20px;background: #eee;z-index: 999;position: fixed;bottom: 5%;right:1%;border:2px solid #ccc;border-radius:5px;">
+    <input type="submit"  value="Изменить">
+    <a class="close-red" href="/testsets" > Закрыть</a>
+</div>
 
 <script>      
     const checkboxes = document.querySelectorAll('.pick');
