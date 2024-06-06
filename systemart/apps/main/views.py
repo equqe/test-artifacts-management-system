@@ -170,6 +170,13 @@ class TestCaseView(LoginRequiredMixin, FormView):
         test_case.id = self.request.user
         test_case.save()
         formset = form.steps_formset(instance=test_case, data=self.request.POST, files=self.request.FILES)
+
+        empty_step_forms = [form for form in formset.forms if not form.instance.pk and not form.cleaned_data["step"] and not form.cleaned_data["predictedresult"]]
+        for form in empty_step_forms:
+            form.cleaned_data["step"] = form.data["step"]
+            form.cleaned_data["predictedresult"] = form.data["predictedresult"]
+            form.save()
+            
         if formset.is_valid():
             print(self.request.POST)
             formset.save()

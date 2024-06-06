@@ -177,54 +177,104 @@
         </form>
     </div>
     <script>
-        
         let rowIndex = 0;
-        let formPrefix = "{{ steps_formset.prefix }}";
+let formPrefix = "{{ steps_formset.prefix }}";
 
-        document.getElementById("addRowBtn").addEventListener("click", function() {
-            
-            let table = document.getElementById("testTable").getElementsByTagName("table")[0];
-            let index = table.rows.length;
+document.getElementById("addRowBtn").addEventListener("click", function() {
+    let table = document.getElementById("testTable").getElementsByTagName("table")[0];
+    let index = table.rows.length;
 
-            let row = table.insertRow();
-            let indexCell = row.insertCell();
-            let stepsCell = row.insertCell();
-            let emptyCell = row.insertCell();
-            let expectedResultsIndexCell = row.insertCell();
-            let expectedResultsCell = row.insertCell();
+    let row = table.insertRow();
+    let indexCell = row.insertCell();
+    let stepsCell = row.insertCell();
+    let emptyCell = row.insertCell();
+    let expectedResultsIndexCell = row.insertCell();
+    let expectedResultsCell = row.insertCell();
 
-            indexCell.textContent = index;
-            stepsCell.innerHTML = `<textarea name="${formPrefix}-${rowIndex}-step" id="id_${formPrefix}-${rowIndex}-step"></textarea>`;
-            emptyCell.setAttribute('id', 'invis');
-            expectedResultsIndexCell.textContent = index;
-            expectedResultsCell.innerHTML = `<textarea name="${formPrefix}-${rowIndex}-predictedresult" id="id_${formPrefix}-${rowIndex}-predictedresult"></textarea>`;
+    indexCell.textContent = index;
+    stepsCell.innerHTML = `<textarea name="${formPrefix}-${rowIndex}-step" id="id_${formPrefix}-${rowIndex}-step" class="step-input"></textarea>`;
+    emptyCell.setAttribute('id', 'invis');
+    expectedResultsIndexCell.textContent = index;
+    expectedResultsCell.innerHTML = `<textarea name="${formPrefix}-${rowIndex}-predictedresult" id="id_${formPrefix}-${rowIndex}-predictedresult" class="predictedresult-input"></textarea>`;
 
-            rowIndex++;
-        });
+    let stepInput = document.getElementById(`id_${formPrefix}-${rowIndex}-step`);
+    let predictedResultInput = document.getElementById(`id_${formPrefix}-${rowIndex}-predictedresult`);
 
-        document.getElementById("delRowBtn").addEventListener("click", function() {
-            let table = document.getElementById("testTable").getElementsByTagName("table")[0];
-        
-            let rows = table.rows;
-        
-            if (rows.length > 2) {
-                let rowIndexToDelete = rows.length - 2;
-                table.deleteRow(rowIndexToDelete);
-        
-                let managementForm = document.getElementById("id_casesteps_set-TOTAL_FORMS");
-                managementForm.value = parseInt(managementForm.value) - 1;
-            }
-        });
+    stepInput.addEventListener("input", function() {
+        if (stepInput.value && predictedResultInput.value) {
+            let newRowIndex = document.querySelector("#id_casesteps_set-TOTAL_FORMS").value;
+            createNewStepRow(newRowIndex);
+            row.classList.remove("empty-step-row");
+        }
+    });
 
-    // Update the management forms when the page loads
-    let managementFormTotal = document.getElementById("id_casesteps_set-TOTAL_FORMS");
-    let managementFormInitial = document.getElementById("id_casesteps_set-INITIAL_FORMS");
-    let managementFormMin = document.getElementById("id_casesteps_set-MIN_NUM_FORMS");
-    let managementFormMax = document.getElementById("id_casesteps_set-MAX_NUM_FORMS");
+    predictedResultInput.addEventListener("input", function() {
+        if (stepInput.value && predictedResultInput.value) {
+            let newRowIndex = document.querySelector("#id_casesteps_set-TOTAL_FORMS").value;
+            createNewStepRow(newRowIndex);
+            row.classList.remove("empty-step-row");
+        }
+    });
 
-    managementFormTotal.value = managementFormInitial.value;
-    managementFormMin.value = 0;
-    managementFormMax.value = 1000;
+    rowIndex++;
+});
+
+document.getElementById("delRowBtn").addEventListener("click", function() {
+    let table = document.getElementById("testTable").getElementsByTagName("table")[0];
+
+    let rows = table.rows;
+
+    if (rows.length > 2) {
+        let rowIndexToDelete = rows.length - 2;
+        table.deleteRow(rowIndexToDelete);
+
+        let managementForm = document.getElementById("id_casesteps_set-TOTAL_FORMS");
+        managementForm.value = parseInt(managementForm.value) - 1;
+    }
+});
+
+let emptyStepRows = document.querySelectorAll("#testTable tbody tr.empty-step-row");
+
+for (let i = 0; i < emptyStepRows.length; i++) {
+    let stepInput = emptyStepRows[i].querySelector(".step-input");
+    let predictedResultInput = emptyStepRows[i].querySelector(".predictedresult-input");
+
+    stepInput.addEventListener("input", function() {
+        if (stepInput.value && predictedResultInput.value) {
+            let newRowIndex = document.querySelector("#id_casesteps_set-TOTAL_FORMS").value;
+            createNewStepRow(newRowIndex);
+            emptyStepRows[i].classList.remove("empty-step-row");
+        }
+    });
+
+    predictedResultInput.addEventListener("input", function() {
+        if (stepInput.value && predictedResultInput.value) {
+            let newRowIndex = document.querySelector("#id_casesteps_set-TOTAL_FORMS").value;
+            createNewStepRow(newRowIndex);
+            emptyStepRows[i].classList.remove("empty-step-row");
+        }
+    });
+}
+
+function createNewStepRow(index) {
+    let table = document.getElementById("testTable").getElementsByTagName("table")[0];
+    let row = table.insertRow();
+    let indexCell = row.insertCell();
+    let stepsCell = row.insertCell();
+    let emptyCell = row.insertCell();
+    let expectedResultsIndexCell = row.insertCell();
+    let expectedResultsCell = row.insertCell();
+
+    indexCell.textContent = index;
+    stepsCell.innerHTML = `<textarea name="${formPrefix}-${index}-step" id="id_${formPrefix}-${index}-step" class="step-input"></textarea>`;
+    emptyCell.setAttribute('id', 'invis');
+    expectedResultsIndexCell.textContent = index;
+    expectedResultsCell.innerHTML = `<textarea name="${formPrefix}-${index}-predictedresult" id="id_${formPrefix}-${index}-predictedresult" class="predictedresult-input"></textarea>`;
+
+    let managementForm = document.getElementById("id_casesteps_set-TOTAL_FORMS");
+    managementForm.value = parseInt(managementForm.value) + 1;
+}
+
 </script>
 </body>
 </html>
