@@ -150,7 +150,7 @@
                         <tr>
                           <th> </th>
                           <th>Шаги</th>
-                          <th style="width:600px;" id="invis"> </th>
+                          <th style="width:600px;"> </th>
                           <th> </th>
                           <th>Ожидаемые результаты</th>
                         </tr>
@@ -159,7 +159,7 @@
                             <tr>
                                 <td>{{ forloop.counter }}</td>
                                 <td>{{ form.step }}</td>
-                                <td></td>
+                                <td id="invis"></td>
                                 <td>{{ form.testcase_id }}</td>
                                 <td>{{ form.predictedresult }}</td>
                             </tr>
@@ -202,12 +202,12 @@
                 let indexCell = row.insertCell();
                 let stepsCell = row.insertCell();
                 let emptyCell = row.insertCell();
+                emptyCell.setAttribute('id', 'invis');
                 let expectedResultsIndexCell = row.insertCell();
                 let expectedResultsCell = row.insertCell();
 
                 indexCell.textContent = index;
                 stepsCell.innerHTML = `<textarea name="${formPrefix}-${rowIndex}-step" id="id_${formPrefix}-${rowIndex}-step"></textarea>`;
-                emptyCell.setAttribute('id', 'invis');
                 expectedResultsIndexCell.textContent = index;
                 expectedResultsCell.innerHTML = `<textarea name="${formPrefix}-${rowIndex}-predictedresult" id="id_${formPrefix}-${rowIndex}-predictedresult"></textarea>`;
 

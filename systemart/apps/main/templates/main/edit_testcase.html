@@ -142,7 +142,7 @@
                             <tr>
                                 <td>{{ forloop.counter }}</td>
                                 <td>{{ form.step }}</td>
-                                <td></td>
+                                <td id="invis"></td>
                                 <td>{{ form.testcase_id }}</td>
                                 <td>{{ form.predictedresult }}</td>
                                 {% if form.instance.pk %}
@@ -153,7 +153,7 @@
                             <tr>
                                 <td>{{ forloop.counter }}</td>
                                 <td>{{ form.step }}</td>
-                                <td></td>
+                                <td id="invis"></td>
                                 <td>{{ form.testcase_id }}</td>
                                 <td>{{ form.predictedresult }}</td>
                             </tr>
@@ -188,12 +188,12 @@ document.getElementById("addRowBtn").addEventListener("click", function() {
     let indexCell = row.insertCell();
     let stepsCell = row.insertCell();
     let emptyCell = row.insertCell();
+    emptyCell.setAttribute('id', 'invis');
     let expectedResultsIndexCell = row.insertCell();
     let expectedResultsCell = row.insertCell();
 
     indexCell.textContent = index;
     stepsCell.innerHTML = `<textarea name="${formPrefix}-${rowIndex}-step" id="id_${formPrefix}-${rowIndex}-step" class="step-input"></textarea>`;
-    emptyCell.setAttribute('id', 'invis');
     expectedResultsIndexCell.textContent = index;
     expectedResultsCell.innerHTML = `<textarea name="${formPrefix}-${rowIndex}-predictedresult" id="id_${formPrefix}-${rowIndex}-predictedresult" class="predictedresult-input"></textarea>`;
 
