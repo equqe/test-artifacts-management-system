@@ -94,6 +94,7 @@ class TestCases(models.Model):
     creation_date = models.DateTimeField(default=datetime.now, editable=False)
     precondition = models.TextField(max_length=120)
     runtime = models.DateTimeField(default=datetime.now, blank=True, null=True)
+    case_file = models.FileField(upload_to='testcases/', null=True, blank=True)
 
     def save(self, *args, **kwargs):
         if self.pk and TestCases.objects.get(pk=self.pk).case_status != self.case_status:

@@ -167,16 +167,12 @@ class TestCaseView(LoginRequiredMixin, FormView):
 
     def form_valid(self, form):
         test_case = form.save(commit=False)
+        if self.request.FILES:
+            test_case.testcase_file = self.request.FILES['case_file']
         test_case.id = self.request.user
         test_case.save()
         formset = form.steps_formset(instance=test_case, data=self.request.POST, files=self.request.FILES)
 
-        empty_step_forms = [form for form in formset.forms if not form.instance.pk and not form.cleaned_data["step"] and not form.cleaned_data["predictedresult"]]
-        for form in empty_step_forms:
-            form.cleaned_data["step"] = form.data["step"]
-            form.cleaned_data["predictedresult"] = form.data["predictedresult"]
-            form.save()
-            
         if formset.is_valid():
             print(self.request.POST)
             formset.save()
@@ -261,8 +257,6 @@ def add_testcase(request, testset_id):
     return render(request, 'main/add_testcase.html', {'testset': testset, 'testcases': testcases})
 
 
-
-
 # delete and edit views
 
 #testcase
@@ -300,6 +294,8 @@ class edit_testcase(LoginRequiredMixin, UpdateView):
 
     def form_valid(self, form):
         test_case = form.save(commit=False)
+        if self.request.FILES:
+            test_case.testcase_file = self.request.FILES['case_file']
         test_case.id = self.request.user
         test_case.save()
         formset = form.steps_formset(instance=test_case, data=self.request.POST, files=self.request.FILES)
@@ -341,23 +337,38 @@ class edit_testcase_desc(LoginRequiredMixin, FormView):
                 raise Http404
         else:
             raise Http404
-
+        
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        kwargs['instance'] = self.get_object()
+        test_case = self.get_object()
+        kwargs['instance'] = test_case
         return kwargs
-    
+
     def form_valid(self, form):
-        form = form.save(commit=False)
+        test_case = form.save(commit=False)
         if self.request.FILES:
-            form.testcase_file = self.request.FILES['case_file']
-        form.save()
-        return super().form_valid(form)
+            test_case.testcase_file = self.request.FILES['case_file']
+        test_case.id = self.request.user
+        test_case.save()
+        formset = form.steps_formset(instance=test_case, data=self.request.POST, files=self.request.FILES)
+        if formset.is_valid():
+            formset.save()
+            return super().form_valid(form)
+        else:
+            context = self.get_context_data(form=form, steps_formset=formset)
+            context['formset_errors'] = formset.errors
+
+            return self.render_to_response(context)
         
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        referer = self.request.META.get('HTTP_REFERER', '/')
-        context['referer'] = referer
+        form = self.get_form()
+        test_case = self.get_object()
+        if self.request.method == 'POST':
+            context['steps_formset'] = form.steps_formset(instance=test_case, data=self.request.POST, files=self.request.FILES)
+        else:
+            context['steps_formset'] = form.steps_formset(instance=test_case)
+        context['test_case'] = test_case
         return context
 
 #testset
