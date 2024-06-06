@@ -38,6 +38,8 @@ urlpatterns = [
     path('bugreports/new/', views.BugReportsView.as_view()),
     path('bugreports/delete/<int:bug_id>/', views.delete_bugreport, name='delete_bugreport'),
     path('bugreports/<int:pk>/edit/', views.edit_bugreport.as_view(), name='edit_bugreport'),
-
+    
     path('', views.index_view),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+handler403 = views.custom_permission_denied

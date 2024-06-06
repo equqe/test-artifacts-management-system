@@ -1,4 +1,6 @@
 from django.http import Http404, JsonResponse, HttpResponse
+from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
+from django.contrib.auth.models import Group
 from reportlab.lib.pagesizes import letter
 from reportlab.platypus import Table, TableStyle
 from reportlab.lib import colors
@@ -7,14 +9,20 @@ from reportlab.pdfbase.ttfonts import TTFont
 from django.contrib.auth import authenticate
 from django.shortcuts import render, redirect
 from django.contrib.auth import logout
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.views.generic.edit import FormView
 from .forms import RegisterForm, ProjectForm, TestCaseForm, TestsetForm, ReportForm, FilterForm, CaseStepForm
 from .models import Projects, TestCases, TestSet, BugReports
+from django.views.defaults import page_not_found, server_error, permission_denied
 from django.views.generic.edit import UpdateView
 from django.urls import reverse_lazy
 
 pdfmetrics.registerFont(TTFont('Arial', 'arial.ttf'))
+
+def custom_permission_denied(request, exception=None):
+    return render(request, 'main/forbidden.html', status=403)
+
+permission_denied = custom_permission_denied
 
 # auth views
 @login_required
@@ -22,6 +30,7 @@ def index_view(request):
     projects = Projects.objects.all()
     return render(request, 'main/index.html', {'projects': projects})
 
+@login_required
 def user_logout(request):
     if request.method == 'POST':
         logout(request)
@@ -80,6 +89,7 @@ def generate_pdf(data, report_type):
 
 
 # objects views
+@login_required
 def generate_report(request):
     form = FilterForm(request.GET or None)
     if form.is_valid():
@@ -103,34 +113,43 @@ def generate_report(request):
 
     return render(request, 'main/analytics.html', {'form': form})
 
+@login_required
 def projects_view(request):
     projects = Projects.objects.all()
     return render(request, 'main/projects.html', {'projects': projects})
 
+@login_required
 def testcase_view(request):
     testcases = TestCases.objects.all()
     return render(request, 'main/testcases.html', {'testcases': testcases})
 
+@login_required
 def testcase_order_view(request, order_by):
     testcases = TestCases.objects.all()
     testcases = testcases.order_by(order_by)
     return render(request, 'main/testcases.html', {'testcases': testcases})
 
+@login_required
 def testset_view(request):
     testsets = TestSet.objects.all()
     return render(request, 'main/testsets.html', {'testsets': testsets})
 
+@login_required
 def testset_order_view(request, order_by, testset_id):
     testset = TestSet.objects.get(pk=testset_id)
     testcases = testset.testcases.order_by(order_by)
     return render(request, 'main/desc_testsets.html', {'testset': testset, 'testcases': testcases})
 
+@login_required
 def bugreport_view(request):
     bugreports = BugReports.objects.all()
     return render(request, 'main/bugreports.html', {'bugreports': bugreports})
 
 # create views
-class ProjectView(FormView):
+class ProjectView(LoginRequiredMixin, PermissionRequiredMixin, FormView):
+    permission_required = 'project.create_project'
+    login_url = '/accounts/login/'
+    redirect_field_name = 'index'
     form_class = ProjectForm
     template_name = 'main/create_project.html'
     success_url = reverse_lazy('projects')
@@ -138,11 +157,13 @@ class ProjectView(FormView):
     def form_valid(self, form):
         form.save()
         return super().form_valid(form)
-    
-class TestCaseView(FormView):
+ 
+class TestCaseView(LoginRequiredMixin, FormView):
     form_class = TestCaseForm
     template_name = 'main/create_testcase.html'
     success_url = reverse_lazy('testcases')
+    login_url = '/accounts/login/'
+    redirect_field_name = 'index'
 
     def form_valid(self, form):
         test_case = form.save(commit=False)
@@ -168,10 +189,12 @@ class TestCaseView(FormView):
             context['steps_formset'] = form.steps_formset()
         return context
     
-class TestSetView(FormView):
+class TestSetView(LoginRequiredMixin, FormView):
     form_class = TestsetForm
     template_name = 'main/create_testset.html'
     success_url = reverse_lazy('testsets')
+    login_url = '/accounts/login/'
+    redirect_field_name = 'index'
 
     testcases = TestCases.objects.all()
 
@@ -182,10 +205,12 @@ class TestSetView(FormView):
         form.save_m2m()
         return super().form_valid(form)
 
-class BugReportsView(FormView):
+class BugReportsView(LoginRequiredMixin, FormView):
     form_class = ReportForm
     template_name = 'main/create_bugreport.html'
     success_url = reverse_lazy('bugreports')
+    login_url = '/accounts/login/'
+    redirect_field_name = 'index'
 
     def form_valid(self, form):
         form.instance.id = self.request.user
@@ -200,15 +225,20 @@ class RegisterView(FormView):
     success_url = reverse_lazy("login")
 
     def form_valid(self, form):
-        form.save()
+        user = form.save()
+        tester_group = Group.objects.get(name='tester')
+        tester_group.user_set.add(user)
         return super().form_valid(form)
+    
 
 # desc testset
+@login_required
 def desc_testset(request, testset_id):
     testset = TestSet.objects.get(pk=testset_id)
     testcases = testset.testcases.all()
     return render(request, 'main/desc_testsets.html', {'testset': testset, 'testcases': testcases})
 
+@login_required
 def add_testcase(request, testset_id):
     testset = TestSet.objects.get(pk=testset_id)
     testcases = TestCases.objects.all()
@@ -228,6 +258,7 @@ def add_testcase(request, testset_id):
 # delete and edit views
 
 #testcase
+@login_required
 def delete_testcase(request, testcase_id):
     password = request.POST.get('password')
     user = authenticate(request, username=request.user.username, password=password)
@@ -240,11 +271,14 @@ def delete_testcase(request, testcase_id):
 
     return JsonResponse({'success': True})
 
-class edit_testcase(UpdateView):
+
+class edit_testcase(LoginRequiredMixin, UpdateView):
     model = TestCases
     form_class = TestCaseForm
     template_name = 'main/edit_testcase.html'
     success_url = reverse_lazy('testcases')
+    login_url = '/accounts/login/'
+    redirect_field_name = 'index'
 
     def get_object(self):
         obj_id = self.kwargs.get('pk')
@@ -283,12 +317,15 @@ class edit_testcase(UpdateView):
             context['steps_formset'] = CaseStepForm(instance=test_case, initial=initial_data)
         context['test_case'] = test_case
         return context
-    
-class edit_testcase_desc(FormView):
+
+
+class edit_testcase_desc(LoginRequiredMixin, FormView):
     model = TestCases
     form_class = TestCaseForm
     template_name = 'main/desc_edit_testsets.html'
     success_url = reverse_lazy('testsets')
+    login_url = '/accounts/login/'
+    redirect_field_name = 'index'
 
     def get_object(self):
         obj_id = self.kwargs.get('pk')
@@ -319,6 +356,7 @@ class edit_testcase_desc(FormView):
         return context
 
 #testset
+@login_required
 def delete_testset(request, testset_id):
     password = request.POST.get('password')
     user = authenticate(request, username=request.user.username, password=password)
@@ -345,11 +383,13 @@ def delete_testset_testcase(request, testset_id, testcase_id):
     return JsonResponse({'success': True})
 
 
-class edit_testset(FormView):
+class edit_testset(LoginRequiredMixin, FormView):
     model = TestSet
     form_class = TestsetForm
     template_name = 'main/edit_testset.html'
     success_url = reverse_lazy('testsets')
+    login_url = '/accounts/login/'
+    redirect_field_name = 'index'
 
     def get_object(self):
         obj_id = self.kwargs.get('pk')
@@ -376,6 +416,8 @@ class edit_testset(FormView):
         return context
     
 #bugreport
+@login_required
+@permission_required('bugreport.delete_bugreport', raise_exception=True)
 def delete_bugreport(request, bug_id):
     password = request.POST.get('password')
     user = authenticate(request, username=request.user.username, password=password)
@@ -388,11 +430,14 @@ def delete_bugreport(request, bug_id):
 
     return JsonResponse({'success': True})
 
-class edit_bugreport(FormView):
+
+class edit_bugreport(LoginRequiredMixin, FormView):
     model = BugReports
     form_class = ReportForm
     template_name = 'main/edit_bugreport.html'
     success_url = reverse_lazy('bugreports')
+    login_url = '/accounts/login/'
+    redirect_field_name = 'index'
 
     def get_object(self):
         obj_id = self.kwargs.get('pk')
@@ -422,6 +467,8 @@ class edit_bugreport(FormView):
     
 
 #projects
+@login_required
+@permission_required('project.delete_project', raise_exception=True)
 def delete_project(request, project_id):
     password = request.POST.get('password')
     user = authenticate(request, username=request.user.username, password=password)
@@ -434,11 +481,14 @@ def delete_project(request, project_id):
 
     return JsonResponse({'success': True})
 
-class edit_project(FormView):
+class edit_project(LoginRequiredMixin, PermissionRequiredMixin, FormView):
     model = Projects
     form_class = ProjectForm
     template_name = 'main/edit_project.html'
     success_url = reverse_lazy('projects')
+    login_url = '/accounts/login/'
+    redirect_field_name = 'index'
+    permission_required = 'project.change_project'
 
     def get_object(self):
         obj_id = self.kwargs.get('pk')

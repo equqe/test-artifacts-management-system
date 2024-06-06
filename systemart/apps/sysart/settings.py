@@ -120,4 +120,4 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 MEDIA_URL = '/media/'
 
-
+handler403 = 'apps.main.views.custom_permission_denied'
