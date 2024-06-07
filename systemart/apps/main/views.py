@@ -16,6 +16,8 @@ from reportlab.platypus import Table, TableStyle
 from reportlab.lib import colors
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
+from reportlab.pdfgen import canvas
+from datetime import datetime
 
 pdfmetrics.registerFont(TTFont('Arial', 'arial.ttf'))
 
@@ -37,11 +39,12 @@ def user_logout(request):
         return redirect('login')
     return render(request, 'registration/logout.html')
 
-from reportlab.pdfgen import canvas
-
 def generate_pdf(data, report_type):
+    date = datetime.now().strftime("%B-%Y-%d")
+    name = report_type + "-" + date
+
     response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = 'attachment; filename="report.pdf"'
+    response['Content-Disposition'] = f'attachment; filename="{name}.pdf"'
 
     c = canvas.Canvas(response, pagesize=landscape(letter))
 
@@ -75,17 +78,20 @@ def generate_pdf(data, report_type):
     table.setStyle(body_style)
 
     table_width = table.wrap(0, 0)[0]
-
-    page_width = letter[0]
+    page_width = letter[1]  # Изменено для горизонтальной ориентации
     x_coord = (page_width - table_width) / 2
+
+    # Измененный код для расположения таблицы вверху страницы с отступом
     table_height = table.wrap(0, 0)[1]
-    page_height = letter[1]
-    y_coord = page_height - table_height
+    page_height = letter[0]  # Изменено для горизонтальной ориентации
+    y_coord = page_height - table_height - 30  # 30 - это величина отступа внизу от таблицы
+    if y_coord < 30:  # 30 - это величина отступа вверху от таблицы
+        y_coord = 30
+
     table.drawOn(c, x_coord, y_coord)
 
     c.save()
     return response
-
 
 
 # objects views
