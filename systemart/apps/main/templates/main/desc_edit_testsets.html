@@ -116,6 +116,12 @@
                 </div>
                 <div class="col-sm-4">
                     <div class="form-group">
+                        <label for="{{ form.case_status.id_for_label }}">{{ form.case_status.label }}</label>
+                        {{ form.case_status }}
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
                         <label for="{{ form.id.id_for_label }}">{{ form.id.label }}</label>
                         {{ form.id }}
                     </div>
