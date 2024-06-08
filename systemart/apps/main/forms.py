@@ -110,5 +110,5 @@ class FilterForm(forms.Form):
     end_runtime = forms.DateField(label='по:', widget=forms.DateInput(attrs={'type': 'date'}), required=False)
     start_date = forms.DateField(label='Дата создания с:', widget=forms.DateInput(attrs={'type': 'date'}), required=False)
     end_date = forms.DateField(label='по:', widget=forms.DateInput(attrs={'type': 'date'}), required=False)
-    report_type = forms.ChoiceField(label='Тип отчета:', choices=[('testcases', 'Тесткейсы'), ('bugreports', 'Багрепорты')])
-    search_criteria = forms.ChoiceField(label='Статус:', choices=[('Успешно', 'Успешно'), ('Провален', 'Провален'), ('Пропущен', 'Пропущен'), ('Не пройден', 'Не пройден')])
+    report_type = forms.ChoiceField(label='Тип отчета:', choices=[('testcases', 'Тест кейсы'), ('bugreports', 'Баг репорты')])
+    search_criteria = forms.ChoiceField(label='Статус:', choices=[('Успешно', 'Успешно'), ('Провален', 'Провален'), ('Пропущен', 'Пропущен')])

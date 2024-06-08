@@ -18,6 +18,7 @@ from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfgen import canvas
 from datetime import datetime
+from reportlab.lib.units import mm
 
 pdfmetrics.registerFont(TTFont('Arial', 'arial.ttf'))
 
@@ -39,6 +40,13 @@ def user_logout(request):
         return redirect('login')
     return render(request, 'registration/logout.html')
 
+
+from reportlab.lib.pagesizes import letter, landscape
+from reportlab.lib import colors
+from reportlab.platypus import Table, TableStyle, Paragraph
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib.styles import ParagraphStyle
+
 def generate_pdf(data, report_type):
     date = datetime.now().strftime("%B-%Y-%d")
     name = report_type + "-" + date
@@ -49,27 +57,50 @@ def generate_pdf(data, report_type):
     c = canvas.Canvas(response, pagesize=landscape(letter))
 
     pdfmetrics.registerFont(TTFont('arial', '/usr/share/fonts/truetype/arial.ttf'))
+    body_text_style = getSampleStyleSheet()['BodyText']
+    new_body_text_style = ParagraphStyle(name='BodyText', parent=body_text_style, fontName='arial', fontSize=12)
 
     if report_type == 'testcases':
         headers = ['ID', 'Название', 'Приоритет', 'Статус', 'Тип кейса', 'Дата прохождения', 'Автор']
-        table_data = [headers] + [[str(item.testcase_id), str(item.name), str(item.priority), str(item.case_status), str(item.case_type), str(item.runtime.strftime('%d-%m-%Y')), str(item.id)] for item in data]
+        table_data = [headers]
+        for item in data:
+            table_data.append([
+                Paragraph(str(item.testcase_id), new_body_text_style),
+                Paragraph(str(item.name), new_body_text_style),
+                Paragraph(str(item.priority), new_body_text_style),
+                Paragraph(str(item.case_status), new_body_text_style),
+                Paragraph(str(item.case_type), new_body_text_style),
+                Paragraph(str(item.runtime.strftime('%d-%m-%Y')), new_body_text_style),
+                Paragraph(str(item.id), new_body_text_style),
+            ])
     else:
         headers = ['ID', 'Название', 'Приоритет', 'Статус', 'Дата создания', 'Автор', 'Проект']
-        table_data = [headers] + [[str(item.bug_id), str(item.name), str(item.priority), str(item.status), str(item.creation_date.strftime('%d-%m-%Y')), str(item.id), str(item.project)] for item in data]
+        table_data = [headers]
+        for item in data:
+            table_data.append([
+                Paragraph(str(item.bug_id), new_body_text_style),
+                Paragraph(str(item.name), new_body_text_style),
+                Paragraph(str(item.priority), new_body_text_style),
+                Paragraph(str(item.status), new_body_text_style),
+                Paragraph(str(item.creation_date.strftime('%d-%m-%Y')), new_body_text_style),
+                Paragraph(str(item.id), new_body_text_style),
+                Paragraph(str(item.project), new_body_text_style),
+            ])
+    col_widths = [30, 150, 120, 120, 120, 120, 120]
 
-    table = Table(table_data)
+    table = Table(table_data, colWidths=col_widths)
 
     body_style = TableStyle([
-        ('FONT', (0, 1), (-1, -1), 'Arial'),
-        ('FONTSIZE', (0, 1), (-1, -1), 12),
+        ('FONT', (0, 0), (-1, -1), 'arial'),
+        ('FONTSIZE', (0, 0), (-1, -1), 12),
     ])
 
     table.setStyle(TableStyle([
         ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
         ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-        ('FONT', (0, 0), (-1, 0), 'arial'),
-        ('FONTSIZE', (0, 0), (-1, 0), 14),
+        ('FONT', (0, 0), (-1, -1), 'arial'), 
+        ('FONTSIZE', (0, 0), (-1, -1), 12),  
         ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
         ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
         ('GRID', (0, 0), (-1, -1), 1, colors.black)
@@ -77,21 +108,21 @@ def generate_pdf(data, report_type):
 
     table.setStyle(body_style)
 
-    table_width = table.wrap(0, 0)[0]
-    page_width = letter[1]  # Изменено для горизонтальной ориентации
+    table_width = table.wrapOn(c, 0, 0)[0]
+    page_width = letter[1]  
     x_coord = (page_width - table_width) / 2
 
-    # Измененный код для расположения таблицы вверху страницы с отступом
-    table_height = table.wrap(0, 0)[1]
-    page_height = letter[0]  # Изменено для горизонтальной ориентации
-    y_coord = page_height - table_height - 30  # 30 - это величина отступа внизу от таблицы
-    if y_coord < 30:  # 30 - это величина отступа вверху от таблицы
+    table_height = table.wrapOn(c, 0, 0)[1]
+    page_height = letter[0]  
+    y_coord = page_height - table_height - 30  
+    if y_coord < 30:  
         y_coord = 30
 
     table.drawOn(c, x_coord, y_coord)
 
     c.save()
     return response
+
 
 
 # objects views
