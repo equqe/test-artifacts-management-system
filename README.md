@@ -1,4 +1,4 @@
-# test-artifacts-management-system by june 1st
+# test-artifacts-management-system
 test artifacts management system on Django.
 
 # how-to
