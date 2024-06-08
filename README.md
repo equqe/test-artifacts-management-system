@@ -41,10 +41,6 @@ DATABASES = {
 ![image](https://github.com/equqe/test-artifacts-management-system/assets/145790372/a258b7a5-4ed9-45f2-aee3-4736a18401ff)
 
 
-## :::CHANGELOG
-
-исправлена ошибка при регистрации Group matching query does not exist, добавление юзера в обе группы, ошибка при генерации отчета багрепорта, изменена ориентация листа pdf на горизонтальную, шаги можно добавлять в любом количестве и редактировать имеющиеся
-
 # описание архитектуры
 
 <details>
