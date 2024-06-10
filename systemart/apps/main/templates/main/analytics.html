@@ -81,7 +81,13 @@
         <td style="width: 250px;">{{ item.name }}</td>
         <td style="width: 250px;">{{ item.priority }}</td>
         <td style="width: 250px;">{{ item.status }} {{ item.case_status }}</td>
-        <td style="width: 350px;">{{ item.creation_date|date:"j M Y" }}</td>
+        <td style="width: 350px;">
+          {% if form.report_type.value == 'testcases' %}
+            {{ item.runtime|date:"j M Y" }}
+          {% else %}
+            {{ item.creation_date|date:"j M Y" }}
+          {% endif %}
+        </td>
         <td>{{ item.author }} {{ item.id }}</td>
         <td>{{ item.project }}</td>
       </tr>

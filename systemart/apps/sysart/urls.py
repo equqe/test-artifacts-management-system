@@ -32,10 +32,12 @@ urlpatterns = [
     path('testsets/delete/<int:testset_id>/<int:testcase_id>/', views.delete_testset_testcase, name='delete_testset_testcase'),
 
     path('testsets/<int:testset_id>/testcase/add/', views.add_testcase, name='add_testcase'),
+    path('testsets/<int:testset_id>/testcase/add/order_by/<str:order_by>/', views.testcase_add_order_view, name='add_testcase_order'),
     path('testsets/testcase/<int:pk>/edit/', views.edit_testcase_desc.as_view(), name='edit_testcase'),
 
     path('bugreports/', views.bugreport_view, name='bugreports'),
     path('bugreports/new/', views.BugReportsView.as_view()),
+    path('bugreports/order_by/<str:order_by>/', views.bugreport_order_view, name='bugreport_order'),
     path('bugreports/delete/<int:bug_id>/', views.delete_bugreport, name='delete_bugreport'),
     path('bugreports/<int:pk>/edit/', views.edit_bugreport.as_view(), name='edit_bugreport'),
     

@@ -40,25 +40,51 @@
     <input type="hidden" id="testset_testcases" name="testset_testcases" value="{{ testset.testcases.all|join:', ' }}">
 </form>
 <form id="searchForm">
-    <input type="text" id="searchInput" style="margin-left:970px;"placeholder="Поиск кейса по названию...">
+    <input type="text" id="searchInput" style="margin-left:770px;"placeholder="Поиск кейса по названию...">
 </form>
+<input type="hidden" id="testset_id" value="{{ testset.testset_id }}">
 <div style="padding: 20px;background: #eee;z-index: 999;position: fixed;bottom: 5%;right:1%;border:2px solid #ccc;border-radius:5px;">
     <input type="submit"  value="Изменить">
     <a class="close-red" href="/testsets" > Закрыть</a>
 </div>
 
-<script>      
+<a class="sort-by"> Сортировать по:</a>
+    <select id="id-sort" class="sort-select">
+      <option value="">---</option>
+      <option value="testcase_id">ID</option>
+      <option value="name">Название</option>
+      <option value="priority">Приоритет</option>
+      <option value="creation_date">Дата создания(возр.)</option>
+      <option value="-creation_date">Дата создания(уб.)</option>
+      <option value="id">Автор</option>
+      <option value="project_id">Проект</option>
+    </select>
+
+<script>     
+    const testsetId = document.querySelector('#testset_id').value;
+    const sortSelects = document.querySelectorAll('.sort-select');
+
+    sortSelects.forEach(select => {
+    select.addEventListener('change', event => {
+        const selectedOption = event.target.value;
+        if (selectedOption) {
+            const url = new URL('/testsets/' + testsetId + '/testcase/add/order_by/' + selectedOption + '/', window.location.origin);
+        window.location.href = url.toString();
+        }
+    });
+    });
+
     const checkboxes = document.querySelectorAll('.pick');
     const hiddenInput = document.querySelector('#testset_testcases');
 
     function updateHiddenInput() {
-        const checkedCheckboxes = document.querySelectorAll('.pick:checked');
-        const values = Array.from(checkedCheckboxes).map(checkbox => checkbox.value);
-        hiddenInput.value = values.join(', ');
+    const checkedCheckboxes = document.querySelectorAll('.pick:checked');
+    const values = Array.from(checkedCheckboxes).map(checkbox => checkbox.value);
+    hiddenInput.value = values.join(', ');
     }
 
     checkboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', updateHiddenInput);
+    checkbox.addEventListener('change', updateHiddenInput);
     });
 </script>
 

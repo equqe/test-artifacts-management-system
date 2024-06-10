@@ -70,28 +70,17 @@
 </div>
 
 <script>
-    document.getElementById('id-sort').addEventListener('change', function() {
-        var sortBy = this.value;
-        var currentUrl = window.location.href;
-        var newUrl = currentUrl.indexOf('?') === -1 ? currentUrl + '?sort_by=' + sortBy : currentUrl + '&sort_by=' + sortBy;
-        window.history.pushState({path: newUrl}, '', newUrl);
+    const sortSelects = document.querySelectorAll('.sort-select');
+
+    sortSelects.forEach(select => {
+      select.addEventListener('change', event => {
+        const selectedOption = event.target.value;
+        if (selectedOption) {
+          const url = new URL('/testcases/order_by/' + selectedOption + '/', window.location.origin);
+          window.location.href = url.toString();
+        }
       });
-
-    function getParameterByName(name, url) {
-        if (!url) url = window.location.href;
-        name = name.replace(/[\[\]']/g, '\\$&');
-        var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
-            results = regex.exec(url);
-        if (!results) return null;
-        if (!results[2]) return '';
-        return decodeURIComponent(results[2].replace(/\+/g, ' '));
-    }
-    
-    var sortBy = getParameterByName('sort_by');
-
-    if (sortBy) {
-        document.getElementById('id-sort').value = sortBy;
-      }
+    });
       
     document.querySelector('#delete-form').addEventListener('submit', function(e) {
         e.preventDefault();

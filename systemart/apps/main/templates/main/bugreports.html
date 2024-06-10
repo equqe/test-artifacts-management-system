@@ -37,10 +37,25 @@
             <input type="submit" class="delete-link" value="Удалить" data-testcase-id="{{ bugreport.bug_id }}">
         </div>
         {% endfor %}
+        <a class="sort-by" > Сортировать по:</a>
+          <select id="id-sort" class="sort-select">
+            <option value="">---</option>
+            <option value="bug_id">ID</option>
+            <option value="name">Название</option>
+            <option value="status">Статус</option>
+            <option value="priority">Приоритет</option>
+            <option value="creation_date">Дата создания(возр.)</option>
+            <option value="-creation_date">Дата создания(уб.)</option>
+            <option value="id">Автор</option>
+            <option value="project">Проект</option>
+          </select>
 </div>
 <form id="searchForm">
     <input type="text" id="searchInput" placeholder="Поиск репорта по названию..." oninput="searchProjects(event)">
 </form>
+
+
+
 
 
 <div id="password-form" style="display:none;">
@@ -53,6 +68,18 @@
     </form>
 </div>
 <script>
+    const sortSelects = document.querySelectorAll('.sort-select');
+
+    sortSelects.forEach(select => {
+      select.addEventListener('change', event => {
+        const selectedOption = event.target.value;
+        if (selectedOption) {
+          const url = new URL('/bugreports/order_by/' + selectedOption + '/', window.location.origin);
+          window.location.href = url.toString();
+        }
+      });
+    });
+    
     document.querySelector('#delete-form').addEventListener('submit', function(e) {
         e.preventDefault();
     

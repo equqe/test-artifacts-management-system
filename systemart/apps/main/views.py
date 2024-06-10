@@ -182,6 +182,12 @@ def bugreport_view(request):
     bugreports = BugReports.objects.all()
     return render(request, 'main/bugreports.html', {'bugreports': bugreports})
 
+@login_required
+def bugreport_order_view(request, order_by):
+    bugreports = BugReports.objects.all()
+    bugreports = bugreports.order_by(order_by)
+    return render(request, 'main/bugreports.html', {'bugreports': bugreports})
+
 # create views
 class ProjectView(LoginRequiredMixin, PermissionRequiredMixin, FormView):
     permission_required = 'project.create_project'
@@ -284,6 +290,20 @@ def add_testcase(request, testset_id):
     testset = TestSet.objects.get(pk=testset_id)
     testcases = TestCases.objects.all()
     
+    if request.method == 'POST':
+        testcase_ids_str = request.POST.get('testset_testcases')
+        testcase_ids = [int(id_str) for id_str in testcase_ids_str.split(',')]
+        for testcase_id in testcase_ids:
+            testset.testcases.add(TestCases.objects.get(pk=testcase_id))
+        testset.save()
+        return redirect('testsets')
+    return render(request, 'main/add_testcase.html', {'testset': testset, 'testcases': testcases})
+
+@login_required
+def testcase_add_order_view(request, order_by, testset_id):
+    testset = TestSet.objects.get(pk=testset_id)
+    testcases = TestCases.objects.all()
+    testcases = testcases.order_by(order_by)
     if request.method == 'POST':
         testcase_ids_str = request.POST.get('testset_testcases')
         testcase_ids = [int(id_str) for id_str in testcase_ids_str.split(',')]

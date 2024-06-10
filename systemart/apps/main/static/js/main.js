@@ -74,19 +74,6 @@ document.addEventListener('DOMContentLoaded', function () {
   }
   }
 
-
-  const sortSelects = document.querySelectorAll('.sort-select');
-
-  sortSelects.forEach(select => {
-    select.addEventListener('change', event => {
-      const selectedOption = event.target.value;
-      if (selectedOption) {
-        const url = new URL('/testcases/order_by/' + selectedOption + '/', window.location.origin);
-        window.location.href = url.toString();
-      }
-    });
-  });
-
 });
 
 
