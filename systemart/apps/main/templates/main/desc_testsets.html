@@ -1,6 +1,14 @@
 {% extends "main/index.html" %}
 
 {% block lists %}
+<style>
+  .testsetheader {
+    position: absolute;
+    font-size: 20px;
+    margin-bottom: 110px;
+    right:3%;
+}
+</style>
 
 <h1 class="testsetheader" data-testset-id="{{ testset.testset_id }}"> {{testset.testset_name}}</h1>
 
@@ -51,6 +59,8 @@
       <option value="case_status">Статус</option>
       <option value="creation_date">Дата создания(возр.)</option>
       <option value="-creation_date">Дата создания(уб.)</option>
+      <option value="runtime">Дата прохождения(возр.)</option>
+      <option value="-runtime">Дата прохождения(уб.)</option>
       <option value="id">Автор</option>
       <option value="project_id">Проект</option>
     </select>

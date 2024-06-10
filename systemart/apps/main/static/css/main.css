@@ -294,12 +294,6 @@ input[type="checkbox"] {
     border: 2px solid gray;
 }
 
-.testsetheader {
-    position: relative;
-    right: -60%;
-    bottom: 6%;
-}
-
 td:hover.clicking {
     background-color: rgba(0, 0, 0, 0.3); 
 }
